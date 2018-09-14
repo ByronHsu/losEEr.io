@@ -3,6 +3,7 @@ import BotSnake from './botSnake';
 import PlayerSnake from './playerSnake';
 import Food from './food';
 import Util from './util';
+import uuid from 'uuid/v1';
 
 var Game = function(game) {}
 
@@ -18,15 +19,14 @@ Game.prototype = {
     	this.game.load.image('eye-black', 'asset/eye-black.png');
 
       this.game.load.image('food', 'asset/hex.png');
-      this.game.io = io('http://localhost:2000');
+      this.game.socket = io('http://localhost:8000');
     },
     create: function() {
-        console.log('create!');
         var width = this.game.width;
         var height = this.game.height;
-        console.log(width, height);
         this.game.world.setBounds(-width, -height, width*2, height*2);
-    	  this.game.stage.backgroundColor = '#444';
+        this.game.stage.backgroundColor = '#444';
+        this.game.stage.disableVisibilityChange = true;
 
         //add tilesprite background
         var background = this.game.add.tileSprite(-width, -height,
@@ -43,30 +43,42 @@ Game.prototype = {
             this.initFood(Util.randomInt(-width, width), Util.randomInt(-height, height));
         }
 
-        this.game.snakes = [];
+         this.game.snakes = [];
 
-        //create player
-        var snake = new PlayerSnake(this.game, 'circle', 0, 0);
-        this.game.camera.follow(snake.head);
+         //create player
+         var snake = new PlayerSnake(this.game, 'circle', 0, 0, uuid());
+         this.game.camera.follow(snake.head);
 
-        //create bots
-        new BotSnake(this.game, 'circle', -200, 0);
-        new BotSnake(this.game, 'circle', 200, 0);
+         //create bots
+         //   new BotSnake(this.game, 'circle', -200, 0);
+         //   new BotSnake(this.game, 'circle', 200, 0);
 
-        //initialize snake groups and collision
-        for (var i = 0 ; i < this.game.snakes.length ; i++) {
+         this.game.socket.on('new_enemyPlayer', this.onNewPlayer.bind(this));
+         this.game.socket.on('enemyMove', this.onEnemyMove.bind(this));
+         //initialize snake groups and collision
+         for (var i = 0 ; i < this.game.snakes.length ; i++) {
             var snake = this.game.snakes[i];
             // TODO
             snake.head.body.setCollisionGroup(this.snakeHeadCollisionGroup);
             snake.head.body.collides([this.foodCollisionGroup]);
             //callback for when a snake is destroyed
             snake.addDestroyedCallback(this.snakeDestroyed, this);
-        }
+         }
+    },
+    onNewPlayer: function(data) {
+      new BotSnake(this.game, 'circle', data.x, data.y, data.id);
+      console.log('NewPlayer', this.game);
+    },
+    onEnemyMove: function(data) {
+      var snake = this.game.snakes.find((e) => e.id == data.id);
+      snake.remote_x = data.x;
+      snake.remote_y = data.y;
     },
     /**
      * Main update loop
      */
     update: function() {
+        console.log(this.game.snakes);
         //update game components
         for (var i = this.game.snakes.length - 1 ; i >= 0 ; i--) {
             this.game.snakes[i].update();

@@ -7,7 +7,7 @@ import Snake from './Snake'
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var PlayerSnake = function(game, spriteKey, x, y) {
+var PlayerSnake = function(game, spriteKey, x, y, id) {
     Snake.call(this, game, spriteKey, x, y);
     this.cursors = game.input.keyboard.createCursorKeys();
 
@@ -16,6 +16,9 @@ var PlayerSnake = function(game, spriteKey, x, y) {
     var self = this;
     spaceKey.onDown.add(this.spaceKeyDown, this);
     spaceKey.onUp.add(this.spaceKeyUp, this);
+    this.id = id;
+
+    this.game.socket.emit('createPlayer', {id: this.id, x: x, y: y});
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
         spaceKey.onUp.remove(this.spaceKeyUp, this);
@@ -48,6 +51,7 @@ PlayerSnake.prototype.update = function() {
     var mousePosY = this.game.input.activePointer.worldY;
     var headX = this.head.body.x;
     var headY = this.head.body.y;
+    this.game.socket.emit('playerMove', {id: this.id, x: headX, y: headY});
     var angle = (180*Math.atan2(mousePosX-headX,mousePosY-headY)/Math.PI);
     if (angle > 0) {
         angle = 180-angle;

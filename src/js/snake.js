@@ -24,7 +24,7 @@ var Snake = function(game, spriteKey, x, y) {
     this.scale = 0.6;
     this.fastSpeed = 200;
     this.slowSpeed = 130;
-    this.speed = this.slowSpeed;
+    this.speed = this.fastSpeed;
     this.rotationSpeed = 40;
 
     //initialize groups and arrays

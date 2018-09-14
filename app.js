@@ -17,7 +17,25 @@ console.log("Server started.");
 
  // io connection 
 var io = require('socket.io')(serv,{});
+var snakeArr = [];
 
 io.sockets.on('connection', function(socket){
-   console.log('0.0');
+   socket.on('createPlayer', (data) => {
+      console.log('createPlayer');
+      //send message to every connected client except the sender
+      //send to the new player about everyone who is already connected. 	
+      for (i = 0; i < snakeArr.length; i++) {
+         socket.emit("new_enemyPlayer", snakeArr[i]);
+      }
+      snakeArr.push(data);
+      socket.broadcast.emit('new_enemyPlayer', data);
+   });
+   socket.on('playerMove', (data) => {
+      // console.log('playerMove', data);
+      var snake = snakeArr.find((e) => e.id == data.id);
+      if(snake == null) return
+      snake.x = data.x;
+      snake.y = data.y;
+      socket.broadcast.emit('enemyMove', data);
+   })
 });
