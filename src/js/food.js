@@ -64,7 +64,11 @@ Food.prototype = {
     },
     remote_destroy: function() {
         console.log('Remote_destroy called! @ food.js: remote_destroy');
-        this.game.physics.p2.removeConstraint(this.constraint);
+        if (this.head) { // The food to destroy was near the player snake, but another snake ate it first (very unlikely)
+            this.game.physics.p2.removeConstraint(this.constraint);
+            this.head.snake.food.splice(this.head.snake.food.indexOf(this), 1);
+            this.head = null;
+        }
         this.sprite.destroy();
     }
 };

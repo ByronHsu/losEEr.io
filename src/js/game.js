@@ -49,11 +49,7 @@ Game.prototype = {
          this.game.camera.follow(snake.head);
 
          //remote destroy food
-         this.game.socket.on('destroy_food',this.remove_food_by_id.bind(this));
-
-         //create bots
-         //   new BotSnake(this.game, 'circle', -200, 0);
-         //   new BotSnake(this.game, 'circle', 200, 0);
+         this.game.socket.on('destroy_food', this.remove_food_by_id.bind(this));
 
          this.game.socket.on('new_enemyPlayer', this.onNewPlayer.bind(this));
          this.game.socket.on('enemyMove', this.onEnemyMove.bind(this));
@@ -68,9 +64,9 @@ Game.prototype = {
          }
     },
     onGetFood: function(data) {
-        for(var i = 0;i< data.length;i++){
-            this.initFood(data[i].x, data[i].y,data[i].id);
-        }
+      for(var i = 0;i< data.length;i++){
+          this.initFood(data[i].x, data[i].y,data[i].id);
+      }
     },
     onNewPlayer: function(data) {
       var snake = new BotSnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
@@ -102,8 +98,8 @@ Game.prototype = {
      * @param  {number} y y-coordinate
      * @return {Food}   food object created
      */
-    initFood: function(x, y,id) {
-        var f = new Food(this.game, x, y,id);
+    initFood: function(x, y, id) {
+        var f = new Food(this.game, x, y, id);
         f.sprite.body.setCollisionGroup(this.foodCollisionGroup);
         this.foodGroup.add(f.sprite);
         f.sprite.body.collides([this.snakeHeadCollisionGroup]);
@@ -120,15 +116,16 @@ Game.prototype = {
         }
     },
     remove_food_by_id:function(id){
-        console.log(`Received Request of Removing food ${id} @ game.js: remove_food_by_id`);
-        for(var i = 0;i<this.foodGroup.children.length;i++){
+        // console.log(`Received Request of Removing food ${id} @ game.js: remove_food_by_id`);
+        for(var i = 0; i<this.foodGroup.children.length; i++){
             if(this.foodGroup.children[i].id == id){
-                console.log("Found the food to destroy @ game.js: remove_food_by_id")
+                // console.log("Found the food to destroy @ game.js: remove_food_by_id")
                 this.foodGroup.children[i].food.remote_destroy();
                 return;
             }
         }
-        console.log(`[Error]: food ${id} not found @ game.js: remove_food_by_id`)
+        console.error(`[Error]: food ${id} not found @ game.js: remove_food_by_id`);
+        // Maybe two snake ate the same food (very unlikely)
     }
 };
 
