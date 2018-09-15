@@ -22,20 +22,19 @@ var snakeArr = [];
 io.sockets.on('connection', function(socket){
    socket.on('createPlayer', (data) => {
       console.log('createPlayer');
-      //send message to every connected client except the sender
-      //send to the new player about everyone who is already connected. 	
       for (i = 0; i < snakeArr.length; i++) {
+         //send to the new player about everyone who is already connected. 	
          socket.emit("new_enemyPlayer", snakeArr[i]);
       }
       snakeArr.push(data);
+      //send message to every connected client except the sender
       socket.broadcast.emit('new_enemyPlayer', data);
    });
    socket.on('playerMove', (data) => {
-      // console.log('playerMove', data);
       var snake = snakeArr.find((e) => e.id == data.id);
-      if(snake == null) return
-      snake.x = data.x;
-      snake.y = data.y;
+      if(snake == null) return;
+      snake.path = data.path;
       socket.broadcast.emit('enemyMove', data);
    })
+
 });

@@ -43,38 +43,8 @@ BotSnake.prototype.spaceKeyUp = function() {
  */
 BotSnake.prototype.tempUpdate = BotSnake.prototype.update;
 BotSnake.prototype.update = function() {
-    //find the angle that the head needs to rotate
-    //through in order to face the mouse
-    var mousePosX = this.remote_x;
-    var mousePosY = this.remote_y;
-    var headX = this.head.body.x;
-    var headY = this.head.body.y;
-    this.game.socket.emit('playerMove', {id: this.id, x: headX, y: headY});
-    var angle = (180*Math.atan2(mousePosX-headX,mousePosY-headY)/Math.PI);
-    if (angle > 0) {
-        angle = 180-angle;
-    }
-    else {
-        angle = -180-angle;
-    }
-    var dif = this.head.body.angle - angle;
-    this.head.body.setZeroRotation();
-    //allow arrow keys to be used
-    if (this.cursors.left.isDown) {
-        this.head.body.rotateLeft(this.rotationSpeed);
-    }
-    else if (this.cursors.right.isDown) {
-        this.head.body.rotateRight(this.rotationSpeed);
-    }
-    //decide whether rotating left or right will angle the head towards
-    //the mouse faster, if arrow keys are not used
-    else if (dif < 0 && dif > -180 || dif > 180) {
-        this.head.body.rotateRight(this.rotationSpeed);
-    }
-    else if (dif > 0 && dif < 180 || dif < -180) {
-        this.head.body.rotateLeft(this.rotationSpeed);
-    }
-
+    this.headPath = this.remote_headPath;
+    console.log('botsnake', this.headPath)
     //call the original snake update method
     this.tempUpdate();
 }

@@ -88,7 +88,7 @@ Snake.prototype = {
             //add a point to the head path so that the section stays there
             this.headPath.push(new Phaser.Point(x,y));
         }
-
+        console.log(this.headPath);
     },
     /**
      * Add a section to the snake at a given position
@@ -129,17 +129,6 @@ Snake.prototype = {
      * Call from the main update loop
      */
     update: function() {
-        var speed = this.speed;
-        this.head.body.moveForward(speed);
-
-        //remove the last element of an array that contains points which
-        //the head traveled through
-        //then move this point to the front of the array and change its value
-        //to be where the head is located
-        var point = this.headPath.pop();
-        point.setTo(this.head.body.x, this.head.body.y);
-        this.headPath.unshift(point);
-
         //place each section of the snake on the path of the snake head,
         //a certain distance from the section before it
         var index = 0;

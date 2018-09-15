@@ -66,19 +66,20 @@ Game.prototype = {
          }
     },
     onNewPlayer: function(data) {
-      new BotSnake(this.game, 'circle', data.x, data.y, data.id);
-      console.log('NewPlayer', this.game);
+      var snake = new BotSnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
+      snake.remote_headPath = data.path;
+      console.log('onNewPlayer', this.game.snakes);
     },
     onEnemyMove: function(data) {
+      console.log('onEnemyMove', data);
       var snake = this.game.snakes.find((e) => e.id == data.id);
-      snake.remote_x = data.x;
-      snake.remote_y = data.y;
+      if(snake == null) return;
+      snake.remote_headPath = data.path;
     },
     /**
      * Main update loop
      */
     update: function() {
-        console.log(this.game.snakes);
         //update game components
         for (var i = this.game.snakes.length - 1 ; i >= 0 ; i--) {
             this.game.snakes[i].update();
