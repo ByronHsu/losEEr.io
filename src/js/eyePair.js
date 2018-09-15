@@ -1,4 +1,4 @@
-import Eye from './Eye'
+import Eye from './eye'
 import Util from './util';
 
 /**
