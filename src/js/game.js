@@ -23,8 +23,8 @@ Game.prototype = {
     },
     create: function() {
         //set world size
-        var width = 5000;
-        var height = 5000;
+        var width = 500;
+        var height = 500;
         this.game.world.setBounds(-width, -height, width*2, height*2);
         this.game.stage.backgroundColor = '#444';
         this.game.stage.disableVisibilityChange = true;
@@ -120,16 +120,15 @@ Game.prototype = {
         }
     },
     remove_food_by_id:function(id){
-        //console.log('remove_food_by_id called');
-        //console.log('id:',id);
-        console.log(this.foodGroup.children);
+        console.log(`Received Request of Removing food ${id} @ game.js: remove_food_by_id`);
         for(var i = 0;i<this.foodGroup.children.length;i++){
             if(this.foodGroup.children[i].id == id){
-                var f = this.foodGroup.children[i].food;
-                f.remote_destroy();
-                break;
+                console.log("Found the food to destroy @ game.js: remove_food_by_id")
+                this.foodGroup.children[i].food.remote_destroy();
+                return;
             }
         }
+        console.log(`[Error]: food ${id} not found @ game.js: remove_food_by_id`)
     }
 };
 
