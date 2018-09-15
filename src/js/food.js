@@ -5,11 +5,12 @@
  * @param  {Number} x    coordinate
  * @param  {Number} y    coordinate
  */
-var Food = function(game, x, y) {
+var Food = function(game, x, y, id) {
     this.game = game;
     this.debug = false;
     this.sprite = this.game.add.sprite(x, y, 'food');
     this.sprite.tint = 0xff0000;
+    this.sprite.id = id;
 
     this.game.physics.p2.enable(this.sprite, this.debug);
     this.sprite.body.clearShapes();
@@ -53,6 +54,16 @@ Food.prototype = {
      * Destroy this food and its constraints
      */
     destroy: function() {
+        if (this.head) {
+            //console.log("index:",this.head.snake.food);
+            this.game.physics.p2.removeConstraint(this.constraint);
+            this.sprite.destroy();
+            this.head.snake.food.splice(this.head.snake.food.indexOf(this), 1);
+            this.head = null;
+            this.game.socket.emit('food_destroy',this.id);
+        }
+    },
+    remote_destroy: function() {
         if (this.head) {
             this.game.physics.p2.removeConstraint(this.constraint);
             this.sprite.destroy();

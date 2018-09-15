@@ -22,8 +22,9 @@ Game.prototype = {
       this.game.socket = io('http://localhost:8000');
     },
     create: function() {
-        var width = this.game.width;
-        var height = this.game.height;
+        //set world size
+        var width = 5000;
+        var height = 5000;
         this.game.world.setBounds(-width, -height, width*2, height*2);
         this.game.stage.backgroundColor = '#444';
         this.game.stage.disableVisibilityChange = true;
@@ -38,16 +39,18 @@ Game.prototype = {
         this.snakeHeadCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.foodCollisionGroup = this.game.physics.p2.createCollisionGroup();
 
-        //add food randomly
-        for (var i = 0 ; i < 100 ; i++) {
-            this.initFood(Util.randomInt(-width, width), Util.randomInt(-height, height));
-        }
-
+        //add food from server
+        this.game.socket.emit('on_food_init');
+        this.game.socket.on('on_get_food',this.onGetFood.bind(this));
+        console.log("foodgroup",this.foodGroup.children);
          this.game.snakes = [];
 
          //create player
          var snake = new PlayerSnake(this.game, 'circle', 0, 0, uuid());
          this.game.camera.follow(snake.head);
+
+         //remote destroy food
+         this.game.socket.on('destroy_food',remove_food_by_id);
 
          //create bots
          //   new BotSnake(this.game, 'circle', -200, 0);
@@ -64,6 +67,11 @@ Game.prototype = {
             //callback for when a snake is destroyed
             snake.addDestroyedCallback(this.snakeDestroyed, this);
          }
+    },
+    onGetFood: function(data) {
+        for(var i = 0;i< data.length;i++){
+            this.initFood(data[i].x, data[i].y,data[i].id);
+        }
     },
     onNewPlayer: function(data) {
       var snake = new BotSnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
@@ -95,8 +103,8 @@ Game.prototype = {
      * @param  {number} y y-coordinate
      * @return {Food}   food object created
      */
-    initFood: function(x, y) {
-        var f = new Food(this.game, x, y);
+    initFood: function(x, y,id) {
+        var f = new Food(this.game, x, y,id);
         f.sprite.body.setCollisionGroup(this.foodCollisionGroup);
         this.foodGroup.add(f.sprite);
         f.sprite.body.collides([this.snakeHeadCollisionGroup]);
@@ -110,6 +118,14 @@ Game.prototype = {
                 snake.headPath[i].x + Util.randomInt(-10,10),
                 snake.headPath[i].y + Util.randomInt(-10,10)
             );
+        }
+    },
+    remove_food_by_id:function(id){
+        for(var i = 0;i<this.foodGroup.children.length;i++){
+            if(this.foodGroup.children[i].id === id){
+                this.foodGroup.children[i].food.remote_destroy();
+                break;
+            }
         }
     }
 };
