@@ -1,9 +1,7 @@
-# Front end 
-## Data
+# Data
+## Front end
 game, socket
-
-# Back end
-## Data 
+## Back end
 SnakeArr = {path, id, eye, length, score, name}
 FoodArr = {x,y} ? or food group
 
