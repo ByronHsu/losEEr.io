@@ -42,15 +42,14 @@ Game.prototype = {
         //add food from server
         this.game.socket.emit('on_food_init');
         this.game.socket.on('on_get_food',this.onGetFood.bind(this));
-        console.log("foodgroup",this.foodGroup.children);
-         this.game.snakes = [];
+        this.game.snakes = [];
 
          //create player
          var snake = new PlayerSnake(this.game, 'circle', 0, 0, uuid());
          this.game.camera.follow(snake.head);
 
          //remote destroy food
-         this.game.socket.on('destroy_food',remove_food_by_id);
+         this.game.socket.on('destroy_food',this.remove_food_by_id.bind(this));
 
          //create bots
          //   new BotSnake(this.game, 'circle', -200, 0);
@@ -76,10 +75,10 @@ Game.prototype = {
     onNewPlayer: function(data) {
       var snake = new BotSnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
       snake.remote_headPath = data.path;
-      console.log('onNewPlayer', this.game.snakes);
+      //console.log('onNewPlayer', this.game.snakes);
     },
     onEnemyMove: function(data) {
-      console.log('onEnemyMove', data);
+      //console.log('onEnemyMove', data);
       var snake = this.game.snakes.find((e) => e.id == data.id);
       if(snake == null) return;
       snake.remote_headPath = data.path;
@@ -121,9 +120,13 @@ Game.prototype = {
         }
     },
     remove_food_by_id:function(id){
+        //console.log('remove_food_by_id called');
+        //console.log('id:',id);
+        console.log(this.foodGroup.children);
         for(var i = 0;i<this.foodGroup.children.length;i++){
-            if(this.foodGroup.children[i].id === id){
-                this.foodGroup.children[i].food.remote_destroy();
+            if(this.foodGroup.children[i].id == id){
+                var f = this.foodGroup.children[i].food;
+                f.remote_destroy();
                 break;
             }
         }

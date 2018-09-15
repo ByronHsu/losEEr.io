@@ -88,7 +88,7 @@ Snake.prototype = {
             //add a point to the head path so that the section stays there
             this.headPath.push(new Phaser.Point(x,y));
         }
-        console.log("headpath:",this.headPath);
+        //console.log("headpath:",this.headPath);
     },
     /**
      * Add a section to the snake at a given position

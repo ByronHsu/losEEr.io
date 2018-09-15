@@ -44,7 +44,7 @@ BotSnake.prototype.spaceKeyUp = function() {
 BotSnake.prototype.tempUpdate = BotSnake.prototype.update;
 BotSnake.prototype.update = function() {
     this.headPath = this.remote_headPath;
-    console.log('botsnake', this.headPath)
+    //console.log('botsnake', this.headPath)
     //call the original snake update method
     this.tempUpdate();
 }

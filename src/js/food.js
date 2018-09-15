@@ -56,15 +56,18 @@ Food.prototype = {
     destroy: function() {
         if (this.head) {
             //console.log("index:",this.head.snake.food);
+            var eid = this.sprite.id;
+            this.game.socket.emit('food_destroy',eid);
             this.game.physics.p2.removeConstraint(this.constraint);
             this.sprite.destroy();
             this.head.snake.food.splice(this.head.snake.food.indexOf(this), 1);
             this.head = null;
-            this.game.socket.emit('food_destroy',this.id);
+            
         }
     },
     remote_destroy: function() {
         if (this.head) {
+            console.log('remote_desroy called!');
             this.game.physics.p2.removeConstraint(this.constraint);
             this.sprite.destroy();
             this.head.snake.food.splice(this.head.snake.food.indexOf(this), 1);
