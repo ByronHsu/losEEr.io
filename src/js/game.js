@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import BotSnake from './botSnake';
+import EnemySnake from './enemySnake';
 import PlayerSnake from './playerSnake';
 import Food from './food';
 import Util from './util';
@@ -50,8 +50,8 @@ Game.prototype = {
          this.game.camera.follow(snake.head);
 
          //create bots
-         //   new BotSnake(this.game, 'circle', -200, 0);
-         //   new BotSnake(this.game, 'circle', 200, 0);
+         //   new EnemySnake(this.game, 'circle', -200, 0);
+         //   new EnemySnake(this.game, 'circle', 200, 0);
 
          this.game.socket.on('new_enemyPlayer', this.onNewPlayer.bind(this));
          this.game.socket.on('enemyMove', this.onEnemyMove.bind(this));
@@ -66,7 +66,7 @@ Game.prototype = {
          }
     },
     onNewPlayer: function(data) {
-      var snake = new BotSnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
+      var snake = new EnemySnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
       snake.remote_headPath = data.path;
       console.log('onNewPlayer', this.game.snakes);
     },

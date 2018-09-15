@@ -7,7 +7,7 @@ import Snake from './Snake'
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var BotSnake = function(game, spriteKey, x, y, id) {
+var EnemySnake = function(game, spriteKey, x, y, id) {
     Snake.call(this, game, spriteKey, x, y);
     this.cursors = game.input.keyboard.createCursorKeys();
 
@@ -23,16 +23,16 @@ var BotSnake = function(game, spriteKey, x, y, id) {
     }, this);
 }
 
-BotSnake.prototype = Object.create(Snake.prototype);
-BotSnake.prototype.constructor = BotSnake;
+EnemySnake.prototype = Object.create(Snake.prototype);
+EnemySnake.prototype.constructor = EnemySnake;
 
 //make this snake light up and speed up when the space key is down
-BotSnake.prototype.spaceKeyDown = function() {
+EnemySnake.prototype.spaceKeyDown = function() {
     this.speed = this.fastSpeed;
     this.shadow.isLightingUp = true;
 }
 //make the snake slow down when the space key is up again
-BotSnake.prototype.spaceKeyUp = function() {
+EnemySnake.prototype.spaceKeyUp = function() {
     this.speed = this.slowSpeed;
     this.shadow.isLightingUp = false;
 }
@@ -41,11 +41,11 @@ BotSnake.prototype.spaceKeyUp = function() {
  * Add functionality to the original snake update method so that the player
  * can control where this snake goes
  */
-BotSnake.prototype.tempUpdate = BotSnake.prototype.update;
-BotSnake.prototype.update = function() {
+EnemySnake.prototype.tempUpdate = EnemySnake.prototype.update;
+EnemySnake.prototype.update = function() {
     this.headPath = this.remote_headPath;
-    console.log('botsnake', this.headPath)
+    console.log('EnemySnake', this.headPath)
     //call the original snake update method
     this.tempUpdate();
 }
-export default BotSnake;
+export default EnemySnake;
