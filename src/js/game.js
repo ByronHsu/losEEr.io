@@ -46,16 +46,19 @@ Game.prototype = {
          this.game.snakes = [];
 
          //create player
-         var snake = new PlayerSnake(this.game, 'circle', 0, 0, uuid());
+         var snake = new PlayerSnake(this.game, 'circle', 0, 0, uuid());      
          this.game.camera.follow(snake.head);
 
          //create bots
          //   new EnemySnake(this.game, 'circle', -200, 0);
          //   new EnemySnake(this.game, 'circle', 200, 0);
-
+        
+         // Socket
          this.game.socket.on('new_enemyPlayer', this.onNewPlayer.bind(this));
          this.game.socket.on('enemyMove', this.onEnemyMove.bind(this));
          this.game.socket.on('enemyDestroy', this.onEnemyDestroy.bind(this))
+         this.game.socket.on('enemyIncrease', this.onEnemyIncrease.bind(this))
+         
          //initialize snake groups and collision
          for (var i = 0 ; i < this.game.snakes.length ; i++) {
             var snake = this.game.snakes[i];
@@ -67,12 +70,13 @@ Game.prototype = {
          }
     },
     onNewPlayer: function(data) {
+        console.log(data)
       var snake = new EnemySnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
       snake.remote_headPath = data.path;
       console.log('onNewPlayer', this.game.snakes);
     },
     onEnemyMove: function(data) {
-    //   console.log('onEnemyMove', data);
+        // console.log('onEnemyMove', data);
       var snake = this.game.snakes.find((e) => e.id == data.id);
       if(snake == null) return;
       snake.remote_headPath = data.path;
@@ -83,6 +87,11 @@ Game.prototype = {
                 this.game.snakes[i].destroy()
             }
         }
+    },
+    onEnemyIncrease: function(data) {
+        console.log("onEnemyIncrease", data)
+        let snake = this.game.snakes.find(e => e.id == data.id)
+        snake.incrementSize()
     },
     /**
      * Main update loop

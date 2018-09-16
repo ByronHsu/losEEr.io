@@ -18,7 +18,25 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     spaceKey.onUp.add(this.spaceKeyUp, this);
     this.id = id;
 
-    this.game.socket.emit('createPlayer', {path: this.headPath, id: this.id});
+    this.game.socket.emit('createPlayer', {
+        id: this.id, 
+        // snakeLength: this.snakeLength,
+
+        // //various quantities that can be changed
+        // scale: this.scale,
+        // fastSpeed: this.fastSpeed,
+        // slowSpeed: this.slowSpeed,
+        // speed: this.speed,
+        // rotationSpeed: this.rotationSpeed,
+        
+        //the head path is an array of points that the head of the snake has
+        //traveled through
+        path: this.headPath,
+        // food: this.food,
+
+        // preferredDistance: this.preferredDistance,
+        // queuedSections: this.queuedSections
+    });
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
         spaceKey.onUp.remove(this.spaceKeyUp, this);

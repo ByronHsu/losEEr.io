@@ -273,8 +273,6 @@ Snake.prototype = {
      * Destroy the snake
      */
     destroy: function() {
-        console.log("snakeDestroyed", this.id)
-        this.game.socket.emit("snakeDestroyed", this.id)
         this.game.snakes.splice(this.game.snakes.indexOf(this), 1);
         //remove constraints
         this.game.physics.p2.removeConstraint(this.edgeLock);
@@ -289,25 +287,27 @@ Snake.prototype = {
         });
         this.eyes.destroy();
         this.shadow.destroy();
-
+        
         //call this snake's destruction callbacks
         for (var i = 0 ; i < this.onDestroyedCallbacks.length ; i++) {
             if (typeof this.onDestroyedCallbacks[i] == "function") {
                 this.onDestroyedCallbacks[i].apply(
                     this.onDestroyedContexts[i], [this]);
+                }
             }
-        }
-    },
-    /**
-     * Called when the front of the snake (the edge) hits something
-     * @param  {Phaser.Physics.P2.Body} phaserBody body it hit
-     */
-    edgeContact: function(phaserBody) {
-        //if the edge hits another snake's section, destroy this snake
-        if (phaserBody && this.sections.indexOf(phaserBody.sprite) == -1) {
-            this.destroy();
-        }
-        //if the edge hits this snake's own section, a simple solution to avoid
+        },
+        /**
+         * Called when the front of the snake (the edge) hits something
+         * @param  {Phaser.Physics.P2.Body} phaserBody body it hit
+         */
+        edgeContact: function(phaserBody) {
+            //if the edge hits another snake's section, destroy this snake
+            if (phaserBody && this.sections.indexOf(phaserBody.sprite) == -1) {
+                console.log("snakeDestroyed", this.id)
+                this.game.socket.emit("snakeDestroyed", this.id)
+                this.destroy();
+            }
+            //if the edge hits this snake's own section, a simple solution to avoid
         //glitches is to move the edge to the center of the head, where it
         //will then move back to the front because of the lock constraint
         else if (phaserBody) {

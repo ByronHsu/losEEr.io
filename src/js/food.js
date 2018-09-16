@@ -46,6 +46,8 @@ Food.prototype = {
         if (this.head && Math.round(this.head.body.x) == Math.round(this.sprite.body.x) &&
         Math.round(this.head.body.y) == Math.round(this.sprite.body.y)) {
             this.head.snake.incrementSize();
+            console.log("playerIncrease", this.head.snake)
+            this.game.socket.emit('playerIncrease', { id: this.head.snake.id , scale: this.head.snake.scale })
             this.destroy();
         }
     },

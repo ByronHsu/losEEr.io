@@ -37,8 +37,6 @@ io.sockets.on('connection', function(socket){
       socket.broadcast.emit('enemyMove', data);
    })
    socket.on('snakeDestroyed', (id) => {
-    //    let snake = snakeArr.find((e) => {e.id == id})
-    //    if (snake == null) return
         for (let i = 0;i < snakeArr.length; i++) {
             if (snakeArr[i].id == id) {
                 snakeArr.splice(i, 1);
@@ -48,4 +46,11 @@ io.sockets.on('connection', function(socket){
         socket.broadcast.emit('enemyDestroy', id)
    })
 
+   socket.on("playerIncrease", data => {
+        let snake = snakeArr.find((e) => e.id == data.id);
+        if (snake == null) return
+        console.log("playerIncrease", data)
+        snake.scale = data.scale
+        socket.broadcast.emit('enemyIncrease', data)
+   })
 });
