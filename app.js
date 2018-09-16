@@ -36,5 +36,16 @@ io.sockets.on('connection', function(socket){
       snake.path = data.path;
       socket.broadcast.emit('enemyMove', data);
    })
+   socket.on('snakeDestroyed', (id) => {
+    //    let snake = snakeArr.find((e) => {e.id == id})
+    //    if (snake == null) return
+        for (let i = 0;i < snakeArr.length; i++) {
+            if (snakeArr[i].id == id) {
+                snakeArr.splice(i, 1);
+                break;
+            }
+        }
+        socket.broadcast.emit('enemyDestroy', id)
+   })
 
 });

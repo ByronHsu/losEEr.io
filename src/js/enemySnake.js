@@ -44,7 +44,7 @@ EnemySnake.prototype.spaceKeyUp = function() {
 EnemySnake.prototype.tempUpdate = EnemySnake.prototype.update;
 EnemySnake.prototype.update = function() {
     this.headPath = this.remote_headPath;
-    console.log('EnemySnake', this.headPath)
+    // console.log('EnemySnake', this.headPath)
     //call the original snake update method
     this.tempUpdate();
 }

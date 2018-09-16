@@ -16,7 +16,7 @@ var Snake = function(game, spriteKey, x, y) {
         this.game.snakes = [];
     }
     this.game.snakes.push(this);
-    this.debug = false;
+    this.debug = true;
     this.snakeLength = 0;
     this.spriteKey = spriteKey;
 
@@ -88,7 +88,7 @@ Snake.prototype = {
             //add a point to the head path so that the section stays there
             this.headPath.push(new Phaser.Point(x,y));
         }
-        console.log(this.headPath);
+        console.log("initSections", this.headPath);
     },
     /**
      * Add a section to the snake at a given position
@@ -273,6 +273,8 @@ Snake.prototype = {
      * Destroy the snake
      */
     destroy: function() {
+        console.log("snakeDestroyed", this.id)
+        this.game.socket.emit("snakeDestroyed", this.id)
         this.game.snakes.splice(this.game.snakes.indexOf(this), 1);
         //remove constraints
         this.game.physics.p2.removeConstraint(this.edgeLock);
