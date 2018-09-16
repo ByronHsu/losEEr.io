@@ -1,4 +1,5 @@
 import Snake from './Snake'
+import SnakeProps from './SnakeProps'
 
 /**
  * Player of the core snake for controls
@@ -7,8 +8,9 @@ import Snake from './Snake'
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var EnemySnake = function(game, spriteKey, x, y, id) {
-    Snake.call(this, game, spriteKey, x, y);
+var EnemySnake = function(game, spriteKey, x, y, props = SnakeProps) {
+    console.log("ConstructEnemySnake", props)
+    Snake.call(this, game, spriteKey, x, y, props);
     this.cursors = game.input.keyboard.createCursorKeys();
 
     //handle the space key so that the player's snake can speed up
@@ -16,7 +18,7 @@ var EnemySnake = function(game, spriteKey, x, y, id) {
     var self = this;
     spaceKey.onDown.add(this.spaceKeyDown, this);
     spaceKey.onUp.add(this.spaceKeyUp, this);
-    this.id = id;
+    this.id = props.id;
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
         spaceKey.onUp.remove(this.spaceKeyUp, this);

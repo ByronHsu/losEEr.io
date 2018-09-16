@@ -47,7 +47,13 @@ Food.prototype = {
         Math.round(this.head.body.y) == Math.round(this.sprite.body.y)) {
             this.head.snake.incrementSize();
             console.log("playerIncrease", this.head.snake)
-            this.game.socket.emit('playerIncrease', { id: this.head.snake.id , scale: this.head.snake.scale })
+            this.game.socket.emit('playerIncrease', {
+                id: this.head.snake.id,
+                snakeLength: this.head.snake.snakeLength, 
+                scale: this.head.snake.scale
+                // food: this.head.snake.food,
+                // queuedSections: this.head.snake.queuedSections
+            })
             this.destroy();
         }
     },

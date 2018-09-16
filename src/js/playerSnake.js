@@ -18,25 +18,27 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     spaceKey.onUp.add(this.spaceKeyUp, this);
     this.id = id;
 
-    this.game.socket.emit('createPlayer', {
+    let playerSnakeData = {
         id: this.id, 
-        // snakeLength: this.snakeLength,
+        snakeLength: this.snakeLength,
 
         // //various quantities that can be changed
-        // scale: this.scale,
-        // fastSpeed: this.fastSpeed,
-        // slowSpeed: this.slowSpeed,
+        scale: this.scale,
+        fastSpeed: this.fastSpeed,
+        slowSpeed: this.slowSpeed,
         // speed: this.speed,
-        // rotationSpeed: this.rotationSpeed,
+        rotationSpeed: this.rotationSpeed,
         
         //the head path is an array of points that the head of the snake has
         //traveled through
-        path: this.headPath,
-        // food: this.food,
+        headPath: this.headPath,
+        food: this.food,
 
         // preferredDistance: this.preferredDistance,
-        // queuedSections: this.queuedSections
-    });
+        queuedSections: this.queuedSections
+    }
+    console.log("creatPlayer", playerSnakeData)
+    this.game.socket.emit('createPlayer', playerSnakeData);
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
         spaceKey.onUp.remove(this.spaceKeyUp, this);
@@ -69,7 +71,7 @@ PlayerSnake.prototype.update = function() {
     var mousePosY = this.game.input.activePointer.worldY;
     var headX = this.head.body.x;
     var headY = this.head.body.y;
-    this.game.socket.emit('playerMove', {path: this.headPath, id: this.id});
+    this.game.socket.emit('playerMove', {headPath: this.headPath, id: this.id});
     var angle = (180*Math.atan2(mousePosX-headX,mousePosY-headY)/Math.PI);
     if (angle > 0) {
         angle = 180-angle;

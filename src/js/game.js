@@ -54,7 +54,8 @@ Game.prototype = {
          //   new EnemySnake(this.game, 'circle', 200, 0);
         
          // Socket
-         this.game.socket.on('new_enemyPlayer', this.onNewPlayer.bind(this));
+         this.game.socket.on('enemyPlayers', this.onEnemyPlayers.bind(this))
+         this.game.socket.on('new_enemyPlayer', this.onNewEnemy.bind(this));
          this.game.socket.on('enemyMove', this.onEnemyMove.bind(this));
          this.game.socket.on('enemyDestroy', this.onEnemyDestroy.bind(this))
          this.game.socket.on('enemyIncrease', this.onEnemyIncrease.bind(this))
@@ -69,17 +70,25 @@ Game.prototype = {
             snake.addDestroyedCallback(this.snakeDestroyed, this);
          }
     },
-    onNewPlayer: function(data) {
-        console.log(data)
-      var snake = new EnemySnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
-      snake.remote_headPath = data.path;
-      console.log('onNewPlayer', this.game.snakes);
+    onEnemyPlayers: function(data) {
+        console.log("onEnemyPlayers", data)
+        for (let i = 0;i < data.length; i++) {
+            let snake = new EnemySnake(this.game, 'circle', data[i].headPath[0].x, data[i].headPath[0].y, data[i])
+            snake.remote_headPath = data[i].headPath
+            console.log("enemyPlayers", snake)
+        }
+    },
+    onNewEnemy: function(data) {
+        console.log("onNewEnemyData", data)
+      var snake = new EnemySnake(this.game, 'circle', data.headPath[0].x, data.headPath[0].y, data);
+      snake.remote_headPath = data.headPath;
+    //   console.log('onNewPlayerSnakes', this.game.snakes);
     },
     onEnemyMove: function(data) {
         // console.log('onEnemyMove', data);
       var snake = this.game.snakes.find((e) => e.id == data.id);
       if(snake == null) return;
-      snake.remote_headPath = data.path;
+      snake.remote_headPath = data.headPath;
     },
     onEnemyDestroy: function(id) {
         for (let i = 0;i < this.game.snakes.length; i++) {

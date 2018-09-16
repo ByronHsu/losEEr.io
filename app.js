@@ -20,12 +20,14 @@ var io = require('socket.io')(serv,{});
 var snakeArr = [];
 
 io.sockets.on('connection', function(socket){
+    // console.log(socket.id)
    socket.on('createPlayer', (data) => {
       console.log('createPlayer');
-      for (i = 0; i < snakeArr.length; i++) {
-         //send to the new player about everyone who is already connected. 	
-         socket.emit("new_enemyPlayer", snakeArr[i]);
-      }
+    //   for (i = 0; i < snakeArr.length; i++) {
+    //      //send to the new player about everyone who is already connected. 	
+    //      socket.emit("enemyPlayers", snakeArr[i]);
+    //   }
+      socket.emit("enemyPlayers", snakeArr)
       snakeArr.push(data);
       //send message to every connected client except the sender
       socket.broadcast.emit('new_enemyPlayer', data);
@@ -33,7 +35,7 @@ io.sockets.on('connection', function(socket){
    socket.on('playerMove', (data) => {
       var snake = snakeArr.find((e) => e.id == data.id);
       if(snake == null) return;
-      snake.path = data.path;
+      snake.headPath = data.headPath;
       socket.broadcast.emit('enemyMove', data);
    })
    socket.on('snakeDestroyed', (id) => {
@@ -49,8 +51,10 @@ io.sockets.on('connection', function(socket){
    socket.on("playerIncrease", data => {
         let snake = snakeArr.find((e) => e.id == data.id);
         if (snake == null) return
-        console.log("playerIncrease", data)
+        // console.log("playerIncrease", data)
         snake.scale = data.scale
+        snake.snakeLength = data.snakeLength
+        // snake.queuedSections = data.queuedSections
         socket.broadcast.emit('enemyIncrease', data)
    })
 });
