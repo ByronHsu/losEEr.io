@@ -50,11 +50,14 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     // console.log(this.head)
 
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
-    //add 30 sections behind the head
+
+    // Initial / Create Snake
     if (this.snakeLength === 1) this.initSections(30);
     else {
+        console.log("enemySnakeHeadPath", props.headPath)
         this.initSections(this.snakeLength - 1)
         this.snakeLength = props.snakeLength
+        this.headPath = props.headPath
     }
     //initialize the eyes
     this.eyes = new EyePair(this.game, this.head, this.scale);
@@ -95,7 +98,7 @@ Snake.prototype = {
             this.headPath.push(new Phaser.Point(x,y));
         }
         console.log("initSections", num);
-        console.log("headPathL", this.headPath.length)
+        console.log("init headPath", this.headPath)
     },
     /**
      * Add a section to the snake at a given position

@@ -1,10 +1,10 @@
 # Problems
-- headPath (Repeatedly push)
+- (headPath (Repeatedly push)) (leave it!)
 - eyes (place, angle)
 - player disconnect
 - food
 - shadow
-- fastSpeed
+- fastSpeed (disappear on spaceUP)
 - snake gernerate (place)
 - field (too small)
 - snake inLarge too fast

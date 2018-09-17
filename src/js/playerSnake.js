@@ -17,7 +17,7 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     spaceKey.onDown.add(this.spaceKeyDown, this);
     spaceKey.onUp.add(this.spaceKeyUp, this);
     this.id = id;
-
+    
     let playerSnakeData = {
         id: this.id, 
         snakeLength: this.snakeLength,
@@ -71,7 +71,6 @@ PlayerSnake.prototype.update = function() {
     var mousePosY = this.game.input.activePointer.worldY;
     var headX = this.head.body.x;
     var headY = this.head.body.y;
-    this.game.socket.emit('playerMove', {headPath: this.headPath, id: this.id});
     var angle = (180*Math.atan2(mousePosX-headX,mousePosY-headY)/Math.PI);
     if (angle > 0) {
         angle = 180-angle;
@@ -96,10 +95,10 @@ PlayerSnake.prototype.update = function() {
     else if (dif > 0 && dif < 180 || dif < -180) {
         this.head.body.rotateLeft(this.rotationSpeed);
     }
-
+    
     var speed = this.speed;
     this.head.body.moveForward(speed);
-
+    
     //remove the last element of an array that contains points which
     //the head traveled through
     //then move this point to the front of the array and change its value
@@ -107,7 +106,9 @@ PlayerSnake.prototype.update = function() {
     var point = this.headPath.pop();
     point.setTo(this.head.body.x, this.head.body.y);
     this.headPath.unshift(point);
-
+    // console.log('playerMove', { headPath: this.headPath, id: this.id })
+    this.game.socket.emit('playerMove', {headPath: this.headPath, id: this.id});
+    
     //call the original snake update method
     this.tempUpdate();
 }
