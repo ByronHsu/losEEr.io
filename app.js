@@ -32,8 +32,8 @@ const Util = {
      * @param  {Number} y2 second point
      */
     distanceFormula: function(x1, y1, x2, y2) {
-        var withinRoot = Math.pow(x1-x2,2) + Math.pow(y1-y2,2);
-        var dist = Math.pow(withinRoot,0.5);
+        var withinRoot = Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2);
+        var dist = Math.pow(withinRoot, 0.5);
         return dist;
     }
 };
@@ -43,13 +43,13 @@ const height = 5000;
 var io = require('socket.io')(serv,{});
 var snakeArr = [];
 var foodArr = [];
-var foodamount = 1000;
-for( var i = 0;i<foodamount;i++){
-    foodArr.push({id: uuid(), x:Util.randomInt(-width,width),y:Util.randomInt(-height,height)});
+var foodAmount = 1000;
+for(var i=0; i<foodAmount; i++){
+    foodArr.push({id: uuid(), x: Util.randomInt(-width,width), y: Util.randomInt(-height,height)});
 }
 // console.log(foodArr);
 io.sockets.on('connection', function(socket){
-   socket.on('createPlayer', (data) => {
+   socket.on('createPlayer', data => {
       console.log('createPlayer');
       for (i = 0; i < snakeArr.length; i++) {
          //send to the new player about everyone who is already connected. 	
@@ -59,23 +59,40 @@ io.sockets.on('connection', function(socket){
       //send message to every connected client except the sender
       socket.broadcast.emit('new_enemyPlayer', data);
    });
-   socket.on('playerMove', (data) => {
-      var snake = snakeArr.find((e) => e.id == data.id);
+   socket.on('playerMove', data => {
+      var snake = snakeArr.find(e => e.id == data.id);
       if(snake == null) return;
       snake.path = data.path;
       socket.broadcast.emit('enemyMove', data);
    });
+   socket.on('snakeDestroyed', data => {
+      for (let i = 0; i<snakeArr.length; i++) {
+         if (snakeArr[i].id === data.id) {
+            snakeArr.splice(i, 1);
+            break;
+         }
+       }
+    // console.log('Received id and foodDrop @ app.js: anonymous/snakeDestroyed');
+       // foodArr = foodArr.concat(data.drop); // Not sure if this is needed or not
+       socket.broadcast.emit('enemyDestroy', data.id, data.drop);
+    });
    socket.on('on_food_init', function(){  
-    socket.emit('on_get_food',foodArr);
+    socket.emit('on_get_food', foodArr);
    });
    socket.on('food_destroy', function(id){  
      console.log(`Received request to destroy food id=${id} @ app.js:anonymous/food_destroy`)
        for(var i = 0;i<foodArr.length;i++){
            if(foodArr[i].id === id){
-               foodArr.splice(i,1);
+               foodArr.splice(i, 1);
                break;
            }
        }
-       socket.broadcast.emit('destroy_food',id);
+       socket.broadcast.emit('destroy_food', id);
+   });
+   //Client send idRequest @ game.js: Game.prototype.snakeDestroyed
+   socket.on('idRequest', (numOfIdNeeded, ack) => {
+       //console.log(`Received request to generate ${numOfIdNeeded} uuids @ app.js: anonymous/idRequest`);
+       //Send uuid array of size numOfIdNeeded to client
+      ack([...Array(numOfIdNeeded)].map(() => uuid())); // cannot use .map(uuid)
    });
 });

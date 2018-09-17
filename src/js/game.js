@@ -9,17 +9,16 @@ var Game = function(game) {}
 
 Game.prototype = {
     preload: function() {
-
-      //load assets
-      this.game.load.image('circle','asset/circle.png');
+        //load assets
+        this.game.load.image('circle','asset/circle.png');
     	this.game.load.image('shadow', 'asset/white-shadow.png');
     	this.game.load.image('background', 'asset/tile.png');
 
     	this.game.load.image('eye-white', 'asset/eye-white.png');
     	this.game.load.image('eye-black', 'asset/eye-black.png');
 
-      this.game.load.image('food', 'asset/hex.png');
-      this.game.socket = io('http://localhost:8000');
+        this.game.load.image('food', 'asset/hex.png');
+        this.game.socket = io('http://localhost:8000');
     },
     create: function() {
         //set world size
@@ -44,17 +43,19 @@ Game.prototype = {
         this.game.socket.on('on_get_food',this.onGetFood.bind(this));
         this.game.snakes = [];
 
-         //create player
-         var snake = new PlayerSnake(this.game, 'circle', 0, 0, uuid());
-         this.game.camera.follow(snake.head);
+        //create player
+        var snake = new PlayerSnake(this.game, 'circle', 0, 0, uuid());
+        this.game.camera.follow(snake.head);
 
-         //remote destroy food
-         this.game.socket.on('destroy_food', this.remove_food_by_id.bind(this));
+        //remote destroy food
+        this.game.socket.on('destroy_food', this.remove_food_by_id.bind(this));
 
-         this.game.socket.on('new_enemyPlayer', this.onNewPlayer.bind(this));
-         this.game.socket.on('enemyMove', this.onEnemyMove.bind(this));
-         //initialize snake groups and collision
-         for (var i = 0 ; i < this.game.snakes.length ; i++) {
+        this.game.socket.on('new_enemyPlayer', this.onNewPlayer.bind(this));
+        this.game.socket.on('enemyMove', this.onEnemyMove.bind(this));
+        this.game.socket.on('enemyDestroy', this.onEnemyDestroy.bind(this));
+
+        //initialize snake groups and collision
+        for (var i = 0 ; i < this.game.snakes.length ; i++) {
             var snake = this.game.snakes[i];
             // TODO
             snake.head.body.setCollisionGroup(this.snakeHeadCollisionGroup);
@@ -64,20 +65,33 @@ Game.prototype = {
          }
     },
     onGetFood: function(data) {
-      for(var i = 0;i< data.length;i++){
-          this.initFood(data[i].x, data[i].y,data[i].id);
-      }
+        for(var i = 0;i< data.length;i++){
+            this.initFood(data[i].x, data[i].y,data[i].id);
+        }
     },
     onNewPlayer: function(data) {
-      var snake = new BotSnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
-      snake.remote_headPath = data.path;
-      //console.log('onNewPlayer', this.game.snakes);
+        var snake = new BotSnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
+        snake.remote_headPath = data.path;
+        //console.log('onNewPlayer', this.game.snakes);
     },
     onEnemyMove: function(data) {
-      //console.log('onEnemyMove', data);
-      var snake = this.game.snakes.find((e) => e.id == data.id);
-      if(snake == null) return;
-      snake.remote_headPath = data.path;
+        //console.log('onEnemyMove', data);
+        var snake = this.game.snakes.find(e => e.id == data.id);
+        if(snake == null) return;
+        snake.remote_headPath = data.path;
+    },
+    onEnemyDestroy: function(id, foodDrop) {
+        // console.log(`Received signal to destroy snake of id ${id} @ game.js: onEnemyDestroy`);
+        for (let snake of this.game.snakes) {
+            if (id === snake.id) {
+                // console.log(`Snake of id ${id} found @ game.js: onEnemyDestroy`);
+                snake.destroy();
+            }
+        }
+        for (let food of foodDrop) {
+            this.initFood(food.x, food.y, food.id);
+        }
+        // console.log('Received foodDrop @ game.js: onEnemyDestroy');
     },
     /**
      * Main update loop
@@ -107,15 +121,21 @@ Game.prototype = {
     },
     snakeDestroyed: function(snake) {
         //place food where snake was destroyed
-        for (var i = 0 ; i < snake.headPath.length ;
-        i += Math.round(snake.headPath.length / snake.snakeLength) * 2) {
-            this.initFood(
-                snake.headPath[i].x + Util.randomInt(-10,10),
-                snake.headPath[i].y + Util.randomInt(-10,10)
-            );
-        }
+        let increment = Math.round(snake.headPath.length/snake.snakeLength) * 2, len = snake.headPath.length;
+        let foodDrop = [];
+        this.game.socket.emit('idRequest', Math.floor(len/increment)+1, IDArray => {
+            // console.log('Received new IDs @ game.js: snakeDestroyed: arrow_function (idRequest ack)');
+            for (var i = 0, j = 0; i < len; i += increment, j++) {
+                let x = snake.headPath[i].x + Util.randomInt(-10, 10);
+                let y = snake.headPath[i].y + Util.randomInt(-10, 10);
+                this.initFood(x, y, IDArray[j]);
+                foodDrop.push({x: x, y: y, id: IDArray[j]});
+            }
+            // console.log('Sending id and foodDrop to server @ game.js: snakeDestroyed');
+            this.game.socket.emit("snakeDestroyed", {id: snake.id, drop: foodDrop});
+        });
     },
-    remove_food_by_id:function(id){
+    remove_food_by_id: function(id){
         // console.log(`Received Request of Removing food ${id} @ game.js: remove_food_by_id`);
         for(var i = 0; i<this.foodGroup.children.length; i++){
             if(this.foodGroup.children[i].id == id){
