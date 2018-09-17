@@ -38,12 +38,12 @@ const Util = {
     }
 };
  // io connection 
-const width = 5000;
-const height = 5000;
+const width = 500;
+const height = 500;
 var io = require('socket.io')(serv,{});
 var snakeArr = [];
 var foodArr = [];
-var foodAmount = 1000;
+var foodAmount = 200;
 for(var i=0; i<foodAmount; i++){
     foodArr.push({id: uuid(), x: Util.randomInt(-width,width), y: Util.randomInt(-height,height)});
 }
@@ -73,7 +73,8 @@ io.sockets.on('connection', function(socket){
          }
        }
     // console.log('Received id and foodDrop @ app.js: anonymous/snakeDestroyed');
-       // foodArr = foodArr.concat(data.drop); // Not sure if this is needed or not
+       foodArr.push(...data.drop); // Otherwise the newly added snake won't see food dropped from dead snake
+       foodAmount += data.drop.length;
        socket.broadcast.emit('enemyDestroy', data.id, data.drop);
     });
    socket.on('on_food_init', function(){  
@@ -91,8 +92,8 @@ io.sockets.on('connection', function(socket){
    });
    //Client send idRequest @ game.js: Game.prototype.snakeDestroyed
    socket.on('idRequest', (numOfIdNeeded, ack) => {
-       //console.log(`Received request to generate ${numOfIdNeeded} uuids @ app.js: anonymous/idRequest`);
-       //Send uuid array of size numOfIdNeeded to client
+      //console.log(`Received request to generate ${numOfIdNeeded} uuids @ app.js: anonymous/idRequest`);
+      //Send uuid array of size numOfIdNeeded to client via ack
       ack([...Array(numOfIdNeeded)].map(() => uuid())); // cannot use .map(uuid)
    });
 });

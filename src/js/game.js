@@ -19,6 +19,7 @@ Game.prototype = {
 
         this.game.load.image('food', 'asset/hex.png');
         this.game.socket = io('http://localhost:8000');
+        // this.game.socket = io(window.document.URL);
     },
     create: function() {
         //set world size
@@ -123,12 +124,17 @@ Game.prototype = {
         //place food where snake was destroyed
         let increment = Math.round(snake.headPath.length/snake.snakeLength) * 2, len = snake.headPath.length;
         let foodDrop = [];
-        this.game.socket.emit('idRequest', Math.floor(len/increment)+1, IDArray => {
+        // for (var i = 0; i < len; i += increment) should run Math.ceil(len/increment) times,
+        // which generates one food on each iteration, thus send a request for that many uuids
+        // Then send back the newly added food to server
+        this.game.socket.emit('idRequest', Math.ceil(len/increment), IDArray => {
             // console.log('Received new IDs @ game.js: snakeDestroyed: arrow_function (idRequest ack)');
             for (var i = 0, j = 0; i < len; i += increment, j++) {
                 let x = snake.headPath[i].x + Util.randomInt(-10, 10);
                 let y = snake.headPath[i].y + Util.randomInt(-10, 10);
                 this.initFood(x, y, IDArray[j]);
+                if(!IDArray[j])
+                    console.error(`IDArray[${j}] is undefined, len = ${len}, increment = ${increment} @ game.js: snakeDestroyed`);
                 foodDrop.push({x: x, y: y, id: IDArray[j]});
             }
             // console.log('Sending id and foodDrop to server @ game.js: snakeDestroyed');
