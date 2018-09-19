@@ -18,6 +18,7 @@ console.log("Server started.");
  // io connection 
 var io = require('socket.io')(serv,{});
 var snakeArr = [];
+let socketToSnakeID = {}
 
 io.sockets.on('connection', function(socket){
     // console.log(socket.id)
@@ -29,6 +30,9 @@ io.sockets.on('connection', function(socket){
     //   }
       socket.emit("enemyPlayers", snakeArr)
       snakeArr.push(data);
+    //   console.log(typeof(socket.id))
+      socketToSnakeID[socket.id] = data.id
+      console.log(socketToSnakeID)
       //send message to every connected client except the sender
       socket.broadcast.emit('new_enemyPlayer', data);
    });
@@ -36,6 +40,8 @@ io.sockets.on('connection', function(socket){
       var snake = snakeArr.find((e) => e.id == data.id);
       if(snake == null) return;
       snake.headPath = data.headPath;
+      snake.headAngle = data.headAngle;
+    //   console.log("playerMove", data)
       socket.broadcast.emit('enemyMove', data);
    })
    socket.on('snakeDestroyed', (id) => {
@@ -54,7 +60,22 @@ io.sockets.on('connection', function(socket){
         // console.log("playerIncrease", data)
         snake.scale = data.scale
         snake.snakeLength = data.snakeLength
-        // snake.queuedSections = data.queuedSections
+        snake.headAngle = data.headAngle
         socket.broadcast.emit('enemyIncrease', data)
+   })
+
+   socket.on("disconnect", () => {
+       let snakeId = socketToSnakeID[socket.id]
+       console.log("user disconnect", snakeId)
+       if (!snakeId) return;
+       for (let i = 0;i < snakeArr.length; i++) {
+           if (snakeArr[i].id === snakeId) {
+               console.log("delet snake", snakeId)
+               snakeArr.splice(i, 1)
+               delete socketToSnakeID[socket.id]
+               break;
+           }
+       }
+       socket.broadcast.emit('enemyDisconnect', snakeId)
    })
 });

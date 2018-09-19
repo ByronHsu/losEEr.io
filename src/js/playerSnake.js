@@ -28,6 +28,7 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
         slowSpeed: this.slowSpeed,
         // speed: this.speed,
         rotationSpeed: this.rotationSpeed,
+        headAngle: 0,
         
         //the head path is an array of points that the head of the snake has
         //traveled through
@@ -106,8 +107,12 @@ PlayerSnake.prototype.update = function() {
     var point = this.headPath.pop();
     point.setTo(this.head.body.x, this.head.body.y);
     this.headPath.unshift(point);
-    // console.log('playerMove', { headPath: this.headPath, id: this.id })
-    this.game.socket.emit('playerMove', {headPath: this.headPath, id: this.id});
+    // console.log('playerMove', { headPath: this.headPath, id: this.id , angle: this.head.body.angle})
+    this.game.socket.emit('playerMove', {
+        headPath: this.headPath,
+        id: this.id,
+        headAngle: this.head.body.angle
+     });
     
     //call the original snake update method
     this.tempUpdate();

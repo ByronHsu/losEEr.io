@@ -4,13 +4,16 @@
  * @param  {Phaser.Sprite} head  snake head sprite
  * @param  {Number} scale scale of the new eye
  */
-var Eye = function(game, head, scale) {
+var Eye = function(game, head, scale, headAngle) {
     this.game = game;
     this.head = head;
     this.scale = scale;
     this.eyeGroup = this.game.add.group();
     this.collisionGroup = this.game.physics.p2.createCollisionGroup();
     this.debug = false;
+
+    // fix whiteEye Angle
+    this.headAngle = headAngle
 
     //constraints that will hold the circles in place
     //the lock will hold the white circle on the head, and the distance
@@ -29,7 +32,7 @@ var Eye = function(game, head, scale) {
     );
     this.blackCircle = this.initCircle(this.blackCircle);
     this.blackCircle.body.mass = 0.01;
-
+    
 
 
 }
@@ -58,6 +61,8 @@ Eye.prototype = {
     updateConstraints: function(offset) {
         //change where the lock constraint of the white circle
         //is if it already exists
+        console.log("updateConstraints", offset)
+        console.log("updateConstraintsLock", this.lock)
         if (this.lock) {
             this.lock.localOffsetB = [
                 this.game.physics.p2.pxmi(offset[0]),

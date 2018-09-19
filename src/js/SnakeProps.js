@@ -1,4 +1,5 @@
 let SnakeProps = {
+    headAngle: 0,
     snakeLength: 0, 
     scale: 0.6, 
     fastSpeed: 200, 

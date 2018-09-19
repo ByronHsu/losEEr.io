@@ -59,6 +59,7 @@ Game.prototype = {
          this.game.socket.on('enemyMove', this.onEnemyMove.bind(this));
          this.game.socket.on('enemyDestroy', this.onEnemyDestroy.bind(this))
          this.game.socket.on('enemyIncrease', this.onEnemyIncrease.bind(this))
+         this.game.socket.on('enemyDisconnect', this.onEnemyDisconnect.bind(this))
          
          //initialize snake groups and collision
          for (var i = 0 ; i < this.game.snakes.length ; i++) {
@@ -75,6 +76,7 @@ Game.prototype = {
         for (let i = 0;i < data.length; i++) {
             let snake = new EnemySnake(this.game, 'circle', data[i].headPath[0].x, data[i].headPath[0].y, data[i])
             snake.remote_headPath = data[i].headPath
+            snake.headAngle = data[i].headAngle
             console.log("enemyPlayers", snake)
         }
     },
@@ -82,6 +84,7 @@ Game.prototype = {
         console.log("onNewEnemyData", data)
       var snake = new EnemySnake(this.game, 'circle', data.headPath[0].x, data.headPath[0].y, data);
       snake.remote_headPath = data.headPath;
+      snake.headAngle = data.headAngle
     //   console.log('onNewPlayerSnakes', this.game.snakes);
     },
     onEnemyMove: function(data) {
@@ -89,11 +92,13 @@ Game.prototype = {
       var snake = this.game.snakes.find((e) => e.id == data.id);
       if(snake == null) return;
       snake.remote_headPath = data.headPath;
+      snake.headAngle = data.headAngle
     },
     onEnemyDestroy: function(id) {
         for (let i = 0;i < this.game.snakes.length; i++) {
             if (id == this.game.snakes[i].id) {
                 this.game.snakes[i].destroy()
+                // this.game.snakes.splice(i, 1)
             }
         }
     },
@@ -101,6 +106,12 @@ Game.prototype = {
         console.log("onEnemyIncrease", data)
         let snake = this.game.snakes.find(e => e.id == data.id)
         snake.incrementSize()
+    },
+    onEnemyDisconnect: function(snakeId) {
+        console.log("onEnemyDisconnect", snakeId)
+        let snake = this.game.snakes.find(e => e.id == snakeId)
+        if (snake == null) return
+        snake.destroy()
     },
     /**
      * Main update loop

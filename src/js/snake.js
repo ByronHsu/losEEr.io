@@ -28,6 +28,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.slowSpeed = props.slowSpeed;
     this.speed = this.fastSpeed;
     this.rotationSpeed = props.rotationSpeed;
+    this.headAngle = props.headAngle
 
     //initialize groups and arrays
     this.collisionGroup = this.game.physics.p2.createCollisionGroup();
@@ -55,12 +56,17 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     if (this.snakeLength === 1) this.initSections(30);
     else {
         console.log("enemySnakeHeadPath", props.headPath)
-        this.initSections(this.snakeLength - 1)
+        // this.initSections(this.snakeLength - 1)
+        // this.snakeLength = props.snakeLength
+        // this.headPath = props.headPath
+        for (let i = 1;i < props.snakeLength; i++) {
+            this.addSectionAtPosition(props.headPath[i])
+        }
         this.snakeLength = props.snakeLength
         this.headPath = props.headPath
     }
     //initialize the eyes
-    this.eyes = new EyePair(this.game, this.head, this.scale);
+    this.eyes = new EyePair(this.game, this.head, this.scale, this.headAngle);
 
     //the edge is the front body that can collide with other snakes
     //it is locked to the head of this snake
@@ -172,6 +178,10 @@ Snake.prototype = {
             this.headPath.pop();
         }
 
+        // while (this.headPath.length > this.snakeLength + 20) {
+        //     this.headPath.pop();
+        // }
+
         //this calls onCycleComplete every time a cycle is completed
         //a cycle is the time it takes the second section of a snake to reach
         //where the head of the snake was at the end of the last cycle
@@ -269,7 +279,7 @@ Snake.prototype = {
         }
 
         //scale eyes and shadows
-        this.eyes.setScale(scale);
+        this.eyes.setScale(scale, this.headAngle);
         this.shadow.setScale(scale);
     },
     /**

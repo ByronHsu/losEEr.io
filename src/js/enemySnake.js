@@ -29,15 +29,15 @@ EnemySnake.prototype = Object.create(Snake.prototype);
 EnemySnake.prototype.constructor = EnemySnake;
 
 //make this snake light up and speed up when the space key is down
-EnemySnake.prototype.spaceKeyDown = function() {
-    this.speed = this.fastSpeed;
-    this.shadow.isLightingUp = true;
-}
-//make the snake slow down when the space key is up again
-EnemySnake.prototype.spaceKeyUp = function() {
-    this.speed = this.slowSpeed;
-    this.shadow.isLightingUp = false;
-}
+// EnemySnake.prototype.spaceKeyDown = function() {
+//     this.speed = this.fastSpeed;
+//     this.shadow.isLightingUp = true;
+// }
+// //make the snake slow down when the space key is up again
+// EnemySnake.prototype.spaceKeyUp = function() {
+//     this.speed = this.slowSpeed;
+//     this.shadow.isLightingUp = false;
+// }
 
 /**
  * Add functionality to the original snake update method so that the player
