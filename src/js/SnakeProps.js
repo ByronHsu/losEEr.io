@@ -2,12 +2,13 @@ let SnakeProps = {
     headAngle: 0,
     snakeLength: 0, 
     scale: 0.6, 
-    fastSpeed: 200, 
-    speed: 200, 
-    rotationSpeed: 40, 
+    fastSpeed: 400, 
+    slowSpeed: 200, 
+    rotationSpeed: 80, 
     headPath: [], 
     food: [],
-    queuedSections: 0
+    queuedSections: 0,
+    isLightingUp: false
 }
 
 export default SnakeProps

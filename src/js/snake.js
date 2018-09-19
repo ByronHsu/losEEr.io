@@ -26,7 +26,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.scale = props.scale;
     this.fastSpeed = props.fastSpeed;
     this.slowSpeed = props.slowSpeed;
-    this.speed = this.fastSpeed;
+    this.speed = this.slowSpeed;
     this.rotationSpeed = props.rotationSpeed;
     this.headAngle = props.headAngle
 

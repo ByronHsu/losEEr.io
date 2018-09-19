@@ -59,6 +59,7 @@ Game.prototype = {
          this.game.socket.on('enemyMove', this.onEnemyMove.bind(this));
          this.game.socket.on('enemyDestroy', this.onEnemyDestroy.bind(this))
          this.game.socket.on('enemyIncrease', this.onEnemyIncrease.bind(this))
+         this.game.socket.on('enemySpaceKeyEvent', this.onEnemySpaceKeyEvent.bind(this))
          this.game.socket.on('enemyDisconnect', this.onEnemyDisconnect.bind(this))
          
          //initialize snake groups and collision
@@ -106,6 +107,11 @@ Game.prototype = {
         console.log("onEnemyIncrease", data)
         let snake = this.game.snakes.find(e => e.id == data.id)
         snake.incrementSize()
+    },
+    onEnemySpaceKeyEvent: function(data) {
+        console.log("onEnemySpaceKeyEvent", data)
+        let snake = this.game.snakes.find(e => e.id == data.id)
+        snake.shadow.isLightingUp = data.isLightingUp
     },
     onEnemyDisconnect: function(snakeId) {
         console.log("onEnemyDisconnect", snakeId)

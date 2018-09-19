@@ -3,8 +3,8 @@
 - eyes (place, angle)  (I can't solve it!!!!QAQ)
 - <del> player disconnect </del>
 - food
-- shadow
-- fastSpeed (disappear on spaceUP)
+- <del>shadow (light up)</del>
+- <del>fastSpeed (disappear on spaceUP)</del>
 - snake gernerate (place)
 - field (too small)
 - field bound

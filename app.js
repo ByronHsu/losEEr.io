@@ -23,7 +23,7 @@ let socketToSnakeID = {}
 io.sockets.on('connection', function(socket){
     // console.log(socket.id)
    socket.on('createPlayer', (data) => {
-      console.log('createPlayer');
+      console.log('createPlayer', data.id);
     //   for (i = 0; i < snakeArr.length; i++) {
     //      //send to the new player about everyone who is already connected. 	
     //      socket.emit("enemyPlayers", snakeArr[i]);
@@ -64,13 +64,20 @@ io.sockets.on('connection', function(socket){
         socket.broadcast.emit('enemyIncrease', data)
    })
 
+   socket.on("spaceKeyEvent", data => {
+       let snake = snakeArr.find(e => e.id == data.id)
+       if (snake == null) return
+       snake.isLightingUp = data.isLightingUp
+       socket.broadcast.emit('enemySpaceKeyEvent', data)
+   })
+
    socket.on("disconnect", () => {
        let snakeId = socketToSnakeID[socket.id]
-       console.log("user disconnect", snakeId)
+    //    console.log("user disconnect", snakeId)
        if (!snakeId) return;
        for (let i = 0;i < snakeArr.length; i++) {
            if (snakeArr[i].id === snakeId) {
-               console.log("delet snake", snakeId)
+               console.log("disconnect snake", snakeId)
                snakeArr.splice(i, 1)
                delete socketToSnakeID[socket.id]
                break;

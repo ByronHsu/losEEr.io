@@ -29,6 +29,7 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
         // speed: this.speed,
         rotationSpeed: this.rotationSpeed,
         headAngle: 0,
+        isLightingUp: this.shadow.isLightingUp,
         
         //the head path is an array of points that the head of the snake has
         //traveled through
@@ -53,11 +54,20 @@ PlayerSnake.prototype.constructor = PlayerSnake;
 PlayerSnake.prototype.spaceKeyDown = function() {
     this.speed = this.fastSpeed;
     this.shadow.isLightingUp = true;
+    console.log("spaceKeyDown")
+    this.game.socket.emit("spaceKeyEvent", {
+        id: this.id,
+        isLightingUp: this.shadow.isLightingUp
+    })
 }
 //make the snake slow down when the space key is up again
 PlayerSnake.prototype.spaceKeyUp = function() {
     this.speed = this.slowSpeed;
     this.shadow.isLightingUp = false;
+    this.game.socket.emit("spaceKeyEvent", {
+        id: this.id,
+        isLightingUp: this.shadow.isLightingUp
+    })
 }
 
 /**
