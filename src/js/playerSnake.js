@@ -76,6 +76,7 @@ PlayerSnake.prototype.spaceKeyUp = function() {
  */
 PlayerSnake.prototype.tempUpdate = PlayerSnake.prototype.update;
 PlayerSnake.prototype.update = function() {
+    
     //find the angle that the head needs to rotate
     //through in order to face the mouse
     var mousePosX = this.game.input.activePointer.worldX;
@@ -117,14 +118,31 @@ PlayerSnake.prototype.update = function() {
     var point = this.headPath.pop();
     point.setTo(this.head.body.x, this.head.body.y);
     this.headPath.unshift(point);
+    // detect hitting the corner
     // console.log('playerMove', { headPath: this.headPath, id: this.id , angle: this.head.body.angle})
     this.game.socket.emit('playerMove', {
         headPath: this.headPath,
         id: this.id,
         headAngle: this.head.body.angle
-     });
+    });
     
     //call the original snake update method
     this.tempUpdate();
+    let worldWidth = this.game.worldWidth
+    let worldHeight = this.game.worldHeight
+    let cornerWidth = this.game.cornerWidth
+    let headRad = this.head.width / 2
+    // console.log(worldHeight, worldWidth, cornerWidth)
+    // console.log(this.scale)
+    if (this.head.body.x - (-worldWidth + cornerWidth) < headRad || (worldWidth - cornerWidth) - this.head.body.x < headRad) {
+        console.log("hit the corner", this.id)
+        this.game.socket.emit("snakeDestroyed", this.id)
+        this.destroy()
+    } 
+    else if (this.head.body.y - (-worldHeight + cornerWidth) < headRad || (worldHeight - cornerWidth) - this.head.body.y < headRad) {
+        console.log("hit the corner", this.id)
+        this.game.socket.emit("snakeDestroyed", this.id)
+        this.destroy()
+    }
 }
 export default PlayerSnake;

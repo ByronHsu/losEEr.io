@@ -26,12 +26,15 @@ Game.prototype = {
         var height = this.game.height;
         // set world width & height
         let worldWidth = 1500, worldHeight = 1500 // actually twice
+        this.game.worldWidth = worldWidth
+        this.game.worldHeight = worldHeight
         this.game.world.setBounds(-worldWidth, -worldHeight, worldWidth * 2, worldHeight * 2)
         this.game.stage.backgroundColor = '#000033';
         this.game.stage.disableVisibilityChange = true;
         
         //add tilesprite background
         let cornerWidth = 100
+        this.game.cornerWidth = cornerWidth
         var background = this.game.add.tileSprite(-worldWidth + cornerWidth, -worldHeight + cornerWidth,
             this.game.world.width - cornerWidth * 2, this.game.world.height - cornerWidth * 2, 'background');
         console.log("background", background)

@@ -51,6 +51,7 @@ io.sockets.on('connection', function(socket){
                 break;
             }
         }
+        console.log("snakeDied", id)
         socket.broadcast.emit('enemyDestroy', id)
    })
 

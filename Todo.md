@@ -1,14 +1,16 @@
 # Problems
+- <del> Size increment </del>
 - (headPath (Repeatedly push)) (Can't solve)
 - eyes (place, angle)  (I can't solve it!!!!QAQ)
 - <del> player disconnect </del>
 - food
 - <del>shadow (light up)</del>
 - <del>fastSpeed (disappear on spaceUP)</del>
-- snake gernerate (place)
-- field (too small)
-- field bound
+- <del> snake generate (place) </del>
+- <del> field (too small) </del>
+- <del> field bound </del>
 - snake inLarge too fast
+- snake generate & Died
 
 # Todo Functions
 - game over
