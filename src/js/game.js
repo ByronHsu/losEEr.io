@@ -24,13 +24,17 @@ Game.prototype = {
     create: function() {
         var width = this.game.width;
         var height = this.game.height;
-        this.game.world.setBounds(-width, -height, width*2, height*2);
-        this.game.stage.backgroundColor = '#444';
+        // set world width & height
+        let worldWidth = 1500, worldHeight = 1500 // actually twice
+        this.game.world.setBounds(-worldWidth, -worldHeight, worldWidth * 2, worldHeight * 2)
+        this.game.stage.backgroundColor = '#000033';
         this.game.stage.disableVisibilityChange = true;
-
+        
         //add tilesprite background
-        var background = this.game.add.tileSprite(-width, -height,
-            this.game.world.width, this.game.world.height, 'background');
+        let cornerWidth = 100
+        var background = this.game.add.tileSprite(-worldWidth + cornerWidth, -worldHeight + cornerWidth,
+            this.game.world.width - cornerWidth * 2, this.game.world.height - cornerWidth * 2, 'background');
+        console.log("background", background)
 
         //initialize physics and groups
         this.game.physics.startSystem(Phaser.Physics.P2JS);
@@ -40,13 +44,16 @@ Game.prototype = {
 
         //add food randomly
         for (var i = 0 ; i < 100 ; i++) {
-            this.initFood(Util.randomInt(-width, width), Util.randomInt(-height, height));
+            this.initFood(Util.randomInt(-worldWidth + cornerWidth * 1.5, worldWidth - cornerWidth * 1.5),
+             Util.randomInt(-worldHeight + cornerWidth * 1.5, worldHeight - cornerWidth * 1.5));
         }
 
          this.game.snakes = [];
 
          //create player
-         var snake = new PlayerSnake(this.game, 'circle', 0, 0, uuid());      
+         var snake = new PlayerSnake(this.game, 'circle', Util.randomInt(-worldWidth + cornerWidth * 5, worldWidth - cornerWidth * 5),
+          Util.randomInt(-worldHeight + cornerWidth * 5, worldHeight - cornerWidth * 5), uuid());  
+         snake.head.body.collideWorldBounds = true
          this.game.camera.follow(snake.head);
 
          //create bots
