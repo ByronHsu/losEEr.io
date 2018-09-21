@@ -21,7 +21,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.debug = true;
     this.snakeLength = props.snakeLength;
     this.spriteKey = spriteKey;
-    
+
     //various quantities that can be changed
     this.scale = props.scale;
     this.fastSpeed = props.fastSpeed;
@@ -45,7 +45,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.shadow = new Shadow(this.game, this.sections, this.scale);
     this.sectionGroup = this.game.add.group();
     //add the head of the snake
-    this.head = this.addSectionAtPosition(x,y);
+    this.head = this.addSectionAtPosition(x, y);
     this.head.name = "head";
     this.head.snake = this;
     // console.log(this.head)
@@ -56,10 +56,10 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     if (this.snakeLength === 1) this.initSections(10);
     else {
         console.log("enemySnakeHeadPath", props.headPath)
-        // this.initSections(this.snakeLength - 1)
-        // this.snakeLength = props.snakeLength
-        // this.headPath = props.headPath
-        for (let i = 1;i < props.snakeLength; i++) {
+            // this.initSections(this.snakeLength - 1)
+            // this.snakeLength = props.snakeLength
+            // this.headPath = props.headPath
+        for (let i = 1; i < props.snakeLength; i++) {
             this.addSectionAtPosition(props.headPath[i])
         }
         this.snakeLength = props.snakeLength
@@ -79,7 +79,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
 
     //constrain edge to the front of the head
     this.edgeLock = this.game.physics.p2.createLockConstraint(
-        this.edge.body, this.head.body, [0, -this.head.width*0.5-this.edgeOffset]
+        this.edge.body, this.head.body, [0, -this.head.width * 0.5 - this.edgeOffset]
     );
 
     this.edge.body.onBeginContact.add(this.edgeContact, this);
@@ -96,12 +96,12 @@ Snake.prototype = {
     initSections: function(num) {
         //create a certain number of sections behind the head
         //only use this once
-        for (var i = 1 ; i <= num ; i++) {
+        for (var i = 1; i <= num; i++) {
             var x = this.head.body.x;
             var y = this.head.body.y + i * this.preferredDistance;
             this.addSectionAtPosition(x, y);
             //add a point to the head path so that the section stays there
-            this.headPath.push(new Phaser.Point(x,y));
+            this.headPath.push(new Phaser.Point(x, y));
         }
         console.log("initSections", num);
         console.log("init headPath", this.headPath)
@@ -127,10 +127,10 @@ Snake.prototype = {
 
         this.sections.push(sec);
 
-        this.shadow.add(x,y);
+        this.shadow.add(x, y);
         //add a circle body to this section
         sec.body.clearShapes();
-        sec.body.addCircle(sec.width*0.5);
+        sec.body.addCircle(sec.width * 0.5);
 
         return sec;
     },
@@ -149,7 +149,7 @@ Snake.prototype = {
         //a certain distance from the section before it
         var index = 0;
         var lastIndex = null;
-        for (var i = 0 ; i < this.snakeLength ; i++) {
+        for (var i = 0; i < this.snakeLength; i++) {
 
             this.sections[i].body.x = this.headPath[index].x;
             this.sections[i].body.y = this.headPath[index].y;
@@ -188,9 +188,9 @@ Snake.prototype = {
         var i = 0;
         var found = false;
         while (this.headPath[i].x != this.sections[1].body.x &&
-        this.headPath[i].y != this.sections[1].body.y) {
+            this.headPath[i].y != this.sections[1].body.y) {
             if (this.headPath[i].x == this.lastHeadPosition.x &&
-            this.headPath[i].y == this.lastHeadPosition.y) {
+                this.headPath[i].y == this.lastHeadPosition.y) {
                 found = true;
                 break;
             }
@@ -272,7 +272,7 @@ Snake.prototype = {
         ];
 
         //scale sections and their bodies
-        for (var i = 0 ; i < this.sections.length ; i++) {
+        for (var i = 0; i < this.sections.length; i++) {
             var sec = this.sections[i];
             sec.scale.setTo(this.scale);
             sec.body.data.shapes[0].radius = this.game.physics.p2.pxm(sec.width*0.5);
@@ -298,7 +298,7 @@ Snake.prototype = {
         this.game.physics.p2.removeConstraint(this.edgeLock);
         this.edge.destroy();
         //destroy food that is constrained to the snake head
-        for (var i = this.food.length - 1 ; i >= 0 ; i--) {
+        for (var i = this.food.length - 1; i >= 0; i--) {
             this.food[i].destroy();
         }
         //destroy everything else
@@ -307,27 +307,25 @@ Snake.prototype = {
         });
         this.eyes.destroy();
         this.shadow.destroy();
-        
+
         //call this snake's destruction callbacks
-        for (var i = 0 ; i < this.onDestroyedCallbacks.length ; i++) {
+        for (var i = 0; i < this.onDestroyedCallbacks.length; i++) {
             if (typeof this.onDestroyedCallbacks[i] == "function") {
                 this.onDestroyedCallbacks[i].apply(
                     this.onDestroyedContexts[i], [this]);
-                }
             }
-        },
-        /**
-         * Called when the front of the snake (the edge) hits something
-         * @param  {Phaser.Physics.P2.Body} phaserBody body it hit
-         */
-        edgeContact: function(phaserBody) {
-            //if the edge hits another snake's section, destroy this snake
-            if (phaserBody && this.sections.indexOf(phaserBody.sprite) == -1) {
-                console.log("snakeDestroyed", this.id)
-                this.game.socket.emit("snakeDestroyed", this.id)
-                this.destroy();
-            }
-            //if the edge hits this snake's own section, a simple solution to avoid
+        }
+    },
+    /**
+     * Called when the front of the snake (the edge) hits something
+     * @param  {Phaser.Physics.P2.Body} phaserBody body it hit
+     */
+    edgeContact: function(phaserBody) {
+        //if the edge hits another snake's section, destroy this snake
+        if (phaserBody && this.sections.indexOf(phaserBody.sprite) == -1) {
+            this.destroy();
+        }
+        //if the edge hits this snake's own section, a simple solution to avoid
         //glitches is to move the edge to the center of the head, where it
         //will then move back to the front because of the lock constraint
         else if (phaserBody) {

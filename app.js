@@ -4,7 +4,7 @@ var uuid = require('uuid/v4');
 var app = express();
 var serv = require('http').Server(app);
 app.get('/',function(req, res) {
-	res.sendFile(__dirname, 'public/index.html');
+    res.sendFile(__dirname, 'public/index.html');
 });
 
 app.use(express.static('public'));
@@ -37,101 +37,104 @@ const Util = {
         return dist;
     }
 };
- // io connection 
+// io connection 
 const width = 500;
 const height = 500;
 var io = require('socket.io')(serv,{});
 var snakeArr = [];
 var foodArr = [];
 var foodAmount = 200;
-for(var i=0; i<foodAmount; i++){
-    foodArr.push({id: uuid(), x: Util.randomInt(-width,width), y: Util.randomInt(-height,height)});
+for (var i = 0; i < foodAmount; i++) {
+    foodArr.push({id: uuid(), x: Util.randomInt(-width, width), y: Util.randomInt(-height, height)});
 }
 let socketToSnakeID = {}
 
-io.sockets.on('connection', function(socket){
+io.sockets.on('connection', function(socket) {
     // console.log(socket.id)
-   socket.on('createPlayer', (data) => {
-      console.log('createPlayer', data.id);
-    //   for (i = 0; i < snakeArr.length; i++) {
-    //      //send to the new player about everyone who is already connected. 	
-    //      socket.emit("enemyPlayers", snakeArr[i]);
-    //   }
-      socket.emit("enemyPlayers", snakeArr)
-      snakeArr.push(data);
-    //   console.log(typeof(socket.id))
-      socketToSnakeID[socket.id] = data.id
-      console.log(socketToSnakeID)
-      //send message to every connected client except the sender
-      socket.broadcast.emit('new_enemyPlayer', data);
-   });
-   socket.on('playerMove', data => {
-      var snake = snakeArr.find(e => e.id == data.id);
-      if(snake == null) return;
-      snake.headPath = data.headPath;
-      snake.headAngle = data.headAngle;
-    //   console.log("playerMove", data)
-      socket.broadcast.emit('enemyMove', data);
-   });
-   socket.on('on_food_init', function(){  
-      socket.emit('on_get_food', foodArr);
-   });
-   socket.on('food_destroy', function(id){  
-     console.log(`Received request to destroy food id=${id} @ app.js:anonymous/food_destroy`)
-       for(var i = 0;i<foodArr.length;i++){
-           if(foodArr[i].id === id){
-               foodArr.splice(i, 1);
-               break;
-           }
-       }
-       socket.broadcast.emit('destroy_food', id);
-   });
-   //Client send idRequest @ game.js: Game.prototype.snakeDestroyed
-   socket.on('idRequest', (numOfIdNeeded, ack) => {
-      //console.log(`Received request to generate ${numOfIdNeeded} uuids @ app.js: anonymous/idRequest`);
-      //Send uuid array of size numOfIdNeeded to client via ack
-      ack([...Array(numOfIdNeeded)].map(() => uuid())); // cannot use .map(uuid)
-   });
-   socket.on('snakeDestroyed', (id) => {
-        for (let i = 0;i < snakeArr.length; i++) {
-            if (snakeArr[i].id == id) {
+    socket.on('createPlayer', (data) => {
+        console.log('createPlayer', data.id);
+        //   for (i = 0; i < snakeArr.length; i++) {
+        //      //send to the new player about everyone who is already connected. 	
+        //      socket.emit("enemyPlayers", snakeArr[i]);
+        //   }
+        socket.emit("enemyPlayers", snakeArr)
+        snakeArr.push(data);
+        //   console.log(typeof(socket.id))
+        socketToSnakeID[socket.id] = data.id
+        console.log(socketToSnakeID)
+            //send message to every connected client except the sender
+        socket.broadcast.emit('new_enemyPlayer', data);
+    });
+    socket.on('playerMove', data => {
+        var snake = snakeArr.find(e => e.id == data.id);
+        if(snake == null) return;
+        snake.headPath = data.headPath;
+        snake.headAngle = data.headAngle;
+        //   console.log("playerMove", data)
+        socket.broadcast.emit('enemyMove', data);
+    });
+    socket.on('on_food_init', function() {
+        socket.emit('on_get_food', foodArr);
+    });
+    socket.on('food_destroy', function(id) {
+        console.log(`Received request to destroy food id=${id} @ app.js:anonymous/food_destroy`)
+        for(var i = 0; i < foodArr.length; i++) {
+            if(foodArr[i].id === id) {
+                foodArr.splice(i, 1);
+                break;
+            }
+        }
+        socket.broadcast.emit('destroy_food', id);
+    });
+    //Client send idRequest @ game.js: Game.prototype.snakeDestroyed
+    socket.on('idRequest', (numOfIdNeeded, ack) => {
+        //console.log(`Received request to generate ${numOfIdNeeded} uuids @ app.js: anonymous/idRequest`);
+        //Send uuid array of size numOfIdNeeded to client via ack
+        ack([...Array(numOfIdNeeded)].map(() => uuid())); // cannot use .map(uuid)
+    });
+    socket.on('snakeDestroyed', data => {
+        for (let i = 0; i < snakeArr.length; i++) {
+            if (snakeArr[i].id === data.id) {
                 snakeArr.splice(i, 1);
                 break;
             }
         }
-        console.log("snakeDied", id)
-        socket.broadcast.emit('enemyDestroy', id)
-   })
+        console.log(`Snake ${data.id} died @ app.js: anonymous/snakeDestroyed`)
+            // console.log('Received id and foodDrop @ app.js: anonymous/snakeDestroyed');
+        foodArr.push(...data.drop); // Otherwise the newly added snake won't see food dropped from dead snake
+        foodAmount += data.drop.length;
+        socket.broadcast.emit('enemyDestroy', data.id, data.drop);
+    });
 
-   socket.on("playerIncrease", data => {
+    socket.on("playerIncrease", data => {
         let snake = snakeArr.find((e) => e.id == data.id);
         if (snake == null) return
-        // console.log("playerIncrease", data)
+            // console.log("playerIncrease", data)
         snake.scale = data.scale
         snake.snakeLength = data.snakeLength
         snake.headAngle = data.headAngle
         socket.broadcast.emit('enemyIncrease', data)
-   })
+    })
 
-   socket.on("spaceKeyEvent", data => {
-       let snake = snakeArr.find(e => e.id == data.id)
-       if (snake == null) return
-       snake.isLightingUp = data.isLightingUp
-       socket.broadcast.emit('enemySpaceKeyEvent', data)
-   })
+    socket.on("spaceKeyEvent", data => {
+        let snake = snakeArr.find(e => e.id == data.id)
+        if (snake == null) return
+        snake.isLightingUp = data.isLightingUp
+        socket.broadcast.emit('enemySpaceKeyEvent', data)
+    })
 
-   socket.on("disconnect", () => {
-       let snakeId = socketToSnakeID[socket.id]
-    //    console.log("user disconnect", snakeId)
-       if (!snakeId) return;
-       for (let i = 0;i < snakeArr.length; i++) {
-           if (snakeArr[i].id === snakeId) {
-               console.log("disconnect snake", snakeId)
-               snakeArr.splice(i, 1)
-               delete socketToSnakeID[socket.id]
-               break;
-           }
-       }
-       socket.broadcast.emit('enemyDisconnect', snakeId)
-   })
+    socket.on("disconnect", () => {
+        let snakeId = socketToSnakeID[socket.id]
+            //    console.log("user disconnect", snakeId)
+        if (!snakeId) return;
+        for (let i = 0; i < snakeArr.length; i++) {
+            if (snakeArr[i].id === snakeId) {
+                console.log("disconnect snake", snakeId)
+                snakeArr.splice(i, 1)
+                delete socketToSnakeID[socket.id]
+                break;
+            }
+        }
+        socket.broadcast.emit('enemyDisconnect', snakeId)
+    })
 });
