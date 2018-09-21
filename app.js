@@ -40,12 +40,14 @@ const Util = {
  // io connection 
 const width = 500;
 const height = 500;
+const cornerWidth=110;
+const cornerHeight = 110;
 var io = require('socket.io')(serv,{});
 var snakeArr = [];
 var foodArr = [];
 var foodAmount = 200;
 for(var i=0; i<foodAmount; i++){
-    foodArr.push({id: uuid(), x: Util.randomInt(-width,width), y: Util.randomInt(-height,height)});
+    foodArr.push({id: uuid(), x: Util.randomInt(-width + cornerWidth ,width - cornerWidth), y: Util.randomInt(-height + cornerHeight ,height - cornerHeight)});
 }
 let socketToSnakeID = {}
 
