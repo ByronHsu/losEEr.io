@@ -1,4 +1,4 @@
-import Snake from './Snake'
+import Snake from './snake'
 
 /**
  * Player of the core snake for controls

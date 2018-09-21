@@ -53,7 +53,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
 
     // Initial / Create Snake
-    if (this.snakeLength === 1) this.initSections(30);
+    if (this.snakeLength === 1) this.initSections(10);
     else {
         console.log("enemySnakeHeadPath", props.headPath)
         // this.initSections(this.snakeLength - 1)

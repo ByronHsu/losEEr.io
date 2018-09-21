@@ -1,4 +1,4 @@
-import Snake from './Snake'
+import Snake from './snake'
 import SnakeProps from './SnakeProps'
 
 /**

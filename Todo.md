@@ -9,8 +9,10 @@
 - <del> snake generate (place) </del>
 - <del> field (too small) </del>
 - <del> field bound </del>
+
+# Game Settings
 - snake inLarge too fast
-- snake generate & Died
+- snake generate then Died
 
 # Todo Functions
 - game over
