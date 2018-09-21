@@ -17,8 +17,30 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     spaceKey.onDown.add(this.spaceKeyDown, this);
     spaceKey.onUp.add(this.spaceKeyUp, this);
     this.id = id;
+    
+    let playerSnakeData = {
+        id: this.id, 
+        snakeLength: this.snakeLength,
 
-    this.game.socket.emit('createPlayer', {path: this.headPath, id: this.id});
+        // //various quantities that can be changed
+        scale: this.scale,
+        fastSpeed: this.fastSpeed,
+        slowSpeed: this.slowSpeed,
+        // speed: this.speed,
+        rotationSpeed: this.rotationSpeed,
+        headAngle: 0,
+        isLightingUp: this.shadow.isLightingUp,
+        
+        //the head path is an array of points that the head of the snake has
+        //traveled through
+        headPath: this.headPath,
+        food: this.food,
+
+        // preferredDistance: this.preferredDistance,
+        queuedSections: this.queuedSections
+    }
+    console.log("creatPlayer", playerSnakeData)
+    this.game.socket.emit('createPlayer', playerSnakeData);
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
         spaceKey.onUp.remove(this.spaceKeyUp, this);
@@ -32,11 +54,20 @@ PlayerSnake.prototype.constructor = PlayerSnake;
 PlayerSnake.prototype.spaceKeyDown = function() {
     this.speed = this.fastSpeed;
     this.shadow.isLightingUp = true;
+    console.log("spaceKeyDown")
+    this.game.socket.emit("spaceKeyEvent", {
+        id: this.id,
+        isLightingUp: this.shadow.isLightingUp
+    })
 }
 //make the snake slow down when the space key is up again
 PlayerSnake.prototype.spaceKeyUp = function() {
     this.speed = this.slowSpeed;
     this.shadow.isLightingUp = false;
+    this.game.socket.emit("spaceKeyEvent", {
+        id: this.id,
+        isLightingUp: this.shadow.isLightingUp
+    })
 }
 
 /**
@@ -45,13 +76,13 @@ PlayerSnake.prototype.spaceKeyUp = function() {
  */
 PlayerSnake.prototype.tempUpdate = PlayerSnake.prototype.update;
 PlayerSnake.prototype.update = function() {
+    
     //find the angle that the head needs to rotate
     //through in order to face the mouse
     var mousePosX = this.game.input.activePointer.worldX;
     var mousePosY = this.game.input.activePointer.worldY;
     var headX = this.head.body.x;
     var headY = this.head.body.y;
-    this.game.socket.emit('playerMove', {path: this.headPath, id: this.id});
     var angle = (180*Math.atan2(mousePosX-headX,mousePosY-headY)/Math.PI);
     if (angle > 0) {
         angle = 180-angle;
@@ -76,10 +107,10 @@ PlayerSnake.prototype.update = function() {
     else if (dif > 0 && dif < 180 || dif < -180) {
         this.head.body.rotateLeft(this.rotationSpeed);
     }
-
+    
     var speed = this.speed;
     this.head.body.moveForward(speed);
-
+    
     //remove the last element of an array that contains points which
     //the head traveled through
     //then move this point to the front of the array and change its value
@@ -87,8 +118,31 @@ PlayerSnake.prototype.update = function() {
     var point = this.headPath.pop();
     point.setTo(this.head.body.x, this.head.body.y);
     this.headPath.unshift(point);
-
+    // detect hitting the corner
+    // console.log('playerMove', { headPath: this.headPath, id: this.id , angle: this.head.body.angle})
+    this.game.socket.emit('playerMove', {
+        headPath: this.headPath,
+        id: this.id,
+        headAngle: this.head.body.angle
+    });
+    
     //call the original snake update method
     this.tempUpdate();
+    let worldWidth = this.game.worldWidth
+    let worldHeight = this.game.worldHeight
+    let cornerWidth = this.game.cornerWidth
+    let headRad = this.head.width / 2
+    // console.log(worldHeight, worldWidth, cornerWidth)
+    // console.log(this.scale)
+    if (this.head.body.x - (-worldWidth + cornerWidth) < headRad || (worldWidth - cornerWidth) - this.head.body.x < headRad) {
+        console.log("hit the corner", this.id)
+        this.game.socket.emit("snakeDestroyed", this.id)
+        this.destroy()
+    } 
+    else if (this.head.body.y - (-worldHeight + cornerWidth) < headRad || (worldHeight - cornerWidth) - this.head.body.y < headRad) {
+        console.log("hit the corner", this.id)
+        this.game.socket.emit("snakeDestroyed", this.id)
+        this.destroy()
+    }
 }
 export default PlayerSnake;

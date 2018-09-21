@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import BotSnake from './botSnake';
+import EnemySnake from './enemySnake';
 import PlayerSnake from './playerSnake';
 import Food from './food';
 import Util from './util';
@@ -22,16 +22,22 @@ Game.prototype = {
         // this.game.socket = io(window.document.URL);
     },
     create: function() {
-        //set world size
-        var width = 500;
-        var height = 500;
-        this.game.world.setBounds(-width, -height, width*2, height*2);
-        this.game.stage.backgroundColor = '#444';
+        var width = this.game.width;
+        var height = this.game.height;
+        // set world width & height
+        let worldWidth = 500, worldHeight = 500 // actually twice
+        this.game.worldWidth = worldWidth
+        this.game.worldHeight = worldHeight
+        this.game.world.setBounds(-worldWidth, -worldHeight, worldWidth * 2, worldHeight * 2)
+        this.game.stage.backgroundColor = '#000033';
         this.game.stage.disableVisibilityChange = true;
-
+        
         //add tilesprite background
-        var background = this.game.add.tileSprite(-width, -height,
-            this.game.world.width, this.game.world.height, 'background');
+        let cornerWidth = 100
+        this.game.cornerWidth = cornerWidth
+        var background = this.game.add.tileSprite(-worldWidth + cornerWidth, -worldHeight + cornerWidth,
+            this.game.world.width - cornerWidth * 2, this.game.world.height - cornerWidth * 2, 'background');
+        console.log("background", background)
 
         //initialize physics and groups
         this.game.physics.startSystem(Phaser.Physics.P2JS);
@@ -44,21 +50,26 @@ Game.prototype = {
         this.game.socket.on('on_get_food',this.onGetFood.bind(this));
         this.game.snakes = [];
 
-        //create player
-        var snake = new PlayerSnake(this.game, 'circle', 0, 0, uuid());
-        this.game.camera.follow(snake.head);
-
         //remote destroy food
         this.game.socket.on('destroy_food', this.remove_food_by_id.bind(this));
+        
+         //create player
+         var snake = new PlayerSnake(this.game, 'circle', Util.randomInt(-worldWidth + cornerWidth * 5, worldWidth - cornerWidth * 5),
+          Util.randomInt(-worldHeight + cornerWidth * 5, worldHeight - cornerWidth * 5), uuid());  
+         snake.head.body.collideWorldBounds = true
+         this.game.camera.follow(snake.head);
 
-        this.game.socket.on('new_enemyPlayer', this.onNewPlayer.bind(this));
-        this.game.socket.on('enemyMove', this.onEnemyMove.bind(this));
-        this.game.socket.on('enemyDestroy', this.onEnemyDestroy.bind(this));
-
-        //initialize snake groups and collision
-        for (var i = 0 ; i < this.game.snakes.length ; i++) {
+         // Socket
+         this.game.socket.on('enemyPlayers', this.onEnemyPlayers.bind(this))
+         this.game.socket.on('new_enemyPlayer', this.onNewEnemy.bind(this));
+         this.game.socket.on('enemyMove', this.onEnemyMove.bind(this));
+         this.game.socket.on('enemyDestroy', this.onEnemyDestroy.bind(this))
+         this.game.socket.on('enemyIncrease', this.onEnemyIncrease.bind(this))
+         this.game.socket.on('enemySpaceKeyEvent', this.onEnemySpaceKeyEvent.bind(this))
+         this.game.socket.on('enemyDisconnect', this.onEnemyDisconnect.bind(this))
+         //initialize snake groups and collision
+         for (var i = 0 ; i < this.game.snakes.length ; i++) {
             var snake = this.game.snakes[i];
-            // TODO
             snake.head.body.setCollisionGroup(this.snakeHeadCollisionGroup);
             snake.head.body.collides([this.foodCollisionGroup]);
             //callback for when a snake is destroyed
@@ -75,30 +86,59 @@ Game.prototype = {
         snake.remote_headPath = data.path;
         //console.log('onNewPlayer', this.game.snakes);
     },
-    onEnemyMove: function(data) {
-        //console.log('onEnemyMove', data);
-        var snake = this.game.snakes.find(e => e.id == data.id);
-        if(snake == null) return;
-        snake.remote_headPath = data.path;
+    onEnemyPlayers: function(data) {
+        console.log("onEnemyPlayers", data)
+        for (let i = 0;i < data.length; i++) {
+            let snake = new EnemySnake(this.game, 'circle', data[i].headPath[0].x, data[i].headPath[0].y, data[i])
+            snake.remote_headPath = data[i].headPath
+            snake.headAngle = data[i].headAngle
+            console.log("enemyPlayers", snake)
+        }
     },
-    onEnemyDestroy: function(id, foodDrop) {
-        // console.log(`Received signal to destroy snake of id ${id} @ game.js: onEnemyDestroy`);
-        for (let snake of this.game.snakes) {
-            if (id === snake.id) {
-                // console.log(`Snake of id ${id} found @ game.js: onEnemyDestroy`);
-                snake.destroy();
+    onNewEnemy: function(data) {
+        console.log("onNewEnemyData", data)
+      var snake = new EnemySnake(this.game, 'circle', data.headPath[0].x, data.headPath[0].y, data);
+      snake.remote_headPath = data.headPath;
+      snake.headAngle = data.headAngle
+    //   console.log('onNewPlayerSnakes', this.game.snakes);
+    },
+    onEnemyMove: function(data) {
+        // console.log('onEnemyMove', data);
+      var snake = this.game.snakes.find((e) => e.id == data.id);
+      if(snake == null) return;
+      snake.remote_headPath = data.headPath;
+      snake.headAngle = data.headAngle
+    },
+    onEnemyDestroy: function(id) {
+        for (let i = 0;i < this.game.snakes.length; i++) {
+            if (id == this.game.snakes[i].id) {
+                this.game.snakes[i].destroy()
+                // this.game.snakes.splice(i, 1)
             }
         }
-        for (let food of foodDrop) {
-            this.initFood(food.x, food.y, food.id);
-        }
-        // console.log('Received foodDrop @ game.js: onEnemyDestroy');
+    },
+    onEnemyIncrease: function(data) {
+        console.log("onEnemyIncrease", data)
+        let snake = this.game.snakes.find(e => e.id == data.id)
+        snake.incrementSize()
+    },
+    onEnemySpaceKeyEvent: function(data) {
+        console.log("onEnemySpaceKeyEvent", data)
+        let snake = this.game.snakes.find(e => e.id == data.id)
+        snake.shadow.isLightingUp = data.isLightingUp
+    },
+    onEnemyDisconnect: function(snakeId) {
+        console.log("onEnemyDisconnect", snakeId)
+        let snake = this.game.snakes.find(e => e.id == snakeId)
+        if (snake == null) return
+        snake.destroy()
     },
     /**
      * Main update loop
      */
     update: function() {
         //update game components
+        // console.log(this)
         for (var i = this.game.snakes.length - 1 ; i >= 0 ; i--) {
             this.game.snakes[i].update();
         }
@@ -151,7 +191,6 @@ Game.prototype = {
             }
         }
         console.error(`[Error]: food ${id} not found @ game.js: remove_food_by_id`);
-        // Maybe two snake ate the same food (very unlikely)
     }
 };
 
