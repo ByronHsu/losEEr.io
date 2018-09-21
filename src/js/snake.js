@@ -10,7 +10,7 @@ import SnakeProps from './SnakeProps'
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
+var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     console.log("props", props)
     this.game = game;
     //create an array of snakes in the game object and add this snake
@@ -18,7 +18,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
         this.game.snakes = [];
     }
     this.game.snakes.push(this);
-    this.debug = true;
+    this.debug = false;
     this.snakeLength = props.snakeLength;
     this.spriteKey = spriteKey;
 
@@ -56,9 +56,9 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     if (this.snakeLength === 1) this.initSections(10);
     else {
         console.log("enemySnakeHeadPath", props.headPath)
-            // this.initSections(this.snakeLength - 1)
-            // this.snakeLength = props.snakeLength
-            // this.headPath = props.headPath
+        // this.initSections(this.snakeLength - 1)
+        // this.snakeLength = props.snakeLength
+        // this.headPath = props.headPath
         for (let i = 1; i < props.snakeLength; i++) {
             this.addSectionAtPosition(props.headPath[i])
         }
@@ -93,7 +93,7 @@ Snake.prototype = {
      * Give the snake starting segments
      * @param  {Number} num number of snake sections to create
      */
-    initSections: function(num) {
+    initSections: function (num) {
         //create a certain number of sections behind the head
         //only use this once
         for (var i = 1; i <= num; i++) {
@@ -112,7 +112,7 @@ Snake.prototype = {
      * @param  {Number} y coordinate
      * @return {Phaser.Sprite}   new section
      */
-    addSectionAtPosition: function(x, y) {
+    addSectionAtPosition: function (x, y) {
         //initialize a new section
         var sec = this.game.add.sprite(x, y, this.spriteKey);
         this.game.physics.p2.enable(sec, this.debug);
@@ -138,13 +138,13 @@ Snake.prototype = {
      * Add to the queue of new sections
      * @param  {Integer} amount Number of sections to add to queue
      */
-    addSectionsAfterLast: function(amount) {
+    addSectionsAfterLast: function (amount) {
         this.queuedSections += amount;
     },
     /**
      * Call from the main update loop
      */
-    update: function() {
+    update: function () {
         //place each section of the snake on the path of the snake head,
         //a certain distance from the section before it
         var index = 0;
@@ -211,7 +211,7 @@ Snake.prototype = {
      * @param  {Integer} currentIndex Index of the previous snake section
      * @return {Integer}              new index
      */
-    findNextPointIndex: function(currentIndex) {
+    findNextPointIndex: function (currentIndex) {
         var pt = this.headPath[currentIndex];
         //we are trying to find a point at approximately this distance away
         //from the point before it, where the distance is the total length of
@@ -224,11 +224,11 @@ Snake.prototype = {
         //this loop sums the distances between points on the path of the head
         //starting from the given index of the function and continues until
         //this sum nears the preferred distance between two snake sections
-        while (i+1 < this.headPath.length && (dif === null || dif < 0)) {
+        while (i + 1 < this.headPath.length && (dif === null || dif < 0)) {
             //get distance between next two points
             var dist = Util.distanceFormula(
                 this.headPath[i].x, this.headPath[i].y,
-                this.headPath[i+1].x, this.headPath[i+1].y
+                this.headPath[i + 1].x, this.headPath[i + 1].y
             );
             len += dist;
             prevDif = dif;
@@ -244,14 +244,14 @@ Snake.prototype = {
             return i;
         }
         else {
-            return i-1;
+            return i - 1;
         }
     },
     /**
      * Called each time the snake's second section reaches where the
      * first section was at the last call (completed a single cycle)
      */
-    onCycleComplete: function() {
+    onCycleComplete: function () {
         if (this.queuedSections > 0) {
             var lastSec = this.sections[this.sections.length - 1];
             this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
@@ -262,20 +262,20 @@ Snake.prototype = {
      * Set snake scale
      * @param  {Number} scale Scale
      */
-    setScale: function(scale) {
+    setScale: function (scale) {
         this.scale = scale;
         this.preferredDistance = 17 * this.scale;
 
         //update edge lock location with p2 physics
         this.edgeLock.localOffsetB = [
-            0, this.game.physics.p2.pxmi(this.head.width*0.5+this.edgeOffset)
+            0, this.game.physics.p2.pxmi(this.head.width * 0.5 + this.edgeOffset)
         ];
 
         //scale sections and their bodies
         for (var i = 0; i < this.sections.length; i++) {
             var sec = this.sections[i];
             sec.scale.setTo(this.scale);
-            sec.body.data.shapes[0].radius = this.game.physics.p2.pxm(sec.width*0.5);
+            sec.body.data.shapes[0].radius = this.game.physics.p2.pxm(sec.width * 0.5);
         }
 
         //scale eyes and shadows
@@ -285,14 +285,14 @@ Snake.prototype = {
     /**
      * Increment length and scale
      */
-    incrementSize: function() {
+    incrementSize: function () {
         this.addSectionsAfterLast(1);
         this.setScale(this.scale * 1.01);
     },
     /**
      * Destroy the snake
      */
-    destroy: function() {
+    destroy: function () {
         this.game.snakes.splice(this.game.snakes.indexOf(this), 1);
         //remove constraints
         this.game.physics.p2.removeConstraint(this.edgeLock);
@@ -302,7 +302,7 @@ Snake.prototype = {
             this.food[i].destroy();
         }
         //destroy everything else
-        this.sections.forEach(function(sec, index) {
+        this.sections.forEach(function (sec, index) {
             sec.destroy();
         });
         this.eyes.destroy();
@@ -320,7 +320,7 @@ Snake.prototype = {
      * Called when the front of the snake (the edge) hits something
      * @param  {Phaser.Physics.P2.Body} phaserBody body it hit
      */
-    edgeContact: function(phaserBody) {
+    edgeContact: function (phaserBody) {
         //if the edge hits another snake's section, destroy this snake
         if (phaserBody && this.sections.indexOf(phaserBody.sprite) == -1) {
             this.destroy();
@@ -338,7 +338,7 @@ Snake.prototype = {
      * @param  {Function} callback Callback function
      * @param  {Object}   context  context of callback
      */
-    addDestroyedCallback: function(callback, context) {
+    addDestroyedCallback: function (callback, context) {
         this.onDestroyedCallbacks.push(callback);
         this.onDestroyedContexts.push(context);
     }
