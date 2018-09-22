@@ -1,34 +1,35 @@
 class Login extends Phaser.State {
     constructor() {
         super();
+        this.login = document.getElementById('login');
+        this.warning = document.getElementById('nullstringwarning');
         document.getElementById('submitname').addEventListener('click', () => {
-            let login = document.getElementById('login');
-            if (login.children.nameinput.value) {
-                login.style.visibility = 'hidden';
+            if (this.login.children.nameinput.value) {
+                this.login.style.visibility = 'hidden';
                 this.game.playerName = login.children.nameinput.value;
                 this.game.state.start('Game');
                 
-                document.getElementsByTagName('canvas')[0].style.visibility = 'visible';
-                document.getElementsByTagName('canvas')[0].className = '';
-                document.getElementById('nullstringwarning').innerHTML = '';
+                this.canvas.style.visibility = 'visible';
+                this.canvas.className = '';
+                this.warning.innerHTML = '';
             }
             else
-                document.getElementById('nullstringwarning').innerHTML = 'Please enter a name';
+                this.warning.innerHTML = 'Please enter a name';
         });
     }
 
     preload() {
-        document.getElementsByTagName('canvas')[0].className += 'fadeout';
+        this.canvas = document.getElementsByTagName('canvas')[0];
+        this.canvas.className += 'fadeout';
         // Make the game resize itself
         this.game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
     }
 
     create() {
         this.game.playerName = '';
-        let login = document.getElementById('login');
-        if (login.style.visibility === 'hidden')
-            login.style.visibility = 'initial';
-        login.children.nameinput.value = '';
+        if (this.login.style.visibility === 'hidden')
+            this.login.style.visibility = 'initial';
+        this.login.children.nameinput.value = '';
     }
 }
 export default Login;
