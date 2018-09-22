@@ -34,6 +34,8 @@ Game.prototype = {
         this.cornerWidth = 100
         this.game.cornerWidth = this.cornerWidth
 
+        this.game.snakes = [];
+
         //callbacks
         this.game.socket.on('on_get_food', this.onGetFood.bind(this));
         this.game.socket.on('destroy_food', this.remove_food_by_id.bind(this));
@@ -188,6 +190,7 @@ Game.prototype = {
             // console.log('Sending id and foodDrop to server @ game.js: snakeDestroyed');
             this.game.socket.emit("snakeDestroyed", { id: snake.id, drop: foodDrop });
             this.game.socket.disconnect();
+            
             this.game.state.start('Login');
         });
     },
