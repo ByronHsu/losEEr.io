@@ -10,7 +10,10 @@ class Login extends Phaser.State {
                 this.game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
                 this.game.state.start('Game');
                 document.getElementsByTagName('canvas')[0].style.visibility = 'initial';
+                document.getElementById('nullstringwarning').innerHTML = '';
             }
+            else
+                document.getElementById('nullstringwarning').innerHTML = 'Please enter a name';
         });
     }
 

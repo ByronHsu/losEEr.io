@@ -33,6 +33,11 @@
             border-radius: 10rem;
             border-style: double;
         }
+        #nullstringwarning {
+            color: gold;
+            font-family: sans-serif;
+            font-weight: bold;
+        }
         #nameinput::placeholder {
             font-style: italic;
         }
@@ -50,8 +55,9 @@
 
 <body style="background-color: #000033">
     <div id="login">
-        <input id="nameinput" placeholder="Enter your name">
+        <input id="nameinput" type="text" placeholder="Enter your name">
         <button id="submitname">Play</button>
+        <p id="nullstringwarning"></p>
     </div>
     <!-- <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script> -->
     <script src="asset/phaser.min.js"></script>
