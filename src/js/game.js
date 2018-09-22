@@ -188,7 +188,7 @@ Game.prototype = {
             // console.log('Sending id and foodDrop to server @ game.js: snakeDestroyed');
             this.game.socket.emit("snakeDestroyed", { id: snake.id, drop: foodDrop });
             this.game.socket.disconnect();
-            document.getElementsByTagName('canvas')[0].className += 'fadeout';
+            
             this.game.state.start('Login');
         });
     },
