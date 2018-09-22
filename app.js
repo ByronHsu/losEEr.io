@@ -81,10 +81,10 @@ io.sockets.on('connection', function(socket) {
     });
     socket.on('food_destroy', function(id) {
         // console.log(`Received request to destroy food id=${id} @ app.js:anonymous/food_destroy`)
-        foodAmount--;
         for (var i = 0; i < foodArr.length; i++) {
             if (foodArr[i].id === id) {
                 foodArr.splice(i, 1);
+                foodAmount--;
                 break;
             }
         }

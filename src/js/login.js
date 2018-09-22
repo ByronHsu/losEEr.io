@@ -5,13 +5,9 @@ class Login extends Phaser.State {
             let login = document.getElementById('login');
             if (login.children.nameinput.value) {
                 login.style.visibility = 'hidden';
-                // Not needed when child.style.display is set to inherit
-                // for (let child of login.childNodes) {
-                //     if (child.style)
-                //         child.style.display = 'none';
-                // }
-                // alert(login.children.nameinput.value);
                 this.game.playerName = login.children.nameinput.value;
+                // Make the game resize itself
+                this.game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
                 this.game.state.start('Game');
             }
         });
