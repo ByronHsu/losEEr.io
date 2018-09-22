@@ -4,17 +4,31 @@
 <head>
     <meta charset="utf-8" />
     <title>Slither.io Clone - Loonride Example</title>
-    <!-- <style>
+    <style>
         canvas {
             position: absolute;
+            z-index: -1;
         }
-    </style> -->
+        #login {
+            position: absolute;
+            z-index: 999;
+            top: 50%;
+            left: 50%;
+            text-align: center;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        #nameinput {
+            width: 220px;
+            height: 24px;
+            display: flex;
+        }
+    </style>
 </head>
 
 <body style="background-color: #000033">
-    <div id="login" style="position: relative;">
-        <input id="nameinput" style="width: 220px; height: 24px; display: inherit;" placeholder="Enter your name">
-        <button id="submitname" style="display: inherit;">Play</button>
+    <div id="login">
+        <input id="nameinput" placeholder="Enter your name">
+        <button id="submitname">Play</button>
     </div>
     <!-- <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script> -->
     <script src="asset/phaser.min.js"></script>

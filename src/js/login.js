@@ -4,7 +4,7 @@ class Login extends Phaser.State {
         document.getElementById('submitname').addEventListener('click', () => {
             let login = document.getElementById('login');
             if (login.children.nameinput.value) {
-                login.style.display = 'none';
+                login.style.visibility = 'hidden';
                 // Not needed when child.style.display is set to inherit
                 // for (let child of login.childNodes) {
                 //     if (child.style)
@@ -20,8 +20,8 @@ class Login extends Phaser.State {
     create() {
         this.game.playerName = '';
         let login = document.getElementById('login');
-        if (login.style.display === 'none')
-            login.style.display = 'initial';
+        if (login.style.visibility === 'hidden')
+            login.style.visibility = 'initial';
         login.children.nameinput.value = '';
     }
 }
