@@ -3,7 +3,7 @@ var unique = require('node-uuid');
 var uuid = require('uuid/v4');
 var app = express();
 var serv = require('http').Server(app);
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
     res.sendFile(__dirname, 'public/index.html');
 });
 
@@ -19,7 +19,7 @@ const Util = {
      * @param  {Integer} max Maximum of range
      * @return {Integer}     random number generated
      */
-    randomInt: function (min, max) {
+    randomInt: function(min, max) {
         min = Math.ceil(min);
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -31,7 +31,7 @@ const Util = {
      * @param  {Number} x2 second point
      * @param  {Number} y2 second point
      */
-    distanceFormula: function (x1, y1, x2, y2) {
+    distanceFormula: function(x1, y1, x2, y2) {
         var withinRoot = Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2);
         var dist = Math.pow(withinRoot, 0.5);
         return dist;
@@ -52,10 +52,10 @@ for (var i = 0; i < foodAmount; i++) {
 }
 let socketToSnakeID = {}
 
-io.sockets.on('connection', function (socket) {
+io.sockets.on('connection', function(socket) {
     // console.log(socket.id)
     socket.on('createPlayer', (data) => {
-        console.log('createPlayer', data.id);
+        // console.log('createPlayer', data.id);
         //   for (i = 0; i < snakeArr.length; i++) {
         //      //send to the new player about everyone who is already connected. 	
         //      socket.emit("enemyPlayers", snakeArr[i]);
@@ -64,8 +64,8 @@ io.sockets.on('connection', function (socket) {
         snakeArr.push(data);
         //   console.log(typeof(socket.id))
         socketToSnakeID[socket.id] = data.id
-        console.log(socketToSnakeID)
-        //send message to every connected client except the sender
+            // console.log(socketToSnakeID)
+            //send message to every connected client except the sender
         socket.broadcast.emit('new_enemyPlayer', data);
     });
     socket.on('playerMove', data => {
@@ -76,11 +76,11 @@ io.sockets.on('connection', function (socket) {
         //   console.log("playerMove", data)
         socket.broadcast.emit('enemyMove', data);
     });
-    socket.on('on_food_init', function () {
+    socket.on('on_food_init', function() {
         socket.emit('on_get_food', foodArr);
     });
-    socket.on('food_destroy', function (id) {
-        console.log(`Received request to destroy food id=${id} @ app.js:anonymous/food_destroy`)
+    socket.on('food_destroy', function(id) {
+        // console.log(`Received request to destroy food id=${id} @ app.js:anonymous/food_destroy`)
         foodAmount--;
         for (var i = 0; i < foodArr.length; i++) {
             if (foodArr[i].id === id) {
@@ -103,7 +103,7 @@ io.sockets.on('connection', function (socket) {
                 break;
             }
         }
-        console.log(`Snake ${data.id} died @ app.js: anonymous/snakeDestroyed`)
+        // console.log(`Snake ${data.id} died @ app.js: anonymous/snakeDestroyed`)
         // console.log('Received id and foodDrop @ app.js: anonymous/snakeDestroyed');
         foodArr.push(...data.drop); // Otherwise the newly added snake won't see food dropped from dead snake
         foodAmount += data.drop.length;
@@ -113,7 +113,7 @@ io.sockets.on('connection', function (socket) {
     socket.on("playerIncrease", data => {
         let snake = snakeArr.find((e) => e.id == data.id);
         if (snake == null) return
-        // console.log("playerIncrease", data)
+            // console.log("playerIncrease", data)
         snake.scale = data.scale
         snake.snakeLength = data.snakeLength
         snake.headAngle = data.headAngle
@@ -129,11 +129,11 @@ io.sockets.on('connection', function (socket) {
 
     socket.on("disconnect", () => {
         let snakeId = socketToSnakeID[socket.id]
-        //    console.log("user disconnect", snakeId)
+            //    console.log("user disconnect", snakeId)
         if (!snakeId) return;
         for (let i = 0; i < snakeArr.length; i++) {
             if (snakeArr[i].id === snakeId) {
-                console.log("disconnect snake", snakeId)
+                // console.log("disconnect snake", snakeId)
                 snakeArr.splice(i, 1)
                 delete socketToSnakeID[socket.id]
                 break;
@@ -142,8 +142,9 @@ io.sockets.on('connection', function (socket) {
         socket.broadcast.emit('enemyDisconnect', snakeId)
     })
 });
+
 function genfood() {
-    console.log(foodAmount);
+    // console.log(foodAmount);
     var newfoods = [];
     while (foodAmount < limitFoodAmount) {
         foodAmount++;

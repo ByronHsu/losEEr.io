@@ -14,7 +14,7 @@ var Eye = function(game, head, scale, headAngle) {
 
     // fix whiteEye Angle
     this.headAngle = headAngle
-    console.log("Eye constructer: headAngle", headAngle)
+        // console.log("Eye constructer: headAngle", headAngle)
 
     //constraints that will hold the circles in place
     //the lock will hold the white circle on the head, and the distance
@@ -33,7 +33,7 @@ var Eye = function(game, head, scale, headAngle) {
     );
     this.blackCircle = this.initCircle(this.blackCircle);
     this.blackCircle.body.mass = 0.01;
-    
+
 
 
 }
@@ -49,7 +49,7 @@ Eye.prototype = {
         this.game.physics.p2.enable(circle, this.debug);
         circle.body.clearShapes();
         //give the circle a circular physics body
-        circle.body.addCircle(circle.width*0.5);
+        circle.body.addCircle(circle.width * 0.5);
         circle.body.setCollisionGroup(this.collisionGroup);
         circle.body.collides([]);
         this.eyeGroup.add(circle);
@@ -62,15 +62,15 @@ Eye.prototype = {
     updateConstraints: function(offset) {
         //change where the lock constraint of the white circle
         //is if it already exists
-        console.log("updateConstraints", offset)
-        console.log("updateConstraintsLock", this.lock, this.headAngle)
+        // console.log("updateConstraints", offset)
+        // console.log("updateConstraintsLock", this.lock, this.headAngle)
         if (this.lock) {
             this.lock.localOffsetB = [
                 this.game.physics.p2.pxmi(offset[0]),
                 this.game.physics.p2.pxmi(Math.abs(offset[1]))
             ];
             // this.lock.localAngleB = this.headAngle
-            console.log(this.lock)
+            // console.log(this.lock)
         }
         //create a lock constraint if it doesn't already exist
         else {
@@ -82,12 +82,12 @@ Eye.prototype = {
         //change the distance of the distance constraint for
         //the black circle if it exists already
         if (this.dist) {
-            this.dist.distance = this.game.physics.p2.pxm(this.whiteCircle.width*0.25);
+            this.dist.distance = this.game.physics.p2.pxm(this.whiteCircle.width * 0.25);
         }
         //create a distance constraint if it doesn't exist already
         else {
             this.dist = this.game.physics.p2.createDistanceConstraint(
-                this.blackCircle.body, this.whiteCircle.body, this.whiteCircle.width*0.25
+                this.blackCircle.body, this.whiteCircle.body, this.whiteCircle.width * 0.25
             );
         }
     },
@@ -97,11 +97,11 @@ Eye.prototype = {
      */
     setScale: function(scale) {
         this.scale = scale;
-        for (var i = 0 ; i < this.eyeGroup.children.length ; i++) {
+        for (var i = 0; i < this.eyeGroup.children.length; i++) {
             var circle = this.eyeGroup.children[i];
             circle.scale.setTo(this.scale);
             //change the radii of the circle bodies using pure p2 physics
-            circle.body.data.shapes[0].radius = this.game.physics.p2.pxm(circle.width*0.5);
+            circle.body.data.shapes[0].radius = this.game.physics.p2.pxm(circle.width * 0.5);
         }
 
     },
@@ -113,11 +113,11 @@ Eye.prototype = {
         var mousePosY = this.game.input.activePointer.worldY;
         var headX = this.head.body.x;
         var headY = this.head.body.y;
-        var angle = Math.atan2(mousePosY-headY, mousePosX-headX);
+        var angle = Math.atan2(mousePosY - headY, mousePosX - headX);
         var force = 300;
         //move the black circle of the eye towards the mouse
-        this.blackCircle.body.moveRight(force*Math.cos(angle));
-        this.blackCircle.body.moveDown(force*Math.sin(angle));
+        this.blackCircle.body.moveRight(force * Math.cos(angle));
+        this.blackCircle.body.moveDown(force * Math.sin(angle));
     },
     /**
      * Destroy this eye
