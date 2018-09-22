@@ -17,6 +17,8 @@
             z-index: 999;
             top: 50%;
             left: 50%;
+            min-width: 120px;
+            width: 11em;
             text-align: center;
             transform: translateX(-50%) translateY(-50%);
         }
@@ -28,6 +30,8 @@
         #submitname {
             margin-top: 10%;
             width: 40%;
+            border-radius: 10rem;
+            border-style: double;
         }
         #nameinput::placeholder {
             font-style: italic;
@@ -37,6 +41,9 @@
         }
         #nameinput::-webkit-placeholder {
             font-style: italic;
+        }
+        :focus {
+            outline: 0;
         }
     </style>
 </head>
