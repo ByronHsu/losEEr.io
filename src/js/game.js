@@ -34,6 +34,8 @@ Game.prototype = {
         this.cornerWidth = 100
         this.game.cornerWidth = this.cornerWidth
 
+        this.game.snakes = [];
+
         //callbacks
         this.game.socket.on('on_get_food', this.onGetFood.bind(this));
         this.game.socket.on('destroy_food', this.remove_food_by_id.bind(this));
