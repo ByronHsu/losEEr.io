@@ -9,11 +9,13 @@ class Login extends Phaser.State {
                 // Make the game resize itself
                 this.game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
                 this.game.state.start('Game');
+                document.getElementsByTagName('canvas')[0].style.visibility = 'initial';
             }
         });
     }
 
     create() {
+        document.getElementsByTagName('canvas')[0].style.visibility = 'hidden';
         this.game.playerName = '';
         let login = document.getElementById('login');
         if (login.style.visibility === 'hidden')
