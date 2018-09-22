@@ -12,11 +12,17 @@
             background: linear-gradient(to bottom, #000033 0%, #1e5799 50%,#207cca 70%,#7db9e8 100%) fixed;
         }
         canvas {
+            visibility: hidden;
             position: absolute;
             z-index: -1;
             top: 50%;
             left: 50%;
             transform: translateX(-50%) translateY(-50%);
+            opacity: 1;
+            transition: opacity 1.5s;
+        }
+        canvas.fadeout {
+            opacity: 0;
         }
         #login {
             position: absolute;
@@ -73,6 +79,8 @@
             color: gold;
             font-family: sans-serif;
             font-weight: bold;
+            font-size: 1.4em;
+            text-shadow: 0 0 4px rgba(0, 0, 0, 1);
         }
         #nameinput::placeholder {
             opacity: 0.7;

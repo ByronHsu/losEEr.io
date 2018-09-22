@@ -9,8 +9,9 @@ class Login extends Phaser.State {
                 // Make the game resize itself
                 this.game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
                 this.game.state.start('Game');
-                document.getElementsByTagName('canvas')[0].style.visibility = 'initial';
+                document.getElementsByTagName('canvas')[0].className = '';
                 document.getElementById('nullstringwarning').innerHTML = '';
+                document.getElementsByTagName('canvas')[0].style.visibility = 'visible';
             }
             else
                 document.getElementById('nullstringwarning').innerHTML = 'Please enter a name';
@@ -18,7 +19,7 @@ class Login extends Phaser.State {
     }
 
     create() {
-        document.getElementsByTagName('canvas')[0].style.visibility = 'hidden';
+        // document.getElementsByTagName('canvas')[0].style.visibility = 'hidden';
         this.game.playerName = '';
         let login = document.getElementById('login');
         if (login.style.visibility === 'hidden')
