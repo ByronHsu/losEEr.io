@@ -51,7 +51,7 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     // console.log(this.head)
 
     this.level = 1;
-    this.experience = 0;
+    this.exp = 0;
 
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
 
@@ -256,18 +256,24 @@ Snake.prototype = {
      * Called each time the snake's second section reaches where the
      * first section was at the last call (completed a single cycle)
      */
+
+    levelup: function () {
+
+    },
     onCycleComplete: function () {
         if (this.queuedSections > 0) {
             var lastSec = this.sections[this.sections.length - 1];
-            this.experience++;
-            console.log(this.experience, ' ', this.level);
+            this.exp++;
+            console.log(this.exp, ' ', this.level);
 
-
-            if (this.experience >= this.level && this.level <= 15) {
+            //to control snake size
+            if (this.exp >= this.level && this.level <= 15) {
                 this.level++;
-                this.experience = 0;
+                this.exp = 0;
                 this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
             }
+            // if (this.levelup())
+            // this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
             this.queuedSections--;
         }
     },
