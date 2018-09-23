@@ -1,0 +1,48 @@
+.dashboard {
+    right: 5px;
+    top: 8px;
+    color: black;
+    position: absolute;
+    padding: 5px;
+    margin: 0px;
+    /* border: 1px solid white; */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.75em;
+}
+
+h2.dash_title {
+    text-align: center;
+    background-color: rgba(210, 210, 210, 0.7);
+    border-radius: 5px;
+    margin-bottom: 3px;
+    margin-top: 0px;
+}
+
+.dash_leader {
+    background-color: rgba(220, 220, 220, 0.7);
+    border-radius: 5px;
+    padding: 3px 3px 0px 3px;
+    margin-bottom: 3px;
+    margin-top: 0px;
+}
+
+.dash_table {
+    background-color: rgba(220, 220, 220, 0.7);
+    border-radius: 5px;
+    padding: 0px 3px 0px 3px;
+}
+.dash_table table {
+    width: 100%;
+}
+
+.table_rank {
+    text-align: center;
+}
+
+.table_name {
+    text-align: left;
+}
+
+.table_score {
+    text-align: right;
+}
