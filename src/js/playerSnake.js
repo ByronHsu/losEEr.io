@@ -122,13 +122,15 @@ PlayerSnake.prototype.update = function() {
     point.setTo(this.head.body.x, this.head.body.y);
     this.headPath.unshift(point);
     recorder.headPos = point;
-    // detect hitting the corner
+
     this.game.socket.emit('playerMove', {
         id: this.id,
         data: recorder
     });
     //call the original snake update method
     this.tempUpdate();
+    
+    // detect hitting the corner
     let worldWidth = this.game.worldWidth
     let worldHeight = this.game.worldHeight
     let cornerWidth = this.game.cornerWidth

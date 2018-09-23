@@ -11,7 +11,6 @@ import SnakeProps from './SnakeProps'
  * @param  {Number} y         coordinate
  */
 var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
-    // console.log("props", props)
     this.game = game;
     //create an array of snakes in the game object and add this snake
     if (!this.game.snakes) {
@@ -19,16 +18,16 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     }
     this.game.snakes.push(this);
     this.debug = true;
-    this.snakeLength = props.snakeLength;
     this.spriteKey = spriteKey;
-
+    
+    this.snakeLength = props.snakeLength;
     //various quantities that can be changed
     this.scale = props.scale;
     this.fastSpeed = props.fastSpeed;
     this.slowSpeed = props.slowSpeed;
-    this.speed = this.slowSpeed;
     this.rotationSpeed = props.rotationSpeed;
     this.headAngle = props.headAngle
+    this.speed = this.slowSpeed;
 
     //initialize groups and arrays
     this.collisionGroup = this.game.physics.p2.createCollisionGroup();
