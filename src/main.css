@@ -35,6 +35,10 @@ h2.dash_title {
     width: 100%;
 }
 
+/* .dash_table tr {
+    display: none;
+} */
+
 .table_rank {
     text-align: center;
 }

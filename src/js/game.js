@@ -37,8 +37,7 @@ Game.prototype = {
         this.game.cornerWidth = cornerWidth
         var background = this.game.add.tileSprite(-worldWidth + cornerWidth, -worldHeight + cornerWidth,
             this.game.world.width - cornerWidth * 2, this.game.world.height - cornerWidth * 2, 'background');
-        console.log("background", background)
-
+            
         //initialize physics and groups
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.foodGroup = this.game.add.group();
@@ -67,6 +66,7 @@ Game.prototype = {
         this.game.socket.on('enemyIncrease', this.onEnemyIncrease.bind(this))
         this.game.socket.on('enemySpaceKeyEvent', this.onEnemySpaceKeyEvent.bind(this))
         this.game.socket.on('enemyDisconnect', this.onEnemyDisconnect.bind(this))
+        this.game.socket.on('dashboardUpdate', this.onDashboardUpdate.bind(this))
         //initialize snake groups and collision
         for (var i = 0; i < this.game.snakes.length; i++) {
             var snake = this.game.snakes[i];
@@ -93,7 +93,6 @@ Game.prototype = {
             let snake = new EnemySnake(this.game, 'circle', data[i].headPath[0].x, data[i].headPath[0].y, data[i])
             snake.remote_headPath = data[i].headPath
             snake.headAngle = data[i].headAngle
-            console.log("enemyPlayers", snake)
         }
     },
     onNewEnemy: function (data) {
@@ -139,6 +138,43 @@ Game.prototype = {
         let snake = this.game.snakes.find(e => e.id == snakeId)
         if (snake == null) return
         snake.destroy()
+    },
+    onDashboardUpdate: function(data) {
+        console.log("onDashboardUpdate", data)
+        let table = document.getElementById("table_data")
+        if (data.length > table.rows.length) {
+            for (let i = table.rows.length; i < Math.min(data.length, 10); i++) {
+                let row = table.insertRow(i)
+                let c1 = row.insertCell(0)
+                let c2 = row.insertCell(1)
+                let c3 = row.insertCell(2)
+                c1.classList.add("table_rank")
+                c2.classList.add("table_name")
+                c3.classList.add("table_score")
+            }
+        }
+        else if(data.length < table.rows.length) {
+            for (let i = table.rows.length - 1; i >= data.length; i++) {
+                table.deleteRow(i)
+            }
+        }
+        for (let i = 0; i < Math.min(10, data.length); i++) {
+            // table.rows[i].style.display = 'block'
+            table.rows[i].cells[0].innerHTML = i + 1
+            table.rows[i].cells[1].innerHTML = data[i].id
+            table.rows[i].cells[2].innerHTML = data[i].score
+            if (data[i].socketId === this.game.socket.id) {
+                table.rows[i].cells[0].style.color = "orange"
+                table.rows[i].cells[1].style.color = "orange"
+                table.rows[i].cells[2].style.color = "orange"
+            }
+            else {
+                table.rows[i].cells[0].style.color = "black"
+                table.rows[i].cells[1].style.color = "black"
+                table.rows[i].cells[2].style.color = "black"
+            }
+        }
+        console.log("snake", this.game.socket.id, data[0].socketId)
     },
     /**
      * Main update loop
