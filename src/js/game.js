@@ -84,11 +84,6 @@ Game.prototype = {
             this.initFood(data[i].x, data[i].y, data[i].id);
         }
     },
-    onNewPlayer: function(data) {
-        var snake = new BotSnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
-        snake.remote_headPath = data.path;
-        //console.log('onNewPlayer', this.game.snakes);
-    },
     onEnemyPlayers: function(data) {
         // console.log("onEnemyPlayers", data)
         for (let i = 0; i < data.length; i++) {
@@ -108,7 +103,7 @@ Game.prototype = {
     onEnemyMove: function(data) {
         // console.log('onEnemyMove', data);
         var snake = this.game.snakes.find((e) => e.id == data.id);
-        if (snake == null) return;
+        if (!snake) return;
         snake.remote_headPath = data.headPath;
         snake.headAngle = data.headAngle
     },
@@ -134,20 +129,20 @@ Game.prototype = {
     onEnemySpaceKeyEvent: function(data) {
         // console.log("onEnemySpaceKeyEvent", data)
         let snake = this.game.snakes.find(e => e.id == data.id)
-        snake.shadow.isLightingUp = data.isLightingUp
+        if (snake)
+            snake.shadow.isLightingUp = data.isLightingUp
     },
     onEnemyDisconnect: function(snakeId) {
         // console.log("onEnemyDisconnect", snakeId)
         let snake = this.game.snakes.find(e => e.id == snakeId)
-        if (snake == null) return
-        snake.destroy()
+        if (snake)
+            snake.destroy()
     },
     /**
      * Main update loop
      */
     update: function() {
         //update game components
-        // console.log(this)
         for (var i = this.game.snakes.length - 1; i >= 0; i--) {
             this.game.snakes[i].update();
         }
