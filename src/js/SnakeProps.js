@@ -1,4 +1,4 @@
-let SnakeProps = {
+const SnakeProps = {
     headAngle: 0,
     snakeLength: 0, 
     scale: 0.4, 
@@ -10,5 +10,5 @@ let SnakeProps = {
     queuedSections: 0,
     isLightingUp: false
 }
-
+Object.freeze(SnakeProps);
 export default SnakeProps
