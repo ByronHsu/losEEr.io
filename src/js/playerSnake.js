@@ -22,7 +22,7 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
             id: this.id,
             snakeLength: this.snakeLength,
 
-            // //various quantities that can be changed
+            //various quantities that can be changed
             scale: this.scale,
             fastSpeed: this.fastSpeed,
             slowSpeed: this.slowSpeed,
@@ -39,7 +39,6 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
             // preferredDistance: this.preferredDistance,
             queuedSections: this.queuedSections
         }
-        // console.log("creatPlayer", playerSnakeData)
     this.game.socket.emit('createPlayer', playerSnakeData);
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
@@ -54,13 +53,12 @@ PlayerSnake.prototype.constructor = PlayerSnake;
 PlayerSnake.prototype.spaceKeyDown = function() {
         this.speed = this.fastSpeed;
         this.shadow.isLightingUp = true;
-        // console.log("spaceKeyDown")
         this.game.socket.emit("spaceKeyEvent", {
             id: this.id,
             isLightingUp: this.shadow.isLightingUp
         })
     }
-    //make the snake slow down when the space key is up again
+//make the snake slow down when the space key is up again
 PlayerSnake.prototype.spaceKeyUp = function() {
     this.speed = this.slowSpeed;
     this.shadow.isLightingUp = false;
@@ -77,6 +75,7 @@ PlayerSnake.prototype.spaceKeyUp = function() {
 PlayerSnake.prototype.tempUpdate = PlayerSnake.prototype.update;
 PlayerSnake.prototype.update = function() {
 
+    let recorder = {};
     //find the angle that the head needs to rotate
     //through in order to face the mouse
     var mousePosX = this.game.input.activePointer.worldX;
@@ -91,22 +90,29 @@ PlayerSnake.prototype.update = function() {
     }
     var dif = this.head.body.angle - angle;
     this.head.body.setZeroRotation();
+    recorder.rotating = true;
     //allow arrow keys to be used
     if (this.cursors.left.isDown) {
         this.head.body.rotateLeft(this.rotationSpeed);
+        recorder.rotateLeft = true;
     } else if (this.cursors.right.isDown) {
         this.head.body.rotateRight(this.rotationSpeed);
+        recorder.rotateRight = false;
     }
     //decide whether rotating left or right will angle the head towards
     //the mouse faster, if arrow keys are not used
     else if (dif < 0 && dif > -180 || dif > 180) {
         this.head.body.rotateRight(this.rotationSpeed);
+        recorder.rotateLeft = false;
     } else if (dif > 0 && dif < 180 || dif < -180) {
         this.head.body.rotateLeft(this.rotationSpeed);
-    }
+        recorder.rotateLeft = true;
+    } else
+        recorder.rotating = false;
 
     var speed = this.speed;
     this.head.body.moveForward(speed);
+    recorder.forwardSpeed = speed;
 
     //remove the last element of an array that contains points which
     //the head traveled through
@@ -115,28 +121,24 @@ PlayerSnake.prototype.update = function() {
     var point = this.headPath.pop();
     point.setTo(this.head.body.x, this.head.body.y);
     this.headPath.unshift(point);
+    recorder.headPos = point;
     // detect hitting the corner
-    // console.log('playerMove', { headPath: this.headPath, id: this.id , angle: this.head.body.angle})
     this.game.socket.emit('playerMove', {
-        headPath: this.headPath,
         id: this.id,
-        headAngle: this.head.body.angle
+        data: recorder
     });
-
     //call the original snake update method
     this.tempUpdate();
     let worldWidth = this.game.worldWidth
     let worldHeight = this.game.worldHeight
     let cornerWidth = this.game.cornerWidth
     let headRad = this.head.width / 2
-        // console.log(worldHeight, worldWidth, cornerWidth)
-        // console.log(this.scale)
-    if (this.head.body.x - (-worldWidth + cornerWidth) < headRad || (worldWidth - cornerWidth) - this.head.body.x < headRad) {
-        // console.log("hit the corner", this.id);
-        this.destroy();
-    } else if (this.head.body.y - (-worldHeight + cornerWidth) < headRad || (worldHeight - cornerWidth) - this.head.body.y < headRad) {
-        // console.log("hit the corner", this.id);
-        this.destroy();
-    }
+    // if (this.head.body.x - (-worldWidth + cornerWidth) < headRad || (worldWidth - cornerWidth) - this.head.body.x < headRad) {
+    //     // console.log("hit the corner", this.id);
+    //     this.destroy();
+    // } else if (this.head.body.y - (-worldHeight + cornerWidth) < headRad || (worldHeight - cornerWidth) - this.head.body.y < headRad) {
+    //     // console.log("hit the corner", this.id);
+    //     this.destroy();
+    // }
 }
 export default PlayerSnake;

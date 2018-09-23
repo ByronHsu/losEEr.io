@@ -13,7 +13,7 @@ var EyePair = function(game, head, scale, headAngle) {
     this.scale = scale;
     this.eyes = [];
 
-    this.debug = false;
+    this.debug = true;
     // fix eye angle
     this.headAngle = headAngle
         // console.log("EyePair headAngle", this.headAngle)

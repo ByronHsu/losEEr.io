@@ -18,7 +18,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
         this.game.snakes = [];
     }
     this.game.snakes.push(this);
-    this.debug = false;
+    this.debug = true;
     this.snakeLength = props.snakeLength;
     this.spriteKey = spriteKey;
 
@@ -48,17 +48,12 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.head = this.addSectionAtPosition(x, y);
     this.head.name = "head";
     this.head.snake = this;
-    // console.log(this.head)
 
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
 
     // Initial / Create Snake
     if (this.snakeLength === 1) this.initSections(10);
     else {
-        // console.log("enemySnakeHeadPath", props.headPath)
-        // this.initSections(this.snakeLength - 1)
-        // this.snakeLength = props.snakeLength
-        // this.headPath = props.headPath
         for (let i = 1; i < props.snakeLength; i++) {
             this.addSectionAtPosition(props.headPath[i])
         }
@@ -103,8 +98,6 @@ Snake.prototype = {
             //add a point to the head path so that the section stays there
             this.headPath.push(new Phaser.Point(x, y));
         }
-        // console.log("initSections", num);
-        // console.log("init headPath", this.headPath)
     },
     /**
      * Add a section to the snake at a given position
@@ -176,10 +169,6 @@ Snake.prototype = {
             this.headPath.pop();
         }
 
-        // while (this.headPath.length > this.snakeLength + 20) {
-        //     this.headPath.pop();
-        // }
-
         //this calls onCycleComplete every time a cycle is completed
         //a cycle is the time it takes the second section of a snake to reach
         //where the head of the snake was at the end of the last cycle
@@ -210,7 +199,6 @@ Snake.prototype = {
      * @return {Integer}              new index
      */
     findNextPointIndex: function(currentIndex) {
-        var pt = this.headPath[currentIndex];
         //we are trying to find a point at approximately this distance away
         //from the point before it, where the distance is the total length of
         //all the lines connecting the two points

@@ -10,11 +10,10 @@ var Eye = function(game, head, scale, headAngle) {
     this.scale = scale;
     this.eyeGroup = this.game.add.group();
     this.collisionGroup = this.game.physics.p2.createCollisionGroup();
-    this.debug = false;
+    this.debug = true;
 
     // fix whiteEye Angle
     this.headAngle = headAngle
-        // console.log("Eye constructer: headAngle", headAngle)
 
     //constraints that will hold the circles in place
     //the lock will hold the white circle on the head, and the distance
@@ -62,15 +61,11 @@ Eye.prototype = {
     updateConstraints: function(offset) {
         //change where the lock constraint of the white circle
         //is if it already exists
-        // console.log("updateConstraints", offset)
-        // console.log("updateConstraintsLock", this.lock, this.headAngle)
         if (this.lock) {
             this.lock.localOffsetB = [
                 this.game.physics.p2.pxmi(offset[0]),
                 this.game.physics.p2.pxmi(Math.abs(offset[1]))
             ];
-            // this.lock.localAngleB = this.headAngle
-            // console.log(this.lock)
         }
         //create a lock constraint if it doesn't already exist
         else {
