@@ -9,7 +9,7 @@ import SnakeProps from './SnakeProps'
  * @param  {Number} y         coordinate
  */
 var EnemySnake = function(game, spriteKey, x, y, props = SnakeProps) {
-    console.log("ConstructEnemySnake", props)
+    // console.log("ConstructEnemySnake", props)
     Snake.call(this, game, spriteKey, x, y, props);
     // this.cursors = game.input.keyboard.createCursorKeys();
 

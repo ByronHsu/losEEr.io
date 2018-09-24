@@ -6,17 +6,17 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   entry: {
     bundle: [
-      './src/index.js',
+      './src/index.js'
     ],
   },
   output: {
     filename: 'bundle.js',
     path: path.join(__dirname, 'public'),
-    publicPath: '/',
+    publicPath: '/'
   },
   devtool: 'eval',
   resolve: {
-    extensions: ['.js'],
+    extensions: ['.js']
   },
   module: {
     rules: [
@@ -26,13 +26,17 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loaders: ['style-loader', 'css-loader', 'sass-loader'],
+        loaders: ['style-loader', 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.css$/,
+        loaders: ['style-loader', 'css-loader']
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         loader: "file-loader",
         options: {
-          name: "assets/fonts/[name].[ext]",
+          name: "assets/fonts/[name].[ext]"
         }
       }
     ],

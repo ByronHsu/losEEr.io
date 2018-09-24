@@ -19,27 +19,27 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     this.id = id;
 
     let playerSnakeData = {
-        id: this.id,
-        snakeLength: this.snakeLength,
+            id: this.id,
+            snakeLength: this.snakeLength,
 
-        // //various quantities that can be changed
-        scale: this.scale,
-        fastSpeed: this.fastSpeed,
-        slowSpeed: this.slowSpeed,
-        // speed: this.speed,
-        rotationSpeed: this.rotationSpeed,
-        headAngle: 0,
-        isLightingUp: this.shadow.isLightingUp,
+            // //various quantities that can be changed
+            scale: this.scale,
+            fastSpeed: this.fastSpeed,
+            slowSpeed: this.slowSpeed,
+            // speed: this.speed,
+            rotationSpeed: this.rotationSpeed,
+            headAngle: 0,
+            isLightingUp: this.shadow.isLightingUp,
 
-        //the head path is an array of points that the head of the snake has
-        //traveled through
-        headPath: this.headPath,
-        food: this.food,
+            //the head path is an array of points that the head of the snake has
+            //traveled through
+            headPath: this.headPath,
+            food: this.food,
 
-        // preferredDistance: this.preferredDistance,
-        queuedSections: this.queuedSections
-    }
-    console.log("creatPlayer", playerSnakeData)
+            // preferredDistance: this.preferredDistance,
+            queuedSections: this.queuedSections
+        }
+        // console.log("creatPlayer", playerSnakeData)
     this.game.socket.emit('createPlayer', playerSnakeData);
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
@@ -54,7 +54,7 @@ PlayerSnake.prototype.constructor = PlayerSnake;
 PlayerSnake.prototype.spaceKeyDown = function() {
         this.speed = this.fastSpeed;
         this.shadow.isLightingUp = true;
-        console.log("spaceKeyDown")
+        // console.log("spaceKeyDown")
         this.game.socket.emit("spaceKeyEvent", {
             id: this.id,
             isLightingUp: this.shadow.isLightingUp
@@ -83,28 +83,25 @@ PlayerSnake.prototype.update = function() {
     var mousePosY = this.game.input.activePointer.worldY;
     var headX = this.head.body.x;
     var headY = this.head.body.y;
-    var angle = (180*Math.atan2(mousePosX - headX, mousePosY - headY) / Math.PI);
+    var angle = (180 * Math.atan2(mousePosX - headX, mousePosY - headY) / Math.PI);
     if (angle > 0) {
-        angle = 180-angle;
-    }
-    else {
-        angle = -180-angle;
+        angle = 180 - angle;
+    } else {
+        angle = -180 - angle;
     }
     var dif = this.head.body.angle - angle;
     this.head.body.setZeroRotation();
     //allow arrow keys to be used
     if (this.cursors.left.isDown) {
         this.head.body.rotateLeft(this.rotationSpeed);
-    }
-    else if (this.cursors.right.isDown) {
+    } else if (this.cursors.right.isDown) {
         this.head.body.rotateRight(this.rotationSpeed);
     }
     //decide whether rotating left or right will angle the head towards
     //the mouse faster, if arrow keys are not used
     else if (dif < 0 && dif > -180 || dif > 180) {
         this.head.body.rotateRight(this.rotationSpeed);
-    }
-    else if (dif > 0 && dif < 180 || dif < -180) {
+    } else if (dif > 0 && dif < 180 || dif < -180) {
         this.head.body.rotateLeft(this.rotationSpeed);
     }
 
@@ -135,11 +132,10 @@ PlayerSnake.prototype.update = function() {
         // console.log(worldHeight, worldWidth, cornerWidth)
         // console.log(this.scale)
     if (this.head.body.x - (-worldWidth + cornerWidth) < headRad || (worldWidth - cornerWidth) - this.head.body.x < headRad) {
-        console.log("hit the corner", this.id);
+        // console.log("hit the corner", this.id);
         this.destroy();
-    }
-    else if (this.head.body.y - (-worldHeight + cornerWidth) < headRad || (worldHeight - cornerWidth) - this.head.body.y < headRad) {
-        console.log("hit the corner", this.id);
+    } else if (this.head.body.y - (-worldHeight + cornerWidth) < headRad || (worldHeight - cornerWidth) - this.head.body.y < headRad) {
+        // console.log("hit the corner", this.id);
         this.destroy();
     }
 }

@@ -32,7 +32,7 @@ Food.prototype = {
             //it collided with. The food is then brought to the center of
             //the head sprite
             this.constraint = this.game.physics.p2.createRevoluteConstraint(
-                this.sprite.body, [0,0], phaserBody, [0,0]
+                this.sprite.body, [0, 0], phaserBody, [0, 0]
             );
             this.head = phaserBody.sprite;
             this.head.snake.food.push(this);
@@ -45,20 +45,20 @@ Food.prototype = {
         //once the food reaches the center of the snake head, destroy it and
         //increment the size of the snake
         if (this.head && Math.round(this.head.body.x) == Math.round(this.sprite.body.x) &&
-        Math.round(this.head.body.y) == Math.round(this.sprite.body.y)) {
+            Math.round(this.head.body.y) == Math.round(this.sprite.body.y)) {
             this.head.snake.incrementSize();
-            console.log("playerIncrease", {
-                id: this.head.snake.id,
-                snakeLength: this.head.snake.snakeLength, 
-                scale: this.head.snake.scale,
-                headPath: this.head.snake.headPath
-            })
+            // console.log("playerIncrease", {
+            //     id: this.head.snake.id,
+            //     snakeLength: this.head.snake.snakeLength, 
+            //     scale: this.head.snake.scale,
+            //     headPath: this.head.snake.headPath
+            // })
             this.game.socket.emit('playerIncrease', {
                 id: this.head.snake.id,
-                snakeLength: this.head.snake.snakeLength, 
+                snakeLength: this.head.snake.snakeLength,
                 scale: this.head.snake.scale
-                // food: this.head.snake.food,
-                // queuedSections: this.head.snake.queuedSections
+                    // food: this.head.snake.food,
+                    // queuedSections: this.head.snake.queuedSections
             })
             this.destroy();
         }
@@ -76,7 +76,7 @@ Food.prototype = {
         }
     },
     remote_destroy: function() {
-        console.log('Remote_destroy called! @ food.js: remote_destroy');
+        // console.log('Remote_destroy called! @ food.js: remote_destroy');
         if (this.head) { // The food to destroy was near the player snake, but another snake ate it first (very unlikely)
             this.game.physics.p2.removeConstraint(this.constraint);
             this.head.snake.food.splice(this.head.snake.food.indexOf(this), 1);

@@ -1,9 +1,110 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <title>Slither.io Clone - Loonride Example</title>
+    <style>
+        html {
+            height:100%;
+            background: #000033;
+            background: -moz-linear-gradient(top, #000033 0%, #1e5799 50%,#207cca 70%,#7db9e8 100%) fixed;
+            background: -webkit-linear-gradient(top, #000033 0%, #1e5799 50%,#207cca 70%,#7db9e8 100%) fixed no-repeat;
+            background: linear-gradient(to bottom, #000033 0%, #1e5799 50%,#207cca 70%,#7db9e8 100%) fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            overflow: hidden;
+        }
+        canvas {
+            visibility: hidden;
+            position: absolute;
+            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            opacity: 1;
+            transition: opacity 1.5s;
+        }
+        canvas.fadeout {
+            opacity: 0;
+        }
+        #login {
+            position: absolute;
+            z-index: 999;
+            top: 70%;
+            left: 50%;
+            min-width: 120px;
+            width: 17em;
+            text-align: center;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        #nameinput {
+            width: 100%;
+            height: 35px;
+            display: flex;
+            font-size: 1.35em;
+            border-radius: 2em;
+            border-style: none;
+            box-shadow: inset 0 0 4px #2c2e2c;
+            padding-left: 7%;
+            box-sizing: border-box;
+        }
+        #nameinput:hover {
+            box-shadow: inset 0 0 10px #2c2e2c;
+        }
+        #nameinput:focus {
+            box-shadow: inset 0 0 15px #2c2e2c;
+        }
+        #submitname {
+            margin-top: 10%;
+            width: 40%;
+            color: #f9ecdb;
+            font-weight: 900;
+            font-size: 1.7em;
+            border-radius: 10rem;
+            border-style: double;
+            border-color: #209c00;
+            background-color: #209c00;
+            box-shadow: 0 5px rgba(9, 62, 19, 0.43);
+        }
+        #submitname:hover {
+            transform: translateY(4%);
+            border-color: #1f9401;
+            background-color: #1f9401;
+            box-shadow: 0 2px rgba(9, 62, 19, 0.43);
+        }
+        #submitname:active {
+            transform: translateY(5%);
+            border-color: #1d8304;
+            background-color: #1d8304;
+            box-shadow: 0 1px rgba(9, 62, 19, 0.43);
+        }
+        #nullstringwarning {
+            color: gold;
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 1.4em;
+            text-shadow: 0 0 4px rgba(0, 0, 0, 1);
+        }
+        #nameinput::placeholder {
+            opacity: 0.7;
+            font-style: italic;
+        }
+        #nameinput::-moz-placeholder {
+            opacity: 0.7;
+            font-style: italic;
+        }
+        #nameinput::-webkit-placeholder {
+            opacity: 0.7;
+            font-style: italic;
+        }
+        :focus {
+            outline: 0;
+        }
+    </style>
 </head>
 <body style="background-color: #000033">
     <div class="dashboard">
@@ -21,8 +122,14 @@
         <div id="dash_table">
             <table id="table_data"></table>
         </div>
-
     </div>
-   <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script>
-</body>
+
+    <div id="login">
+        <input id="nameinput" type="text" placeholder="Please enter your name">
+        <button id="submitname">Play</button>
+        <p id="nullstringwarning"></p>
+    </div>
+    <!-- <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script> -->
+    <script src="asset/phaser.min.js"></script>
+
 </html>
