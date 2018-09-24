@@ -1,5 +1,6 @@
 import Snake from './snake'
 import SnakeProps from './SnakeProps'
+import Eye from './eye'
 
 /**
  * Player of the core snake for controls
@@ -16,6 +17,9 @@ var EnemySnake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.rotating = false;
     this.forwardSpeed = 0;
     this.headPos = new Phaser.Point(x, y);
+    this.rotation = 0;
+
+    // this.head.debug = true;
 }
 
 EnemySnake.prototype = Object.create(Snake.prototype);
@@ -34,7 +38,7 @@ EnemySnake.prototype.update = function() {
         else
         this.head.body.rotateRight(this.rotationSpeed);
     }
-    
+    this.head.body.rotation = this.rotation;
     this.head.body.moveForward(this.forwardSpeed);
     
     let point = this.headPath.pop();
@@ -45,7 +49,7 @@ EnemySnake.prototype.update = function() {
     }
     else
         console.error(`headPath is empty @ enemySnake.js: anonymous/update`);
-    
+
     //call the original snake update method
     this.tempUpdate();
 }

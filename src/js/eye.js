@@ -10,7 +10,7 @@ var Eye = function(game, head, scale, headAngle) {
     this.scale = scale;
     this.eyeGroup = this.game.add.group();
     this.collisionGroup = this.game.physics.p2.createCollisionGroup();
-    this.debug = true;
+    this.debug = false;
 
     // fix whiteEye Angle
     this.headAngle = headAngle

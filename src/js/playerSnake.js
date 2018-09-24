@@ -110,6 +110,7 @@ PlayerSnake.prototype.update = function() {
     } else
         recorder.rotating = false;
 
+    recorder.rotation = this.head.body.rotation;
     var speed = this.speed;
     this.head.body.moveForward(speed);
     recorder.forwardSpeed = speed;

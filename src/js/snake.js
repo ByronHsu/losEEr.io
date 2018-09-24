@@ -17,7 +17,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
         this.game.snakes = [];
     }
     this.game.snakes.push(this);
-    this.debug = true;
+    this.debug = false;
     this.spriteKey = spriteKey;
     
     this.snakeLength = props.snakeLength;

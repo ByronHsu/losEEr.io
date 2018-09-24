@@ -103,6 +103,7 @@ Game.prototype = {
         snake.forwardSpeed = data.data.forwardSpeed;
         snake.headPos = data.data.headPos;
         snake.rotating = data.data.rotating;
+        snake.rotation = data.data.rotation;
     },
     onEnemyDestroy: function(id, foodDrop) {
         // console.log(`Received signal to destroy snake of id ${id} @ game.js: onEnemyDestroy`);

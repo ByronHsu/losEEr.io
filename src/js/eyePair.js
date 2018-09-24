@@ -13,30 +13,25 @@ var EyePair = function(game, head, scale, headAngle) {
     this.scale = scale;
     this.eyes = [];
 
-    this.debug = true;
+    this.debug = false;
     // fix eye angle
     this.headAngle = headAngle
-        // console.log("EyePair headAngle", this.headAngle)
     if (this.headAngle < 0) this.headAngle = 360 + this.headAngle
     let cosThe = Math.cos(Math.PI * this.headAngle / 180)
     let sinThe = Math.sin(Math.PI * this.headAngle / 180)
-        //create two eyes
+    //create two eyes
     var offset = this.getOffset();
     this.leftEye = new Eye(this.game, this.head, this.scale, headAngle);
     // -offset.x, -offset.y 
     let xv = -offset.x
     let yv = -offset.y
-        // this.leftEye.updateConstraints([cosThe * xv - sinThe * yv, sinThe * xv + cosThe * yv]);
     this.leftEye.updateConstraints([xv, yv])
     this.eyes.push(this.leftEye);
 
     this.rightEye = new Eye(this.game, this.head, this.scale, headAngle);
-    // offset.x, -offset.y
     xv = offset.x
-        // this.rightEye.updateConstraints([cosThe * xv - sinThe * yv, sinThe * xv + cosThe * yv]);
     this.rightEye.updateConstraints([xv, yv])
     this.eyes.push(this.rightEye);
-    // console.log("Eyes", this.eyes)
 }
 
 EyePair.prototype = {
