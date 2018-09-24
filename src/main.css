@@ -18,26 +18,26 @@ h2.dash_title {
     margin-top: 0px;
 }
 
-.dash_leader {
+#dash_leader {
     background-color: rgba(220, 220, 220, 0.7);
     border-radius: 5px;
-    padding: 3px 3px 0px 3px;
+    padding: 0px 3px 0px 3px;
     margin-bottom: 3px;
     margin-top: 0px;
 }
 
-.dash_table {
+#dash_leader table {
+    width: 100%;
+}
+
+#dash_table {
     background-color: rgba(220, 220, 220, 0.7);
     border-radius: 5px;
     padding: 0px 3px 0px 3px;
 }
-.dash_table table {
+#dash_table table {
     width: 100%;
 }
-
-/* .dash_table tr {
-    display: none;
-} */
 
 .table_rank {
     text-align: center;

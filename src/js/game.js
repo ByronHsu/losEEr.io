@@ -67,6 +67,7 @@ Game.prototype = {
         this.game.socket.on('enemySpaceKeyEvent', this.onEnemySpaceKeyEvent.bind(this))
         this.game.socket.on('enemyDisconnect', this.onEnemyDisconnect.bind(this))
         this.game.socket.on('dashboardUpdate', this.onDashboardUpdate.bind(this))
+        this.game.socket.on('higestScoreUpdate', this.onHigestScoreUpdate.bind(this))
         //initialize snake groups and collision
         for (var i = 0; i < this.game.snakes.length; i++) {
             var snake = this.game.snakes[i];
@@ -159,22 +160,23 @@ Game.prototype = {
             }
         }
         for (let i = 0; i < Math.min(10, data.length); i++) {
-            // table.rows[i].style.display = 'block'
-            table.rows[i].cells[0].innerHTML = i + 1
+            table.rows[i].cells[0].innerHTML = "#"+ (i + 1).toString()
             table.rows[i].cells[1].innerHTML = data[i].id
             table.rows[i].cells[2].innerHTML = data[i].score
             if (data[i].socketId === this.game.socket.id) {
-                table.rows[i].cells[0].style.color = "orange"
-                table.rows[i].cells[1].style.color = "orange"
-                table.rows[i].cells[2].style.color = "orange"
+                table.rows[i].style.color = "#ff8533"
             }
             else {
-                table.rows[i].cells[0].style.color = "black"
-                table.rows[i].cells[1].style.color = "black"
-                table.rows[i].cells[2].style.color = "black"
+                table.rows[i].style.color = "black"
             }
         }
-        console.log("snake", this.game.socket.id, data[0].socketId)
+    },
+    onHigestScoreUpdate: function(data) {
+        let table = document.getElementById("leader_data")
+        console.log(data)
+        table.rows[0].cells[1].innerHTML = data.id
+        table.rows[0].cells[2].innerHTML = data.score
+        table.rows[0].style.color = "#cc0000"
     },
     /**
      * Main update loop
