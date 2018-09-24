@@ -64,6 +64,7 @@ io.sockets.on('connection', function(socket) {
     socket.on('playerMove', data => {
         var snake = snakeArr.find(e => e.id == data.id);
         if (snake == null) return;
+        snake.record = data.data;
         socket.broadcast.emit('enemyMove', data);
     });
     socket.on('on_food_init', function() {

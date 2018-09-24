@@ -83,11 +83,16 @@ Game.prototype = {
             this.initFood(data[i].x, data[i].y, data[i].id);
         }
     },
-    onEnemyPlayers: function(data) {
-        for (let i = 0; i < data.length; i++) {
-            let snake = new EnemySnake(this.game, 'circle', data[i].headPath[0].x, data[i].headPath[0].y, data[i])
-            snake.remote_headPath = data[i].headPath
-            snake.headAngle = data[i].headAngle
+    onEnemyPlayers: function(snakeArr) {
+        for (let s of snakeArr) {
+            let snake = new EnemySnake(this.game, 'circle', s.headPath[0].x, s.headPath[0].y, s);
+            if(s.record) {
+                snake.rotateLeft = s.record.rotateLeft;
+                snake.forwardSpeed = s.record.forwardSpeed;
+                snake.headPos = s.record.headPos;
+                snake.rotating = s.record.rotating;
+                snake.rotation = s.record.rotation;
+            }
         }
     },
     onNewEnemy: function(data) {
