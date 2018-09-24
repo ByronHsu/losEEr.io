@@ -109,6 +109,7 @@ Game.prototype = {
         snake.headPos = data.data.headPos;
         snake.rotating = data.data.rotating;
         snake.rotation = data.data.rotation;
+        snake.headPath = data.headPath;
     },
     onEnemyDestroy: function(id, foodDrop) {
         // console.log(`Received signal to destroy snake of id ${id} @ game.js: onEnemyDestroy`);
@@ -191,6 +192,10 @@ Game.prototype = {
     },
     remove_food_by_id: function(id) {
         // console.log(`Received Request of Removing food ${id} @ game.js: remove_food_by_id`);
+        if(!this.foodGroup.children) {
+            console.error(`[Error]: this.foodGroup.children is not defined @ game.js: remove_food_by_id`);
+            return;
+        }
         for (var i = 0; i < this.foodGroup.children.length; i++) {
             if (this.foodGroup.children[i].id == id) {
                 // console.log("Found the food to destroy @ game.js: remove_food_by_id")

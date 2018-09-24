@@ -126,7 +126,8 @@ PlayerSnake.prototype.update = function() {
 
     this.game.socket.emit('playerMove', {
         id: this.id,
-        data: recorder
+        data: recorder,
+        headPath: this.headPath
     });
     //call the original snake update method
     this.tempUpdate();
@@ -136,12 +137,10 @@ PlayerSnake.prototype.update = function() {
     let worldHeight = this.game.worldHeight
     let cornerWidth = this.game.cornerWidth
     let headRad = this.head.width / 2
-    // if (this.head.body.x - (-worldWidth + cornerWidth) < headRad || (worldWidth - cornerWidth) - this.head.body.x < headRad) {
-    //     // console.log("hit the corner", this.id);
-    //     this.destroy();
-    // } else if (this.head.body.y - (-worldHeight + cornerWidth) < headRad || (worldHeight - cornerWidth) - this.head.body.y < headRad) {
-    //     // console.log("hit the corner", this.id);
-    //     this.destroy();
-    // }
+    if (this.head.body.x - (-worldWidth + cornerWidth) < headRad || (worldWidth - cornerWidth) - this.head.body.x < headRad) {
+        this.destroy();
+    } else if (this.head.body.y - (-worldHeight + cornerWidth) < headRad || (worldHeight - cornerWidth) - this.head.body.y < headRad) {
+        this.destroy();
+    }
 }
 export default PlayerSnake;

@@ -41,14 +41,16 @@ EnemySnake.prototype.update = function() {
     this.head.body.rotation = this.rotation;
     this.head.body.moveForward(this.forwardSpeed);
     
-    let point = this.headPath.pop();
-    if(point) {
-        this.head.body.x = point.x = this.headPos.x;
-        this.head.body.y = point.y = this.headPos.y;
-        this.headPath.unshift(point);
+    if(this.headPath && this.headPath.length > 0) {
+        let point = this.headPath.pop();
+        if(point) {
+            this.head.body.x = point.x = this.headPos.x;
+            this.head.body.y = point.y = this.headPos.y;
+            this.headPath.unshift(point);
+        }
+        else
+            console.error(`headPath is empty @ enemySnake.js: anonymous/update`);
     }
-    else
-        console.error(`headPath is empty @ enemySnake.js: anonymous/update`);
 
     //call the original snake update method
     this.tempUpdate();
