@@ -30,6 +30,9 @@ class Login extends Phaser.State {
         if (this.login.style.visibility === 'hidden')
             this.login.style.visibility = 'initial';
         this.login.children.nameinput.value = '';
+
+        //dashboard hidden
+        document.getElementById("dashboard").style.visibility = "hidden"
     }
 }
 export default Login;

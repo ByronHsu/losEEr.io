@@ -72,6 +72,9 @@ Game.prototype = {
         snake.head.body.collideWorldBounds = true
         this.game.camera.follow(snake.head);
 
+        //dashboard visible
+        document.getElementById("dashboard").style.visibility = "visible"
+
         //initialize snake groups and collision
         for (var i = 0; i < this.game.snakes.length; i++) {
             var snake = this.game.snakes[i];
