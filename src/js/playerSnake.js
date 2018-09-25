@@ -19,6 +19,7 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     this.id = id;
 
     let playerSnakeData = {
+            name: this.game.playerName,
             id: this.id,
             snakeLength: this.snakeLength,
 

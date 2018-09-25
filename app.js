@@ -78,7 +78,7 @@ io.sockets.on('connection', function(socket) {
         socket.broadcast.emit('new_enemyPlayer', data);
         // dashboard update
         dashboardData.push({
-            // name: data.name
+            name: data.name,
             id: data.id,
             socketId: socket.id,
             score: data.snakeLength
