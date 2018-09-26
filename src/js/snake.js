@@ -52,8 +52,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
 
     // display snakeName
-    this.displayName = this.game.add.text(this.head.body.x, this.head.body.y, this.snakeName)
-
+    
     // Initial / Create Snake
     if (this.snakeLength === 1) this.initSections(10);
     else {
@@ -69,7 +68,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     }
     //initialize the eyes
     this.eyes = new EyePair(this.game, this.head, this.scale, this.headAngle);
-
+    
     //the edge is the front body that can collide with other snakes
     //it is locked to the head of this snake
     this.edgeOffset = 4;
@@ -78,18 +77,25 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.edge.alpha = 0;
     this.game.physics.p2.enable(this.edge, this.debug);
     this.edge.body.setCircle(this.edgeOffset);
-
+    
     //constrain edge to the front of the head
     this.edgeLock = this.game.physics.p2.createLockConstraint(
         this.edge.body, this.head.body, [0, -this.head.width * 0.5 - this.edgeOffset]
-    );
-
+        );
+        
     this.edge.body.onBeginContact.add(this.edgeContact, this);
-
+    
     this.onDestroyedCallbacks = [];
     this.onDestroyedContexts = [];
+    let displayStyle = {
+        font: "normal 15px Arial",
+        fill: "#0000cc",
+        align: "center"
+    }
+    this.displayName = this.game.add.text(this.headPath[0].x, this.headPath[0].y, this.snakeName, displayStyle)
+    // console.log(this.displayName)
 }
-
+    
 Snake.prototype = {
     /**
      * Give the snake starting segments
@@ -207,8 +213,8 @@ Snake.prototype = {
 
         //update displayName
         // console.log("update displayName", this.displayName)
-        this.displayName.position.x = this.headPath[0].x
-        this.displayName.position.y = this.headPath[0].y
+        this.displayName.position.x = this.headPath[0].x - this.displayName.width / 2
+        this.displayName.position.y = this.headPath[0].y - this.head.width - 6
     },
     /**
      * Find in the headPath array which point the next section of the snake
@@ -311,7 +317,7 @@ Snake.prototype = {
         });
         this.eyes.destroy();
         this.shadow.destroy();
-
+        this.displayName.destroy();
         //call this snake's destruction callbacks
         for (var i = 0; i < this.onDestroyedCallbacks.length; i++) {
             if (typeof this.onDestroyedCallbacks[i] == "function") {
