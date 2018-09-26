@@ -8,6 +8,7 @@
     /* border: 1px solid white; */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 0.75em;
+    width: 25%;
 }
 
 h2.dash_title {
@@ -45,6 +46,10 @@ h2.dash_title {
 
 .table_name {
     text-align: left;
+    /* width: 100px; */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .table_score {

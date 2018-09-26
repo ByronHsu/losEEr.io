@@ -88,11 +88,18 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.onDestroyedCallbacks = [];
     this.onDestroyedContexts = [];
     let displayStyle = {
-        font: "normal 15px Arial",
+        font: "bold 15px Arial",
         fill: "#0000cc",
         align: "center"
     }
-    this.displayName = this.game.add.text(this.headPath[0].x, this.headPath[0].y, this.snakeName, displayStyle)
+    let textlength = 40
+    if (this.snakeName.length > textlength) {
+        this.displayName = this.game.add.text(this.headPath[0].x, this.headPath[0].y, 
+            this.snakeName.substring(0, textlength) + "...", displayStyle)
+    } else {
+        this.displayName = this.game.add.text(this.headPath[0].x, this.headPath[0].y, 
+            this.snakeName, displayStyle)
+    }
     // console.log(this.displayName)
 }
     

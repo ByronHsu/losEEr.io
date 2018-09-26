@@ -163,7 +163,13 @@ Game.prototype = {
         }
         for (let i = 0; i < Math.min(10, data.length); i++) {
             table.rows[i].cells[0].innerHTML = "#"+ (i + 1).toString()
-            table.rows[i].cells[1].innerHTML = data[i].name
+            let textlength = 40
+            if (data[i].name.length > textlength) {
+                table.rows[i].cells[1].innerHTML = data[i].name.substring(0, textlength) + "..."
+            } else {
+                table.rows[i].cells[1].innerHTML = data[i].name
+            }
+            // table.rows[i].cells[1].innerHTML = data[i].name
             table.rows[i].cells[2].innerHTML = data[i].score
             if (data[i].socketId === this.game.socket.id) {
                 table.rows[i].style.color = "#ff8533"
@@ -176,7 +182,13 @@ Game.prototype = {
     onHigestScoreUpdate: function(data) {
         let table = document.getElementById("leader_data")
         console.log(data)
-        table.rows[0].cells[1].innerHTML = data.name
+        let textlength = 40
+        if (data.name.length > textlength) {
+            table.rows[0].cells[1].innerHTML = data.name.substring(0, textlength) + "..."
+        } else {
+            table.rows[0].cells[1].innerHTML = data.name
+        }
+        // table.rows[0].cells[1].innerHTML = data.name
         table.rows[0].cells[2].innerHTML = data.score
         table.rows[0].style.color = "#cc0000"
     },
