@@ -89,11 +89,6 @@ Game.prototype = {
             this.initFood(data[i].x, data[i].y, data[i].id);
         }
     },
-    onNewPlayer: function(data) {
-        var snake = new BotSnake(this.game, 'circle', data.path[0].x, data.path[0].y, data.id);
-        snake.remote_headPath = data.path;
-        //console.log('onNewPlayer', this.game.snakes);
-    },
     onEnemyPlayers: function(data) {
         // console.log("onEnemyPlayers", data)
         for (let i = 0; i < data.length; i++) {
@@ -162,7 +157,7 @@ Game.prototype = {
             }
         }
         else if(data.length < table.rows.length) {
-            for (let i = table.rows.length - 1; i >= data.length; i++) {
+            for (let i = table.rows.length - 1; i >= data.length; i--) {
                 table.deleteRow(i)
             }
         }

@@ -23,6 +23,7 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.spriteKey = spriteKey;
 
     //various quantities that can be changed
+    this.snakeName = props.name
     this.scale = props.scale;
     this.fastSpeed = props.fastSpeed;
     this.slowSpeed = props.slowSpeed;
@@ -48,9 +49,10 @@ var Snake = function(game, spriteKey, x, y, props = SnakeProps) {
     this.head = this.addSectionAtPosition(x, y);
     this.head.name = "head";
     this.head.snake = this;
-    // console.log(this.head)
-
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
+
+    // display snakeName
+    this.displayName = this.game.add.text(this.head.body.x, this.head.body.y, this.snakeName)
 
     // Initial / Create Snake
     if (this.snakeLength === 1) this.initSections(10);
@@ -202,6 +204,11 @@ Snake.prototype = {
         //update the eyes and the shadow below the snake
         this.eyes.update();
         this.shadow.update();
+
+        //update displayName
+        // console.log("update displayName", this.displayName)
+        this.displayName.position.x = this.headPath[0].x
+        this.displayName.position.y = this.headPath[0].y
     },
     /**
      * Find in the headPath array which point the next section of the snake
