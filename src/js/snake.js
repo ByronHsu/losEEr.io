@@ -11,7 +11,6 @@ import SnakeProps from './SnakeProps'
  * @param  {Number} y         coordinate
  */
 var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
-    // console.log("props", props)
     this.game = game;
     //create an array of snakes in the game object and add this snake
     if (!this.game.snakes) {
@@ -19,16 +18,16 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     }
     this.game.snakes.push(this);
     this.debug = true;
-    this.snakeLength = props.snakeLength;
     this.spriteKey = spriteKey;
 
+    this.snakeLength = props.snakeLength;
     //various quantities that can be changed
     this.scale = props.scale;
     this.fastSpeed = props.fastSpeed;
     this.slowSpeed = props.slowSpeed;
-    this.speed = this.slowSpeed;
     this.rotationSpeed = props.rotationSpeed;
     this.headAngle = props.headAngle
+    this.speed = this.slowSpeed;
 
     //initialize groups and arrays
     this.collisionGroup = this.game.physics.p2.createCollisionGroup();
@@ -48,20 +47,13 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     this.head = this.addSectionAtPosition(x, y);
     this.head.name = "head";
     this.head.snake = this;
-    // console.log(this.head)
-
-    this.level = 1;
+    this.req_exp = 1;
     this.exp = 0;
-
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
 
     // Initial / Create Snake
     if (this.snakeLength === 1) this.initSections(10);
     else {
-        // console.log("enemySnakeHeadPath", props.headPath)
-        // this.initSections(this.snakeLength - 1)
-        // this.snakeLength = props.snakeLength
-        // this.headPath = props.headPath
         for (let i = 1; i < props.snakeLength; i++) {
             this.addSectionAtPosition(props.headPath[i])
         }
@@ -106,8 +98,6 @@ Snake.prototype = {
             //add a point to the head path so that the section stays there
             this.headPath.push(new Phaser.Point(x, y));
         }
-        // console.log("initSections", num);
-        // console.log("init headPath", this.headPath)
     },
     /**
      * Add a section to the snake at a given position
@@ -123,8 +113,6 @@ Snake.prototype = {
         sec.body.collides([]);
         sec.body.kinematic = true;
 
-
-
         this.snakeLength++;
         this.sectionGroup.add(sec);
         sec.sendToBack();
@@ -135,10 +123,7 @@ Snake.prototype = {
         this.shadow.add(x, y);
         //add a circle body to this section
         sec.body.clearShapes();
-
         sec.body.addCircle(sec.width * 0.5);
-
-
 
         return sec;
     },
@@ -184,10 +169,6 @@ Snake.prototype = {
             this.headPath.pop();
         }
 
-        // while (this.headPath.length > this.snakeLength + 20) {
-        //     this.headPath.pop();
-        // }
-
         //this calls onCycleComplete every time a cycle is completed
         //a cycle is the time it takes the second section of a snake to reach
         //where the head of the snake was at the end of the last cycle
@@ -218,7 +199,6 @@ Snake.prototype = {
      * @return {Integer}              new index
      */
     findNextPointIndex: function (currentIndex) {
-        var pt = this.headPath[currentIndex];
         //we are trying to find a point at approximately this distance away
         //from the point before it, where the distance is the total length of
         //all the lines connecting the two points
@@ -256,23 +236,19 @@ Snake.prototype = {
      * Called each time the snake's second section reaches where the
      * first section was at the last call (completed a single cycle)
      */
-
-    levelup: function () {
-
-    },
     onCycleComplete: function () {
         if (this.queuedSections > 0) {
             var lastSec = this.sections[this.sections.length - 1];
-            this.exp++;
-            console.log(this.exp, ' ', this.level);
 
+            this.exp++;
+            console.log(this.exp, ' ', this.req_exp);
             //to control snake size
-            if (this.exp >= this.level && this.level <= 15) {
-                this.level++;
+            if (this.exp >= this.req_exp) {
+                this.req_exp++;
                 this.exp = 0;
                 this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
+                if (this.req_exp % 5 == 0) { this.req_exp *= 2; }
             }
-            // if (this.levelup())
             // this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
             this.queuedSections--;
         }
@@ -306,7 +282,8 @@ Snake.prototype = {
      */
     incrementSize: function () {
         this.addSectionsAfterLast(1);
-        this.setScale(this.scale * 1.01);
+        if (this.req_exp < 34) { this.setScale(this.scale * 1.01); }
+        else this.setScale(this.scale * 1.001);
     },
     /**
      * Destroy the snake
