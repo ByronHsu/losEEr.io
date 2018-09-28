@@ -51,6 +51,15 @@ for (var i = 0; i < foodAmount; i++) {
     foodArr.push({ id: uuid(), x: Util.randomInt(-width + cornerWidth, width - cornerWidth), y: Util.randomInt(-height + cornerHeight, height - cornerHeight) });
 }
 let socketToSnakeID = {}
+let dashboardData = []
+let highestScoreSnake = {
+    // name: "",
+    id: "",
+    socketId: "",
+    score: 0
+}
+
+let dashboardCompare = (a, b) => b.score - a.score
 
 io.sockets.on('connection', function(socket) {
     // console.log(socket.id)
@@ -62,11 +71,19 @@ io.sockets.on('connection', function(socket) {
         //   }
         socket.emit("enemyPlayers", snakeArr)
         snakeArr.push(data);
-        //   console.log(typeof(socket.id))
+        // socketId <=> snakeId
         socketToSnakeID[socket.id] = data.id
             // console.log(socketToSnakeID)
             //send message to every connected client except the sender
         socket.broadcast.emit('new_enemyPlayer', data);
+        // dashboard update
+        dashboardData.push({
+            name: data.name,
+            id: data.id,
+            socketId: socket.id,
+            score: data.snakeLength
+        })
+        updateDashboard()
     });
     socket.on('playerMove', data => {
         var snake = snakeArr.find(e => e.id == data.id);
@@ -108,6 +125,15 @@ io.sockets.on('connection', function(socket) {
         foodArr.push(...data.drop); // Otherwise the newly added snake won't see food dropped from dead snake
         foodAmount += data.drop.length;
         socket.broadcast.emit('enemyDestroy', data.id, data.drop);
+        // update dashboard
+        for (let i = 0;i < dashboardData.length; i++) {
+            if (dashboardData[i].id == data.id) {
+                dashboardData.splice(i, 1)
+                break;
+            }
+        }
+        updateDashboard()
+
     });
 
     socket.on("playerIncrease", data => {
@@ -118,6 +144,14 @@ io.sockets.on('connection', function(socket) {
         snake.snakeLength = data.snakeLength
         snake.headAngle = data.headAngle
         socket.broadcast.emit('enemyIncrease', data)
+        //update dashboard
+        for (let i = 0;i < dashboardData.length; i++) {
+            if (dashboardData[i].id == data.id) {
+                dashboardData[i].score = data.snakeLength
+                break;
+            }
+        }
+        updateDashboard()
     })
 
     socket.on("spaceKeyEvent", data => {
@@ -140,6 +174,14 @@ io.sockets.on('connection', function(socket) {
             }
         }
         socket.broadcast.emit('enemyDisconnect', snakeId)
+        // update dashboard
+        for (let i = 0;i < dashboardData.length; i++) {
+            if (dashboardData[i].id == snakeId) {
+                dashboardData.splice(i, 1)
+                break;
+            }
+        }
+        updateDashboard()
     })
 });
 
@@ -153,5 +195,13 @@ function genfood() {
         foodArr.push(newfood);
     }
     io.emit('on_get_food', newfoods);
+}
+
+function updateDashboard() {
+    dashboardData.sort(dashboardCompare)
+    if (dashboardData[0] && highestScoreSnake.score < dashboardData[0].score) highestScoreSnake = dashboardData[0]
+    console.log("disconnect", dashboardData)
+    io.emit('dashboardUpdate', dashboardData)
+    io.emit('higestScoreUpdate', highestScoreSnake)
 }
 setInterval(genfood, 2000);

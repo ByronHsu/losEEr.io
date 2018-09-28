@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta charset="utf-8" />
     <title>losEEr.io</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <style>
         html {
             height:100%;
@@ -106,8 +107,24 @@
         }
     </style>
 </head>
+<body style="background-color: #000033">
+    <div id="dashboard">
+        <h2 class="dash_title">LEgEnd Board</h2>
+        <div id="dash_leader">
+            <span style="padding-left: 3px;">Highest Score of All The Time</span>
+            <table id="leader_data">
+                <tr>
+                    <td class="table_rank"><i class="fas fa-crown"></i></td>
+                    <td class="table_name"></td>
+                    <td class="table_score"></td>
+                </tr>
+            </table>
+        </div>
+        <div id="dash_table">
+            <table id="table_data"></table>
+        </div>
+    </div>
 
-<body>
     <div id="login">
         <input id="nameinput" type="text" placeholder="Please enter your name">
         <button id="submitname">Play</button>
@@ -115,6 +132,5 @@
     </div>
     <!-- <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script> -->
     <script src="asset/phaser.min.js"></script>
-</body>
 
 </html>

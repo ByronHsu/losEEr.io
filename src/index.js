@@ -1,5 +1,6 @@
 import Login from './js/login';
 import Game from './js/game';
+import './main.css'
 
 var game = new Phaser.Game(document.documentElement.clientWidth*0.99, document.documentElement.clientHeight*0.98, Phaser.AUTO, null);
 

@@ -46,6 +46,8 @@ Game.prototype = {
         this.game.socket.on('enemyIncrease', this.onEnemyIncrease.bind(this));
         this.game.socket.on('enemySpaceKeyEvent', this.onEnemySpaceKeyEvent.bind(this));
         this.game.socket.on('enemyDisconnect', this.onEnemyDisconnect.bind(this));
+        this.game.socket.on('dashboardUpdate', this.onDashboardUpdate.bind(this))
+        this.game.socket.on('higestScoreUpdate', this.onHigestScoreUpdate.bind(this))
     },
     create: function() {
         if (this.game.socket.disconnected)
@@ -69,6 +71,9 @@ Game.prototype = {
             Util.randomInt(-this.worldHeight + this.cornerWidth * 5, this.worldHeight - this.cornerWidth * 5), uuid());
         snake.head.body.collideWorldBounds = true
         this.game.camera.follow(snake.head);
+
+        //dashboard visible
+        document.getElementById("dashboard").style.visibility = "visible"
 
         //initialize snake groups and collision
         for (var i = 0; i < this.game.snakes.length; i++) {
@@ -137,6 +142,56 @@ Game.prototype = {
         let snake = this.game.snakes.find(e => e.id == snakeId)
         if (snake)
             snake.destroy()
+    },
+    onDashboardUpdate: function(data) {
+        console.log("onDashboardUpdate", data)
+        let table = document.getElementById("table_data")
+        if (data.length > table.rows.length) {
+            for (let i = table.rows.length; i < Math.min(data.length, 10); i++) {
+                let row = table.insertRow(i)
+                let c1 = row.insertCell(0)
+                let c2 = row.insertCell(1)
+                let c3 = row.insertCell(2)
+                c1.classList.add("table_rank")
+                c2.classList.add("table_name")
+                c3.classList.add("table_score")
+            }
+        }
+        else if(data.length < table.rows.length) {
+            for (let i = table.rows.length - 1; i >= data.length; i--) {
+                table.deleteRow(i)
+            }
+        }
+        for (let i = 0; i < Math.min(10, data.length); i++) {
+            table.rows[i].cells[0].innerHTML = "#"+ (i + 1).toString()
+            let textlength = 40
+            if (data[i].name.length > textlength) {
+                table.rows[i].cells[1].innerHTML = data[i].name.substring(0, textlength) + "..."
+            } else {
+                table.rows[i].cells[1].innerHTML = data[i].name
+            }
+            // table.rows[i].cells[1].innerHTML = data[i].name
+            table.rows[i].cells[2].innerHTML = data[i].score
+            if (data[i].socketId === this.game.socket.id) {
+                table.rows[i].style.color = "#ff8533"
+            }
+            else {
+                table.rows[i].style.color = "black"
+            }
+        }
+    },
+    onHigestScoreUpdate: function(data) {
+        let table = document.getElementById("leader_data")
+        console.log(data)
+        let textlength = 40
+        if (data.name.length > textlength) {
+            table.rows[0].cells[1].innerHTML = data.name.substring(0, textlength) + "..."
+        } else {
+            table.rows[0].cells[1].innerHTML = data.name
+        }
+        // table.rows[0].cells[1].innerHTML = data.name
+        table.rows[0].cells[2].innerHTML = data.score
+        table.rows[0].style.color = "#cc0000"
     },
     /**
      * Main update loop

@@ -1,4 +1,5 @@
 import Snake from './snake'
+import SnakeProps from './SnakeProps'
 
 /**
  * Player of the core snake for controls
@@ -8,38 +9,19 @@ import Snake from './snake'
  * @param  {Number} y         coordinate
  */
 var PlayerSnake = function(game, spriteKey, x, y, id) {
-    Snake.call(this, game, spriteKey, x, y);
+    let playerSnakeData = SnakeProps
+    playerSnakeData.name = game.playerName
+    Snake.call(this, game, spriteKey, x, y, playerSnakeData);
     this.cursors = game.input.keyboard.createCursorKeys();
-
+    
     //handle the space key so that the player's snake can speed up
     var spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     var self = this;
     spaceKey.onDown.add(this.spaceKeyDown, this);
     spaceKey.onUp.add(this.spaceKeyUp, this);
     this.id = id;
-
-    let playerSnakeData = {
-            id: this.id,
-            snakeLength: this.snakeLength,
-
-            // //various quantities that can be changed
-            scale: this.scale,
-            fastSpeed: this.fastSpeed,
-            slowSpeed: this.slowSpeed,
-            // speed: this.speed,
-            rotationSpeed: this.rotationSpeed,
-            headAngle: 0,
-            isLightingUp: this.shadow.isLightingUp,
-
-            //the head path is an array of points that the head of the snake has
-            //traveled through
-            headPath: this.headPath,
-            food: this.food,
-
-            // preferredDistance: this.preferredDistance,
-            queuedSections: this.queuedSections
-        }
-        // console.log("creatPlayer", playerSnakeData)
+    playerSnakeData.id = this.id
+    console.log("creatPlayer", playerSnakeData)
     this.game.socket.emit('createPlayer', playerSnakeData);
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
