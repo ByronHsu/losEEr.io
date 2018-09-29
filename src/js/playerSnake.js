@@ -20,8 +20,8 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     spaceKey.onDown.add(this.spaceKeyDown, this);
     spaceKey.onUp.add(this.spaceKeyUp, this);
     this.id = id;
-    playerSnakeData.id = this.id
-    console.log("creatPlayer", playerSnakeData)
+    playerSnakeData.id = this.id;
+    // console.log("creatPlayer", playerSnakeData)
     this.game.socket.emit('createPlayer', playerSnakeData);
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);

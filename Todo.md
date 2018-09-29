@@ -1,14 +1,9 @@
 # Problems
-- <del> Size increment </del>
 - (headPath (Repeatedly push)) (Can't solve)
 - eyes (place, angle)  (I can't solve it!!!!QAQ)
-- <del> player disconnect </del>
 - food
-- <del>shadow (light up)</del>
-- <del>fastSpeed (disappear on spaceUP)</del>
-- <del> snake generate (place) </del>
-- <del> field (too small) </del>
-- <del> field bound </del>
+- Mismatch between cursor coordinate and snake head's
+- World bound width and height is not quite right
 
 # Game Settings
 - snake inLarge too fast

@@ -35,7 +35,38 @@ Game.prototype = {
         this.game.cornerWidth = this.cornerWidth
 
         this.game.snakes = [];
-
+        /* Test */
+        // this.game.groups = [];
+        this.game.globalScale = 0.99;
+        let E = this.game.input.keyboard.addKey(Phaser.Keyboard.E);
+        let Q = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
+        let S = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
+        E.onDown.add(() => {
+            this.game.camera.scale.x *= this.game.globalScale;
+            this.game.camera.scale.y *= this.game.globalScale;
+            this.worldWidth *= this.game.globalScale;
+            this.worldHeight *= this.game.globalScale;
+            this.game.world.setBounds(-this.worldWidth, -this.worldHeight, this.worldWidth * 2, this.worldHeight * 2)
+            this.background.tileScale.x *= this.game.globalScale;
+            this.background.tileScale.y *= this.game.globalScale;
+            // this.game.camera.bounds.x = -this.worldWidth * this.game.camera.scale.x;
+            // this.game.camera.bounds.y = -this.game.worldHeight * this.game.camera.scale.y;
+            // this.game.camera.bounds.width = 2 * this.game.worldWidth * this.game.camera.scale.x;
+            // this.game.camera.bounds.height = 2 * this.game.worldHeight * this.game.camera.scale.y;
+        });
+        Q.onDown.add(() => {
+            this.game.camera.scale.x *= 2 - this.game.globalScale;
+            this.game.camera.scale.y *= 2 - this.game.globalScale;
+            this.worldWidth *= 2 - this.game.globalScale;
+            this.worldHeight *= 2 - this.game.globalScale;
+            this.game.world.setBounds(-this.worldWidth, -this.worldHeight, this.worldWidth * 2, this.worldHeight * 2)
+        })
+        const inspect = ({game}) => ({Bs: game.world.bounds, S: game.world.scale, WS: game.world.worldScale,
+                                    Wx: game.input.activePointer.worldX, Wy: game.input.activePointer.worldY});
+        S.onDown.add(() => {
+            console.log(inspect(this));
+        })
+        /* Test */
         //callbacks
         this.game.socket.on('on_get_food', this.onGetFood.bind(this));
         this.game.socket.on('destroy_food', this.remove_food_by_id.bind(this));
@@ -59,6 +90,7 @@ Game.prototype = {
         //initialize physics and groups
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.foodGroup = this.game.add.group();
+        // this.game.groups.push(this.foodGroup);
         this.snakeHeadCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.foodCollisionGroup = this.game.physics.p2.createCollisionGroup();
 
@@ -144,7 +176,7 @@ Game.prototype = {
             snake.destroy()
     },
     onDashboardUpdate: function(data) {
-        console.log("onDashboardUpdate", data)
+        // console.log("onDashboardUpdate", data)
         let table = document.getElementById("table_data")
         if (data.length > table.rows.length) {
             for (let i = table.rows.length; i < Math.min(data.length, 10); i++) {
@@ -182,7 +214,7 @@ Game.prototype = {
     },
     onHigestScoreUpdate: function(data) {
         let table = document.getElementById("leader_data")
-        console.log(data)
+        // console.log(data)
         let textlength = 40
         if (data.name.length > textlength) {
             table.rows[0].cells[1].innerHTML = data.name.substring(0, textlength) + "..."
@@ -205,6 +237,9 @@ Game.prototype = {
             var f = this.foodGroup.children[i];
             f.food.update();
         }
+        this.game.debug.cameraInfo(this.game.camera, 32, 32);
+        this.game.debug.pointer(this.game.input.activePointer);
+        this.game.debug.spriteInfo(this.game.camera.target, 32, 150);
     },
     /**
      * Create a piece of food at a point
