@@ -103,6 +103,10 @@ Game.prototype = {
             Util.randomInt(-this.worldHeight + this.cornerWidth * 5, this.worldHeight - this.cornerWidth * 5), uuid());
         snake.head.body.collideWorldBounds = true
         this.game.camera.follow(snake.head);
+        this.game.player = snake;
+
+        this.game.debug_cursor_sprite = this.game.add.sprite(0, 0, 'circle');
+        this.game.debug_cursor_sprite.tint = 0x207CCA;
 
         //dashboard visible
         document.getElementById("dashboard").style.visibility = "visible"
@@ -239,7 +243,10 @@ Game.prototype = {
         }
         this.game.debug.cameraInfo(this.game.camera, 32, 32);
         this.game.debug.pointer(this.game.input.activePointer);
-        this.game.debug.spriteInfo(this.game.camera.target, 32, 150);
+        this.game.debug.spriteInfo(this.game.camera.target, 650, 150);
+        this.game.debug_cursor_sprite.x = this.game.camera.target.x;
+        this.game.debug_cursor_sprite.y = this.game.camera.target.y;
+        console.log(this.game.player.head === this.game.camera.target, this.game.player.head, this.game.camera.target);
     },
     /**
      * Create a piece of food at a point
