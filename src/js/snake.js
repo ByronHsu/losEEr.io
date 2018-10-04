@@ -20,17 +20,18 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     this.debug = true;
     this.spriteKey = spriteKey;
 
-    this.snakeLength = props.snakeLength;
-    //various quantities that can be changed
+    this.id = props.id
     this.snakeName = props.name
+    //various quantities that can be changed
     this.scale = props.scale;
     this.fastSpeed = props.fastSpeed;
     this.slowSpeed = props.slowSpeed;
     this.rotationSpeed = props.rotationSpeed;
     this.headAngle = props.headAngle
     this.speed = this.slowSpeed;
-
+    
     //initialize groups and arrays
+    this.snakeLength = props.snakeLength;
     this.collisionGroup = this.game.physics.p2.createCollisionGroup();
     this.sections = [];
     //the head path is an array of points that the head of the snake has
@@ -65,22 +66,6 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     }
     //initialize the eyes
     this.eyes = new EyePair(this.game, this.head, this.scale, this.headAngle);
-    
-    //the edge is the front body that can collide with other snakes
-    //it is locked to the head of this snake
-    this.edgeOffset = 4;
-    this.edge = this.game.add.sprite(x, y - this.edgeOffset, this.spriteKey);
-    this.edge.name = "edge";
-    this.edge.alpha = 0;
-    this.game.physics.p2.enable(this.edge, this.debug);
-    this.edge.body.setCircle(this.edgeOffset);
-    
-    //constrain edge to the front of the head
-    this.edgeLock = this.game.physics.p2.createLockConstraint(
-        this.edge.body, this.head.body, [0, -this.head.width * 0.5 - this.edgeOffset]
-        );
-        
-    this.edge.body.onBeginContact.add(this.edgeContact, this);
     
     this.onDestroyedCallbacks = [];
     this.onDestroyedContexts = [];
@@ -283,11 +268,6 @@ Snake.prototype = {
         this.scale = scale;
         this.preferredDistance = 17 * this.scale;
 
-        //update edge lock location with p2 physics
-        this.edgeLock.localOffsetB = [
-            0, this.game.physics.p2.pxmi(this.head.width * 0.5 + this.edgeOffset)
-        ];
-
         //scale sections and their bodies
         for (var i = 0; i < this.sections.length; i++) {
             var sec = this.sections[i];
@@ -312,9 +292,6 @@ Snake.prototype = {
      */
     destroy: function () {
         this.game.snakes.splice(this.game.snakes.indexOf(this), 1);
-        //remove constraints
-        this.game.physics.p2.removeConstraint(this.edgeLock);
-        this.edge.destroy();
         //destroy food that is constrained to the snake head
         for (var i = this.food.length - 1; i >= 0; i--) {
             this.food[i].destroy();
@@ -332,23 +309,6 @@ Snake.prototype = {
                 this.onDestroyedCallbacks[i].apply(
                     this.onDestroyedContexts[i], [this]);
             }
-        }
-    },
-    /**
-     * Called when the front of the snake (the edge) hits something
-     * @param  {Phaser.Physics.P2.Body} phaserBody body it hit
-     */
-    edgeContact: function (phaserBody) {
-        //if the edge hits another snake's section, destroy this snake
-        if (phaserBody && this.sections.indexOf(phaserBody.sprite) == -1) {
-            this.destroy();
-        }
-        //if the edge hits this snake's own section, a simple solution to avoid
-        //glitches is to move the edge to the center of the head, where it
-        //will then move back to the front because of the lock constraint
-        else if (phaserBody) {
-            this.edge.body.x = this.head.body.x;
-            this.edge.body.y = this.head.body.y;
         }
     },
     /**

@@ -9,18 +9,33 @@ import SnakeProps from './SnakeProps'
  * @param  {Number} y         coordinate
  */
 var PlayerSnake = function(game, spriteKey, x, y, id) {
+    // initialize
     let playerSnakeData = SnakeProps
     playerSnakeData.name = game.playerName
+    playerSnakeData.id = id
     Snake.call(this, game, spriteKey, x, y, playerSnakeData);
+
     this.cursors = game.input.keyboard.createCursorKeys();
-    
     //handle the space key so that the player's snake can speed up
     var spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    var self = this;
     spaceKey.onDown.add(this.spaceKeyDown, this);
     spaceKey.onUp.add(this.spaceKeyUp, this);
-    this.id = id;
-    playerSnakeData.id = this.id
+    
+    //the edge is the front body that can collide with other snakes
+    //it is locked to the head of this snake
+    this.edgeOffset = 4;
+    this.edge = this.game.add.sprite(x, y - this.edgeOffset, this.spriteKey);
+    this.edge.name = "edge";
+    this.edge.alpha = 0;
+    this.game.physics.p2.enable(this.edge, this.debug);
+    this.edge.body.setCircle(this.edgeOffset);
+    //constrain edge to the front of the head
+    this.edgeLock = this.game.physics.p2.createLockConstraint(
+        this.edge.body, this.head.body, [0, -this.head.width * 0.5 - this.edgeOffset]
+    );
+    this.edge.body.onBeginContact.add(this.edgeContact, this);
+    
+    // socket createPlayer
     console.log("creatPlayer", playerSnakeData)
     this.game.socket.emit('createPlayer', playerSnakeData);
     this.addDestroyedCallback(function() {
@@ -50,6 +65,42 @@ PlayerSnake.prototype.spaceKeyUp = function() {
         id: this.id,
         isLightingUp: this.shadow.isLightingUp
     })
+}
+
+/**
+* Called when the front of the snake (the edge) hits something
+* @param  {Phaser.Physics.P2.Body} phaserBody body it hit
+*/
+PlayerSnake.prototype.edgeContact = function (phaserBody) {
+   //if the edge hits another snake's section, destroy this snake
+   if (phaserBody && this.sections.indexOf(phaserBody.sprite) == -1) {
+       this.destroy();
+   }
+   //if the edge hits this snake's own section, a simple solution to avoid
+   //glitches is to move the edge to the center of the head, where it
+   //will then move back to the front because of the lock constraint
+   else if (phaserBody) {
+       this.edge.body.x = this.head.body.x;
+       this.edge.body.y = this.head.body.y;
+   }
+}
+
+// set edgeLock scale
+PlayerSnake.prototype.tempSetScale = PlayerSnake.prototype.setScale
+PlayerSnake.prototype.setScale = function(scale) {
+    this.tempSetScale(scale)
+    //update edge lock location with p2 physics
+    this.edgeLock.localOffsetB = [
+        0, this.game.physics.p2.pxmi(this.head.width * 0.5 + this.edgeOffset)
+    ];
+}
+
+PlayerSnake.prototype.tempDestroy = PlayerSnake.prototype.destroy
+PlayerSnake.prototype.destroy = function() {
+    //remove constraints
+    this.game.physics.p2.removeConstraint(this.edgeLock);
+    this.edge.destroy();
+    this.tempDestroy()
 }
 
 /**
