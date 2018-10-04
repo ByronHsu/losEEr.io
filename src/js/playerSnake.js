@@ -22,7 +22,7 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     this.id = id;
     playerSnakeData.id = this.id;
     this.game.debug_line = new Phaser.Line();
-    this.game.debug_line2 = new Phaser.Line();
+    // this.game.debug_line2 = new Phaser.Line();
     // console.log("creatPlayer", playerSnakeData)
     this.game.socket.emit('createPlayer', playerSnakeData);
     this.addDestroyedCallback(function() {
@@ -67,8 +67,10 @@ PlayerSnake.prototype.update = function() {
     var mousePosY = this.game.input.activePointer.worldY;
     var headX = this.head.body.x;
     var headY = this.head.body.y;
+    this.game.debug_cursor_sprite.x = headX;
+    this.game.debug_cursor_sprite.y = headY;
     this.game.debug_line.setTo(mousePosX, mousePosY, headX, headY);
-    this.game.debug_line2.setTo(mousePosX, mousePosY, this.head.x, this.head.y);
+    // this.game.debug_line2.setTo(mousePosX, mousePosY, this.head.x, this.head.y);
     // console.log(mousePosX - headX, mousePosY - headY);
     var angle = (180 * Math.atan2(mousePosX - headX, mousePosY - headY) / Math.PI);
     if (angle > 0) {

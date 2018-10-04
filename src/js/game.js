@@ -42,10 +42,17 @@ Game.prototype = {
         let Q = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
         // let S = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
         E.onDown.add(() => {
+            console.log(this.game.camera.view.x, this.game.camera.view.y);
             this.game.camera.scale.x *= this.game.globalScale;
             this.game.camera.scale.y *= this.game.globalScale;
-            this.worldWidth *= this.game.globalScale;
-            this.worldHeight *= this.game.globalScale;
+            this.game.camera.bounds.x *= this.game.globalScale;
+            this.game.camera.bounds.y *= this.game.globalScale;
+            this.game.camera.bounds.width *= this.game.globalScale;
+            this.game.camera.bounds.height *= this.game.globalScale;
+            console.log(this.game.camera.view.x, this.game.camera.view.y);
+            // this.worldWidth *= this.game.globalScale;
+            // this.worldHeight *= this.game.globalScale;
+            // this.game.player.speed *= this.game.globalScale;
             // this.game.world.setBounds(-this.worldWidth, -this.worldHeight, this.worldWidth * 2, this.worldHeight * 2)
             this.background.tileScale.x *= this.game.globalScale;
             this.background.tileScale.y *= this.game.globalScale;
@@ -53,8 +60,8 @@ Game.prototype = {
         Q.onDown.add(() => {
             this.game.camera.scale.x *= 2 - this.game.globalScale;
             this.game.camera.scale.y *= 2 - this.game.globalScale;
-            this.worldWidth *= 2 - this.game.globalScale;
-            this.worldHeight *= 2 - this.game.globalScale;
+            // this.worldWidth *= 2 - this.game.globalScale;
+            // this.worldHeight *= 2 - this.game.globalScale;
             // this.game.world.setBounds(-this.worldWidth, -this.worldHeight, this.worldWidth * 2, this.worldHeight * 2)
         })
         // const inspect = ({game}) => ({Bs: game.world.bounds, S: game.world.scale, WS: game.world.worldScale,
@@ -99,6 +106,10 @@ Game.prototype = {
             Util.randomInt(-this.worldHeight + this.cornerWidth * 5, this.worldHeight - this.cornerWidth * 5), uuid());
         snake.head.body.collideWorldBounds = true
         this.game.camera.follow(snake.head);
+        this.game.player = snake;
+        
+        this.game.debug_cursor_sprite = this.game.add.sprite(0, 0, 'circle');
+        this.game.debug_cursor_sprite.tint = 0x207CCA;
 
         //dashboard visible
         document.getElementById("dashboard").style.visibility = "visible"
@@ -236,7 +247,8 @@ Game.prototype = {
         this.game.debug.cameraInfo(this.game.camera, 32, 32);
         this.game.debug.pointer(this.game.input.activePointer);
         this.game.debug.geom(this.game.debug_line);
-        this.game.debug.geom(this.game.debug_line2);
+        this.game.debug.lineInfo(this.game.debug_line, 300, 400);
+        // this.game.debug.geom(this.game.debug_line2);
         this.game.debug.spriteInfo(this.game.camera.target, 50, 150);
     },
     /**
