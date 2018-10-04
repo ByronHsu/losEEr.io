@@ -9,6 +9,7 @@ var Eye = function(game, head, scale, headAngle) {
     this.head = head;
     this.scale = scale;
     this.eyeGroup = this.game.add.group();
+    this.game.metagroup.add(this.eyeGroup);
     this.collisionGroup = this.game.physics.p2.createCollisionGroup();
     this.debug = false;
 

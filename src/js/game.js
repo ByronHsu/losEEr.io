@@ -29,6 +29,7 @@ Game.prototype = {
         this.game.world.setBounds(-this.worldWidth, -this.worldHeight, this.worldWidth * 2, this.worldHeight * 2)
         this.game.stage.backgroundColor = '#000033';
         this.game.stage.disableVisibilityChange = true;
+        this.game.metagroup = this.game.add.group();
 
         //add tilesprite background
         this.cornerWidth = 100
@@ -42,14 +43,18 @@ Game.prototype = {
         let Q = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
         // let S = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
         E.onDown.add(() => {
-            console.log(this.game.camera.view.x, this.game.camera.view.y);
-            this.game.camera.scale.x *= this.game.globalScale;
-            this.game.camera.scale.y *= this.game.globalScale;
-            this.game.camera.bounds.x *= this.game.globalScale;
-            this.game.camera.bounds.y *= this.game.globalScale;
-            this.game.camera.bounds.width *= this.game.globalScale;
-            this.game.camera.bounds.height *= this.game.globalScale;
-            console.log(this.game.camera.view.x, this.game.camera.view.y);
+            this.game.metagroup.pivot.x = this.game.player.head.x;
+            this.game.metagroup.pivot.y = this.game.player.head.y;
+            this.game.metagroup.scale.x *= this.game.globalScale;
+            this.game.metagroup.scale.y *= this.game.globalScale;
+            // console.log(this.game.camera.view.x, this.game.camera.view.y);
+            // this.game.camera.scale.x *= this.game.globalScale;
+            // this.game.camera.scale.y *= this.game.globalScale;
+            // this.game.camera.bounds.x *= this.game.globalScale;
+            // this.game.camera.bounds.y *= this.game.globalScale;
+            // this.game.camera.bounds.width *= this.game.globalScale;
+            // this.game.camera.bounds.height *= this.game.globalScale;
+            // console.log(this.game.camera.view.x, this.game.camera.view.y);
             // this.worldWidth *= this.game.globalScale;
             // this.worldHeight *= this.game.globalScale;
             // this.game.player.speed *= this.game.globalScale;
@@ -58,8 +63,8 @@ Game.prototype = {
             this.background.tileScale.y *= this.game.globalScale;
         });
         Q.onDown.add(() => {
-            this.game.camera.scale.x *= 2 - this.game.globalScale;
-            this.game.camera.scale.y *= 2 - this.game.globalScale;
+            // this.game.camera.scale.x *= 2 - this.game.globalScale;
+            // this.game.camera.scale.y *= 2 - this.game.globalScale;
             // this.worldWidth *= 2 - this.game.globalScale;
             // this.worldHeight *= 2 - this.game.globalScale;
             // this.game.world.setBounds(-this.worldWidth, -this.worldHeight, this.worldWidth * 2, this.worldHeight * 2)
@@ -93,6 +98,8 @@ Game.prototype = {
         //initialize physics and groups
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.foodGroup = this.game.add.group();
+        this.game.metagroup.add(this.background)
+        this.game.metagroup.add(this.foodGroup)
         // this.game.groups.push(this.foodGroup);
         this.snakeHeadCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.foodCollisionGroup = this.game.physics.p2.createCollisionGroup();
