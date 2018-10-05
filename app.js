@@ -64,11 +64,6 @@ let dashboardCompare = (a, b) => b.score - a.score
 io.sockets.on('connection', function(socket) {
     // console.log(socket.id)
     socket.on('createPlayer', (data) => {
-        // console.log('createPlayer', data.id);
-        //   for (i = 0; i < snakeArr.length; i++) {
-        //      //send to the new player about everyone who is already connected. 	
-        //      socket.emit("enemyPlayers", snakeArr[i]);
-        //   }
         socket.emit("enemyPlayers", snakeArr)
         snakeArr.push(data);
         // socketId <=> snakeId
@@ -90,7 +85,8 @@ io.sockets.on('connection', function(socket) {
         if (snake == null) return;
         snake.headPath = data.headPath;
         snake.headAngle = data.headAngle;
-        //   console.log("playerMove", data)
+        snake.secDetails = data.secDetails
+        console.log("playerMove", data.secDetails)
         socket.broadcast.emit('enemyMove', data);
     });
     socket.on('on_food_init', function() {
@@ -139,7 +135,7 @@ io.sockets.on('connection', function(socket) {
     socket.on("playerIncrease", data => {
         let snake = snakeArr.find((e) => e.id == data.id);
         if (snake == null) return
-            // console.log("playerIncrease", data)
+        // console.log("playerIncrease", data)
         snake.scale = data.scale
         snake.snakeLength = data.snakeLength
         snake.headAngle = data.headAngle

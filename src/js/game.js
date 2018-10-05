@@ -90,27 +90,26 @@ Game.prototype = {
         }
     },
     onEnemyPlayers: function(data) {
-        // console.log("onEnemyPlayers", data)
+        console.log("onEnemyPlayers", data)
         for (let i = 0; i < data.length; i++) {
-            let snake = new EnemySnake(this.game, 'circle', data[i].headPath[0].x, data[i].headPath[0].y, data[i])
-            snake.remote_headPath = data[i].headPath
-            snake.headAngle = data[i].headAngle
-                // console.log("enemyPlayers", snake)
+            let snake = new EnemySnake(this.game, 'circle', data[i].secDetails[0].x, data[i].secDetails[0].y, data[i])
         }
     },
     onNewEnemy: function(data) {
         // console.log("onNewEnemyData", data)
-        var snake = new EnemySnake(this.game, 'circle', data.headPath[0].x, data.headPath[0].y, data);
-        snake.remote_headPath = data.headPath;
-        snake.headAngle = data.headAngle
+        let snake = new EnemySnake(this.game, 'circle', data.secDetails[0].x, data.secDetails[0].y, data);
+        console.log("onNewEnemy", snake)
+        // snake.remote_headPath = data.headPath;
+        // snake.headAngle = data.headAngle
             //   console.log('onNewPlayerSnakes', this.game.snakes);
     },
     onEnemyMove: function(data) {
         // console.log('onEnemyMove', data);
         var snake = this.game.snakes.find((e) => e.id == data.id);
         if (!snake) return;
-        snake.remote_headPath = data.headPath;
+        snake.headPath = data.headPath;
         snake.headAngle = data.headAngle
+        snake.secDetails = data.secDetails
     },
     onEnemyDestroy: function(id, foodDrop) {
         // console.log(`Received signal to destroy snake of id ${id} @ game.js: onEnemyDestroy`);
@@ -126,7 +125,7 @@ Game.prototype = {
         // console.log('Received foodDrop @ game.js: onEnemyDestroy');
     },
     onEnemyIncrease: function(data) {
-        // console.log("onEnemyIncrease", data)
+        console.log("onEnemyIncrease", data)
         let snake = this.game.snakes.find(e => e.id == data.id)
         if (snake)
             snake.incrementSize()
@@ -144,7 +143,7 @@ Game.prototype = {
             snake.destroy()
     },
     onDashboardUpdate: function(data) {
-        console.log("onDashboardUpdate", data)
+        // console.log("onDashboardUpdate", data)
         let table = document.getElementById("table_data")
         if (data.length > table.rows.length) {
             for (let i = table.rows.length; i < Math.min(data.length, 10); i++) {
@@ -182,7 +181,7 @@ Game.prototype = {
     },
     onHigestScoreUpdate: function(data) {
         let table = document.getElementById("leader_data")
-        console.log(data)
+        // console.log(data)
         let textlength = 40
         if (data.name.length > textlength) {
             table.rows[0].cells[1].innerHTML = data.name.substring(0, textlength) + "..."
@@ -204,6 +203,12 @@ Game.prototype = {
         for (var i = this.foodGroup.children.length - 1; i >= 0; i--) {
             var f = this.foodGroup.children[i];
             f.food.update();
+        }
+    },
+
+    render: function() {
+        for (let snake of this.game.snakes) {
+            if (snake.render) snake.render()
         }
     },
     /**

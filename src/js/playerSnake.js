@@ -148,16 +148,28 @@ PlayerSnake.prototype.update = function() {
     var point = this.headPath.pop();
     point.setTo(this.head.body.x, this.head.body.y);
     this.headPath.unshift(point);
-    // detect hitting the corner
-    // console.log('playerMove', { headPath: this.headPath, id: this.id , angle: this.head.body.angle})
+    //call the original snake update method
+    this.tempUpdate();
+    
+    // set secDetails
+    for (let i = 0;i < this.secDetails.length; i++) {
+        this.secDetails[i].x = this.sections[i].body.x
+        this.secDetails[i].y = this.sections[i].body.y
+    }
+    for (let i = this.secDetails.length; i < this.sections.length; i++) {
+        this.secDetails.push({
+            x: this.sections[i].body.x,
+            y: this.sections[i].body.y
+        })
+    }
+
     this.game.socket.emit('playerMove', {
         headPath: this.headPath,
         id: this.id,
-        headAngle: this.head.body.angle
+        headAngle: this.head.body.angle,
+        secDetails: this.secDetails
     });
-
-    //call the original snake update method
-    this.tempUpdate();
+    // detect hitting the corner
     let worldWidth = this.game.worldWidth
     let worldHeight = this.game.worldHeight
     let cornerWidth = this.game.cornerWidth
@@ -171,5 +183,10 @@ PlayerSnake.prototype.update = function() {
         // console.log("hit the corner", this.id);
         this.destroy();
     }
+}
+
+PlayerSnake.prototype.render = function() {
+    this.game.debug.spriteInfo(this.head, 32, 32, "rgb(0, 0, 0)");
+    this.game.debug.spriteInfo(this.sections[1], 32, 200, "rgb(100, 0, 0)")
 }
 export default PlayerSnake;

@@ -8,7 +8,7 @@ let SnakeProps = {
     rotationSpeed: 80, 
     headPath: [], 
     food: [],
-    queuedSections: 0,
-    isLightingUp: false
+    isLightingUp: false,
+    secDetails: [] // {x, y}
 }
 export default SnakeProps

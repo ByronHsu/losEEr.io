@@ -36,6 +36,7 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     this.sections = [];
     //the head path is an array of points that the head of the snake has
     //traveled through
+    this.secDetails = props.secDetails
     this.headPath = props.headPath;
     this.food = props.food;
 
@@ -52,17 +53,13 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     this.req_exp = 1;
     this.exp = 0;
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
-
     // display snakeName
     
     // Initial / Create Snake
     if (this.snakeLength === 1) this.initSections(10);
     else {
-        for (let i = 1; i < props.snakeLength; i++) {
-            this.addSectionAtPosition(props.headPath[i])
-        }
-        this.snakeLength = props.snakeLength
-        this.headPath = props.headPath
+        // enemySnake
+        this.initSections()
     }
     //initialize the eyes
     this.eyes = new EyePair(this.game, this.head, this.scale, this.headAngle);
@@ -99,6 +96,12 @@ Snake.prototype = {
             this.addSectionAtPosition(x, y);
             //add a point to the head path so that the section stays there
             this.headPath.push(new Phaser.Point(x, y));
+        }
+        for (let i = 0;i < this.sections.length; i++) {
+            this.secDetails.push({
+                x: this.sections[i].body.x,
+                y: this.sections[i].body.y
+            })
         }
     },
     /**
