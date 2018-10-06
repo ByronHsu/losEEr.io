@@ -27,7 +27,6 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
         spaceKey.onUp.remove(this.spaceKeyUp, this);
     }, this);
-    this.lastInboundPos = {x: 0, y: 0};
 }
 
 PlayerSnake.prototype = Object.create(Snake.prototype);

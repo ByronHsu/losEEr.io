@@ -38,7 +38,7 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     this.headPath = props.headPath;
     this.food = props.food;
 
-    this.preferredDistance = 17 * this.scale;
+    this.preferredDistance = 26 * this.scale;
     this.queuedSections = props.queuedSections;
 
     //initialize the shadow
@@ -281,7 +281,7 @@ Snake.prototype = {
      */
     setScale: function (scale) {
         this.scale = scale;
-        this.preferredDistance = 17 * this.scale;
+        this.preferredDistance = 26 * this.scale;
 
         //update edge lock location with p2 physics
         this.edgeLock.localOffsetB = [
@@ -304,11 +304,7 @@ Snake.prototype = {
      */
     incrementSize: function () {
         this.addSectionsAfterLast(1);
-        if (this.req_exp < 34) {
-            this.setScale(this.scale * 1.01);
-        }
-        else
-            this.setScale(this.scale * 1.001);
+        this.setScale(this.scale + 0.001);
     },
     /**
      * Destroy the snake
