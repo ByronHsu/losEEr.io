@@ -22,8 +22,6 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     this.id = id;
     playerSnakeData.id = this.id;
     this.game.debug_line = new Phaser.Line();
-    // this.game.debug_line2 = new Phaser.Line();
-    // console.log("creatPlayer", playerSnakeData)
     this.game.socket.emit('createPlayer', playerSnakeData);
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
@@ -63,15 +61,15 @@ PlayerSnake.prototype.update = function() {
 
     //find the angle that the head needs to rotate
     //through in order to face the mouse
-    var mousePosX = this.game.input.activePointer.worldX;
-    var mousePosY = this.game.input.activePointer.worldY;
-    var headX = this.head.body.x;
-    var headY = this.head.body.y;
-    this.game.debug_cursor_sprite.x = headX;
-    this.game.debug_cursor_sprite.y = headY;
+    var headX = this.head.body.x * this.game.globalScale;
+    var headY = this.head.body.y * this.game.globalScale;
+    // var mousePosX = this.game.input.activePointer.worldX;
+    // var mousePosY = this.game.input.activePointer.worldY;
+    // var headX = this.head.body.x;
+    // var headY = this.head.body.y;
+    var headX = this.game.camera.x + 0.5 * this.game.camera.width;
+    var headY = this.game.camera.y + 0.5 * this.game.camera.height;
     this.game.debug_line.setTo(mousePosX, mousePosY, headX, headY);
-    // this.game.debug_line2.setTo(mousePosX, mousePosY, this.head.x, this.head.y);
-    // console.log(mousePosX - headX, mousePosY - headY);
     var angle = (180 * Math.atan2(mousePosX - headX, mousePosY - headY) / Math.PI);
     if (angle > 0) {
         angle = 180 - angle;

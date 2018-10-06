@@ -44,7 +44,7 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     //initialize the shadow
     this.shadow = new Shadow(this.game, this.sections, this.scale);
     this.sectionGroup = this.game.add.group();
-    this.game.metagroup.add(this.sectionGroup);
+    // this.game.metagroup.add(this.sectionGroup);
     //add the head of the snake
     this.head = this.addSectionAtPosition(x, y);
     this.head.name = "head";

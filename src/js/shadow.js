@@ -9,7 +9,7 @@ var Shadow = function(game, sections, scale) {
     this.sections = sections;
     this.scale = scale;
     this.shadowGroup = this.game.add.group();
-    this.game.metagroup.add(this.shadowGroup)
+    // this.game.metagroup.add(this.shadowGroup)
     this.shadows = [];
     this.isLightingUp = false;
 
