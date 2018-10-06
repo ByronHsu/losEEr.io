@@ -10,7 +10,7 @@
     "front-watch": "webpack --watch --config webpack.config.js",
     "back-watch": "nodemon app.js",
     "build": "webpack --config webpack.config.js",
-    "server": "node app.js"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",

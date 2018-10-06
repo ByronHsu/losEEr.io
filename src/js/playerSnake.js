@@ -11,7 +11,9 @@ import Util from './util';
  */
 var PlayerSnake = function(game, spriteKey, x, y, id) {
     // initialize
-    let playerSnakeData = SnakeProps
+    let playerSnakeData = Object.assign({}, SnakeProps)
+    playerSnakeData.secDetails = []
+    console.log("construct playersnake", SnakeProps)
     playerSnakeData.name = game.playerName
     playerSnakeData.id = id
     Snake.call(this, game, spriteKey, x, y, playerSnakeData);
@@ -350,6 +352,5 @@ PlayerSnake.prototype.update = function() {
 
 PlayerSnake.prototype.render = function() {
     this.game.debug.spriteInfo(this.head, 32, 32, "rgb(0, 0, 0)");
-    this.game.debug.spriteInfo(this.sections[1], 32, 200, "rgb(100, 0, 0)")
 }
 export default PlayerSnake;

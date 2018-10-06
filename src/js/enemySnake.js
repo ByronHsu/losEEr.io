@@ -8,7 +8,7 @@ import SnakeProps from './SnakeProps'
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var EnemySnake = function(game, spriteKey, x, y, props = SnakeProps) {
+var EnemySnake = function(game, spriteKey, x, y, props) {
     Snake.call(this, game, spriteKey, x, y, props);
     console.log("createEnemySnake", this)
 }
@@ -48,6 +48,8 @@ EnemySnake.prototype.update = function() {
     for (let i = this.sections.length; i < this.secDetails.length; i++) {
         this.addSectionAtPosition(this.secDetails[i].x, this.secDetails[i].y)
     }
+    this.head.body.angle = this.headAngle
+    // console.log(this.head.body)
 
     //call the original snake update method
     // this.tempUpdate();
@@ -56,5 +58,9 @@ EnemySnake.prototype.update = function() {
 
     this.displayName.position.x = this.secDetails[0].x - this.displayName.width / 2
     this.displayName.position.y = this.secDetails[0].y - this.head.width - 6
+}
+
+EnemySnake.prototype.render = function() {
+    this.game.debug.spriteInfo(this.head, 32, 200, "rgb(100, 0, 0)");
 }
 export default EnemySnake;

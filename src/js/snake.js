@@ -1,6 +1,5 @@
 import Shadow from './shadow';
 import EyePair from './eyePair';
-import SnakeProps from './SnakeProps'
 
 /**
  * Phaser snake
@@ -9,7 +8,7 @@ import SnakeProps from './SnakeProps'
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
+var Snake = function (game, spriteKey, x, y, props) {
     this.game = game;
     //create an array of snakes in the game object and add this snake
     if (!this.game.snakes) {
