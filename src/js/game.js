@@ -185,10 +185,10 @@ Game.prototype = {
         let table = document.getElementById("leader_data")
         // console.log(data)
         let textlength = 40
-        if (data.name.length > textlength) {
+        if (data.name && data.name.length > textlength) {
             table.rows[0].cells[1].innerHTML = data.name.substring(0, textlength) + "..."
         } else {
-            table.rows[0].cells[1].innerHTML = data.name
+            table.rows[0].cells[1].innerHTML = data.name || ""
         }
         // table.rows[0].cells[1].innerHTML = data.name
         table.rows[0].cells[2].innerHTML = data.score
