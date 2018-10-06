@@ -59,11 +59,14 @@ PlayerSnake.prototype.spaceKeyUp = function() {
  */
 PlayerSnake.prototype.tempUpdate = PlayerSnake.prototype.update;
 PlayerSnake.prototype.update = function() {
+    if (this.head.width*this.game.globalScale.x/this.game.camera.width > 0.04) {
+        this.game.add.tween(this.game.camera.scale).to(this.game.globalScale, 800, Phaser.Easing.Linear.None, true);
+        this.game.globalScale.x -= 0.005;
+        this.game.globalScale.y -= 0.005;
+    }
 
     //find the angle that the head needs to rotate
     //through in order to face the mouse
-    // var headX = this.head.body.x * this.game.globalScale;
-    // var headY = this.head.body.y * this.game.globalScale;
     var mousePosX = this.game.input.activePointer.worldX;
     var mousePosY = this.game.input.activePointer.worldY;
     var headX = this.head.body.x * this.game.camera.scale.x;

@@ -17,7 +17,7 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
         this.game.snakes = [];
     }
     this.game.snakes.push(this);
-    this.debug = true;
+    this.debug = false;
     this.spriteKey = spriteKey;
 
     this.snakeLength = props.snakeLength;
@@ -44,7 +44,6 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     //initialize the shadow
     this.shadow = new Shadow(this.game, this.sections, this.scale);
     this.sectionGroup = this.game.add.group();
-    // this.game.metagroup.add(this.sectionGroup);
     //add the head of the snake
     this.head = this.addSectionAtPosition(x, y);
     this.head.name = "head";
@@ -305,8 +304,11 @@ Snake.prototype = {
      */
     incrementSize: function () {
         this.addSectionsAfterLast(1);
-        if (this.req_exp < 34) { this.setScale(this.scale * 1.01); }
-        else this.setScale(this.scale * 1.001);
+        if (this.req_exp < 34) {
+            this.setScale(this.scale * 1.01);
+        }
+        else
+            this.setScale(this.scale * 1.001);
     },
     /**
      * Destroy the snake

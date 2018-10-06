@@ -35,54 +35,19 @@ Game.prototype = {
         this.game.cornerWidth = this.cornerWidth
 
         this.game.snakes = [];
-        /* Test */
-        // this.game.groups = [];
-        this.game.globalScale = 0.99;
-        let E = this.game.input.keyboard.addKey(Phaser.Keyboard.E);
-        let Q = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
-        // let S = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-        E.onDown.add(() => {
-            // console.log(this.game.camera.view.x, this.game.camera.view.y);
-            this.game.camera.scale.x = this.game.globalScale;
-            this.game.camera.scale.y = this.game.globalScale;
-            this.game.globalScale -= 0.01;
-
-            // this.game.world.worldScale.x *= this.game.globalScale;
-            // this.game.world.worldScale.y *= this.game.globalScale;
-
-            // this.game.scale.setUserScale(this.game.globalScale, this.game.globalScale);
-            // this.game.globalScale *= 0.9;
-
-            // this.game.world.scale.x *= this.game.globalScale;
-            // this.game.world.scale.y *= this.game.globalScale;
-            // this.game.camera.bounds.x *= this.game.globalScale;
-            // this.game.camera.bounds.y *= this.game.globalScale;
-            // this.game.camera.bounds.width *= this.game.globalScale;
-            // this.game.camera.bounds.height *= this.game.globalScale;
-
-
-            // console.log(this.game.camera.view.x, this.game.camera.view.y);
-            // this.worldWidth *= this.game.globalScale;
-            // this.worldHeight *= this.game.globalScale;
-            // this.game.player.speed *= this.game.globalScale;
-            // this.game.world.setBounds(-this.worldWidth, -this.worldHeight, this.worldWidth * 2, this.worldHeight * 2)
-            // this.background.tileScale.x *= this.game.globalScale;
-            // this.background.tileScale.y *= this.game.globalScale;
-        });
-        Q.onDown.add(() => {
-            this.game.camera.scale.x = this.game.globalScale;
-            this.game.camera.scale.y = this.game.globalScale;
-            this.game.globalScale += 0.01;
-            // this.worldWidth *= 2 - this.game.globalScale;
-            // this.worldHeight *= 2 - this.game.globalScale;
-            // this.game.world.setBounds(-this.worldWidth, -this.worldHeight, this.worldWidth * 2, this.worldHeight * 2)
-        })
-        // const inspect = ({game}) => ({Bs: game.world.bounds, S: game.world.scale, WS: game.world.worldScale,
-        //                             Wx: game.input.activePointer.worldX, Wy: game.input.activePointer.worldY});
-        // S.onDown.add(() => {
-        //     console.log(inspect(this));
+        this.game.globalScale = {x: 0.99, y: 0.99};
+        // let E = this.game.input.keyboard.addKey(Phaser.Keyboard.E);
+        // let Q = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
+        // E.onDown.add(() => {
+        //     this.game.camera.scale.x = this.game.globalScale;
+        //     this.game.camera.scale.y = this.game.globalScale;
+        //     this.game.globalScale -= 0.01;
+        // });
+        // Q.onDown.add(() => {
+        //     this.game.camera.scale.x = this.game.globalScale;
+        //     this.game.camera.scale.y = this.game.globalScale;
+        //     this.game.globalScale += 0.01;
         // })
-        /* Test */
         //callbacks
         this.game.socket.on('on_get_food', this.onGetFood.bind(this));
         this.game.socket.on('destroy_food', this.remove_food_by_id.bind(this));
@@ -106,7 +71,6 @@ Game.prototype = {
         //initialize physics and groups
         this.game.physics.startSystem(Phaser.Physics.P2JS);
         this.foodGroup = this.game.add.group();
-        // this.game.groups.push(this.foodGroup);
         this.snakeHeadCollisionGroup = this.game.physics.p2.createCollisionGroup();
         this.foodCollisionGroup = this.game.physics.p2.createCollisionGroup();
 
@@ -254,14 +218,6 @@ Game.prototype = {
             var f = this.foodGroup.children[i];
             f.food.update();
         }
-        // this.game.debug.cameraInfo(this.game.camera, 32, 32);
-        // this.game.debug.pointer(this.game.input.activePointer);
-        this.game.debug.geom(this.game.debug_line);
-        this.game.debug.lineInfo(this.game.debug_line, 300, 400);
-        // this.game.debug.geom(this.game.debug_line2);
-        // this.game.debug.spriteInfo(this.game.camera.target, 50, 150);
-        // this.game.debug.body(this.game.player, 'red');
-        // this.game.debug.spriteBounds(this.game.player, 'pink');
     },
     /**
      * Create a piece of food at a point
