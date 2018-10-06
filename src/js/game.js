@@ -43,8 +43,9 @@ Game.prototype = {
         // let S = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
         E.onDown.add(() => {
             // console.log(this.game.camera.view.x, this.game.camera.view.y);
-            this.game.camera.scale.x *= this.game.globalScale;
-            this.game.camera.scale.y *= this.game.globalScale;
+            this.game.camera.scale.x = this.game.globalScale;
+            this.game.camera.scale.y = this.game.globalScale;
+            this.game.globalScale -= 0.01;
 
             // this.game.world.worldScale.x *= this.game.globalScale;
             // this.game.world.worldScale.y *= this.game.globalScale;
@@ -65,12 +66,13 @@ Game.prototype = {
             // this.worldHeight *= this.game.globalScale;
             // this.game.player.speed *= this.game.globalScale;
             // this.game.world.setBounds(-this.worldWidth, -this.worldHeight, this.worldWidth * 2, this.worldHeight * 2)
-            this.background.tileScale.x *= this.game.globalScale;
-            this.background.tileScale.y *= this.game.globalScale;
+            // this.background.tileScale.x *= this.game.globalScale;
+            // this.background.tileScale.y *= this.game.globalScale;
         });
         Q.onDown.add(() => {
-            this.game.camera.scale.x *= 2 - this.game.globalScale;
-            this.game.camera.scale.y *= 2 - this.game.globalScale;
+            this.game.camera.scale.x = this.game.globalScale;
+            this.game.camera.scale.y = this.game.globalScale;
+            this.game.globalScale += 0.01;
             // this.worldWidth *= 2 - this.game.globalScale;
             // this.worldHeight *= 2 - this.game.globalScale;
             // this.game.world.setBounds(-this.worldWidth, -this.worldHeight, this.worldWidth * 2, this.worldHeight * 2)
