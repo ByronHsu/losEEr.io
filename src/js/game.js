@@ -103,27 +103,26 @@ Game.prototype = {
         }
     },
     onEnemyPlayers: function(data) {
-        // console.log("onEnemyPlayers", data)
+        console.log("onEnemyPlayers", data)
         for (let i = 0; i < data.length; i++) {
-            let snake = new EnemySnake(this.game, 'circle', data[i].headPath[0].x, data[i].headPath[0].y, data[i])
-            snake.remote_headPath = data[i].headPath
-            snake.headAngle = data[i].headAngle
-                // console.log("enemyPlayers", snake)
+            let snake = new EnemySnake(this.game, 'circle', data[i].secDetails[0].x, data[i].secDetails[0].y, data[i])
         }
     },
     onNewEnemy: function(data) {
         // console.log("onNewEnemyData", data)
-        var snake = new EnemySnake(this.game, 'circle', data.headPath[0].x, data.headPath[0].y, data);
-        snake.remote_headPath = data.headPath;
-        snake.headAngle = data.headAngle
-            //   console.log('onNewPlayerSnakes', this.game.snakes);
+        let snake = new EnemySnake(this.game, 'circle', data.secDetails[0].x, data.secDetails[0].y, data);
+        console.log("onNewEnemy", snake)
+        // snake.remote_headPath = data.headPath;
+        // snake.headAngle = data.headAngle
+        //   console.log('onNewPlayerSnakes', this.game.snakes);
     },
     onEnemyMove: function(data) {
         // console.log('onEnemyMove', data);
         var snake = this.game.snakes.find((e) => e.id == data.id);
         if (!snake) return;
-        snake.remote_headPath = data.headPath;
+        // snake.headPath = data.headPath;
         snake.headAngle = data.headAngle
+        snake.secDetails = data.secDetails
     },
     onEnemyDestroy: function(id, foodDrop) {
         // console.log(`Received signal to destroy snake of id ${id} @ game.js: onEnemyDestroy`);
@@ -139,10 +138,12 @@ Game.prototype = {
         // console.log('Received foodDrop @ game.js: onEnemyDestroy');
     },
     onEnemyIncrease: function(data) {
-        // console.log("onEnemyIncrease", data)
+        console.log("onEnemyIncrease", data)
         let snake = this.game.snakes.find(e => e.id == data.id)
-        if (snake)
-            snake.incrementSize()
+        if (snake) {
+            snake.scale = data.scale
+            snake.setScale(data.scale)
+        }
     },
     onEnemySpaceKeyEvent: function(data) {
         // console.log("onEnemySpaceKeyEvent", data)
@@ -197,10 +198,10 @@ Game.prototype = {
         let table = document.getElementById("leader_data")
         // console.log(data)
         let textlength = 40
-        if (data.name.length > textlength) {
+        if (data.name && data.name.length > textlength) {
             table.rows[0].cells[1].innerHTML = data.name.substring(0, textlength) + "..."
         } else {
-            table.rows[0].cells[1].innerHTML = data.name
+            table.rows[0].cells[1].innerHTML = data.name || ""
         }
         // table.rows[0].cells[1].innerHTML = data.name
         table.rows[0].cells[2].innerHTML = data.score
@@ -219,6 +220,12 @@ Game.prototype = {
             f.food.update();
         }
     },
+
+    render: function() {
+        for (let snake of this.game.snakes) {
+            if (snake.render) snake.render()
+        }
+    },
     /**
      * Create a piece of food at a point
      * @param  {number} x x-coordinate
@@ -234,8 +241,8 @@ Game.prototype = {
     },
     snakeDestroyed: function(snake) {
         //place food where snake was destroyed
-        let increment = Math.round(snake.headPath.length / snake.snakeLength) * 2,
-            len = snake.headPath.length;
+        let increment = Math.round(snake.secDetails.length / snake.snakeLength) * 2,
+            len = snake.secDetails.length;
         let foodDrop = [];
         // for (var i = 0; i < len; i += increment) should run Math.ceil(len/increment) times,
         // which generates one food on each iteration, thus send a request for that many uuids
@@ -243,8 +250,8 @@ Game.prototype = {
         this.game.socket.emit('idRequest', Math.ceil(len / increment), IDArray => {
             // console.log('Received new IDs @ game.js: snakeDestroyed: arrow_function (idRequest ack)');
             for (var i = 0, j = 0; i < len; i += increment, j++) {
-                let x = snake.headPath[i].x + Util.randomInt(-10, 10);
-                let y = snake.headPath[i].y + Util.randomInt(-10, 10);
+                let x = snake.secDetails[i].x + Util.randomInt(-10, 10);
+                let y = snake.secDetails[i].y + Util.randomInt(-10, 10);
                 this.initFood(x, y, IDArray[j]);
                 if (!IDArray[j])
                     console.error(`IDArray[${j}] is undefined, len = ${len}, increment = ${increment} @ game.js: snakeDestroyed`);

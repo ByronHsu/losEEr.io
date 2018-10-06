@@ -6,9 +6,9 @@ let SnakeProps = {
     fastSpeed: 400, 
     slowSpeed: 200, 
     rotationSpeed: 80, 
-    headPath: [], 
+    // headPath: [], 
     food: [],
-    queuedSections: 0,
-    isLightingUp: false
+    isLightingUp: false,
+    secDetails: [] // {x, y}
 }
 export default SnakeProps
