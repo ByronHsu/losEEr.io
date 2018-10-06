@@ -1,6 +1,5 @@
 import Shadow from './shadow';
 import EyePair from './eyePair';
-import Util from './util';
 import SnakeProps from './SnakeProps'
 
 /**
@@ -17,7 +16,7 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
         this.game.snakes = [];
     }
     this.game.snakes.push(this);
-    this.debug = true;
+    this.debug = false;
     this.spriteKey = spriteKey;
 
     this.id = props.id
@@ -37,11 +36,11 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     //the head path is an array of points that the head of the snake has
     //traveled through
     this.secDetails = props.secDetails
-    this.headPath = props.headPath;
     this.food = props.food;
-
+    
+    this.headPath = []
     this.preferredDistance = 17 * this.scale;
-    this.queuedSections = props.queuedSections;
+    this.queuedSections = 0;
 
     //initialize the shadow
     this.shadow = new Shadow(this.game, this.sections, this.scale);
@@ -50,11 +49,7 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     this.head = this.addSectionAtPosition(x, y);
     this.head.name = "head";
     this.head.snake = this;
-    this.req_exp = 1;
-    this.exp = 0;
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
-    // display snakeName
-    
     // Initial / Create Snake
     if (this.snakeLength === 1) this.initSections(10);
     else {
@@ -64,6 +59,8 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     //initialize the eyes
     this.eyes = new EyePair(this.game, this.head, this.scale, this.headAngle);
     
+    
+    // display snakeName
     this.onDestroyedCallbacks = [];
     this.onDestroyedContexts = [];
     let displayStyle = {
@@ -73,37 +70,16 @@ var Snake = function (game, spriteKey, x, y, props = SnakeProps) {
     }
     let textlength = 40
     if (this.snakeName.length > textlength) {
-        this.displayName = this.game.add.text(this.headPath[0].x, this.headPath[0].y, 
+        this.displayName = this.game.add.text(this.secDetails[0].x, this.secDetails[0].y, 
             this.snakeName.substring(0, textlength) + "...", displayStyle)
     } else {
-        this.displayName = this.game.add.text(this.headPath[0].x, this.headPath[0].y, 
+        this.displayName = this.game.add.text(this.secDetails[0].x, this.secDetails[0].y, 
             this.snakeName, displayStyle)
     }
     // console.log(this.displayName)
 }
     
 Snake.prototype = {
-    /**
-     * Give the snake starting segments
-     * @param  {Number} num number of snake sections to create
-     */
-    initSections: function (num) {
-        //create a certain number of sections behind the head
-        //only use this once
-        for (var i = 1; i <= num; i++) {
-            var x = this.head.body.x;
-            var y = this.head.body.y + i * this.preferredDistance;
-            this.addSectionAtPosition(x, y);
-            //add a point to the head path so that the section stays there
-            this.headPath.push(new Phaser.Point(x, y));
-        }
-        for (let i = 0;i < this.sections.length; i++) {
-            this.secDetails.push({
-                x: this.sections[i].body.x,
-                y: this.sections[i].body.y
-            })
-        }
-    },
     /**
      * Add a section to the snake at a given position
      * @param  {Number} x coordinate
@@ -133,137 +109,6 @@ Snake.prototype = {
         return sec;
     },
     /**
-     * Add to the queue of new sections
-     * @param  {Integer} amount Number of sections to add to queue
-     */
-    addSectionsAfterLast: function (amount) {
-        this.queuedSections += amount;
-    },
-    /**
-     * Call from the main update loop
-     */
-    update: function () {
-        //place each section of the snake on the path of the snake head,
-        //a certain distance from the section before it
-        var index = 0;
-        var lastIndex = null;
-        for (var i = 0; i < this.snakeLength; i++) {
-
-            this.sections[i].body.x = this.headPath[index].x;
-            this.sections[i].body.y = this.headPath[index].y;
-
-            //hide sections if they are at the same position
-            if (lastIndex && index == lastIndex) {
-                this.sections[i].alpha = 0;
-            } else {
-                this.sections[i].alpha = 1;
-            }
-
-            lastIndex = index;
-            //this finds the index in the head path array that the next point
-            //should be at
-            index = this.findNextPointIndex(index);
-        }
-
-        //continuously adjust the size of the head path array so that we
-        //keep only an array of points that we need
-        if (index >= this.headPath.length - 1) {
-            var lastPos = this.headPath[this.headPath.length - 1];
-            this.headPath.push(new Phaser.Point(lastPos.x, lastPos.y));
-        } else {
-            this.headPath.pop();
-        }
-
-        //this calls onCycleComplete every time a cycle is completed
-        //a cycle is the time it takes the second section of a snake to reach
-        //where the head of the snake was at the end of the last cycle
-        var i = 0;
-        var found = false;
-        while (this.headPath[i].x != this.sections[1].body.x &&
-            this.headPath[i].y != this.sections[1].body.y) {
-            if (this.headPath[i].x == this.lastHeadPosition.x &&
-                this.headPath[i].y == this.lastHeadPosition.y) {
-                found = true;
-                break;
-            }
-            i++;
-        }
-        if (!found) {
-            this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
-            this.onCycleComplete();
-        }
-
-        //update the eyes and the shadow below the snake
-        this.eyes.update();
-        this.shadow.update();
-
-        //update displayName
-        // console.log("update displayName", this.displayName)
-        this.displayName.position.x = this.headPath[0].x - this.displayName.width / 2
-        this.displayName.position.y = this.headPath[0].y - this.head.width - 6
-    },
-    /**
-     * Find in the headPath array which point the next section of the snake
-     * should be placed at, based on the distance between points
-     * @param  {Integer} currentIndex Index of the previous snake section
-     * @return {Integer}              new index
-     */
-    findNextPointIndex: function (currentIndex) {
-        //we are trying to find a point at approximately this distance away
-        //from the point before it, where the distance is the total length of
-        //all the lines connecting the two points
-        var prefDist = this.preferredDistance;
-        var len = 0;
-        var dif = len - prefDist;
-        var i = currentIndex;
-        var prevDif = null;
-        //this loop sums the distances between points on the path of the head
-        //starting from the given index of the function and continues until
-        //this sum nears the preferred distance between two snake sections
-        while (i + 1 < this.headPath.length && (dif === null || dif < 0)) {
-            //get distance between next two points
-            var dist = Util.distanceFormula(
-                this.headPath[i].x, this.headPath[i].y,
-                this.headPath[i + 1].x, this.headPath[i + 1].y
-            );
-            len += dist;
-            prevDif = dif;
-            //we are trying to get the difference between the current sum and
-            //the preferred distance close to zero
-            dif = len - prefDist;
-            i++;
-        }
-
-        //choose the index that makes the difference closer to zero
-        //once the loop is complete
-        if (prevDif === null || Math.abs(prevDif) > Math.abs(dif)) {
-            return i;
-        } else {
-            return i - 1;
-        }
-    },
-    /**
-     * Called each time the snake's second section reaches where the
-     * first section was at the last call (completed a single cycle)
-     */
-    onCycleComplete: function () {
-        if (this.queuedSections > 0) {
-            var lastSec = this.sections[this.sections.length - 1];
-
-            this.exp++;
-            console.log(this.exp, ' ', this.req_exp);
-            //to control snake size
-            if (this.exp >= this.req_exp) {
-                this.req_exp++;
-                this.exp = 0;
-                this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
-                if (this.req_exp % 5 == 0) { this.req_exp *= 2; }
-            }
-            // this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
-            this.queuedSections--;
-        }
-    },
-    /**
      * Set snake scale
      * @param  {Number} scale Scale
      */
@@ -281,14 +126,6 @@ Snake.prototype = {
         //scale eyes and shadows
         this.eyes.setScale(scale, this.headAngle);
         this.shadow.setScale(scale);
-    },
-    /**
-     * Increment length and scale
-     */
-    incrementSize: function () {
-        this.addSectionsAfterLast(1);
-        if (this.req_exp < 34) { this.setScale(this.scale * 1.01); }
-        else this.setScale(this.scale * 1.001);
     },
     /**
      * Destroy the snake

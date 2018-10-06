@@ -83,10 +83,10 @@ io.sockets.on('connection', function(socket) {
     socket.on('playerMove', data => {
         var snake = snakeArr.find(e => e.id == data.id);
         if (snake == null) return;
-        snake.headPath = data.headPath;
+        // snake.headPath = data.headPath;
         snake.headAngle = data.headAngle;
         snake.secDetails = data.secDetails
-        console.log("playerMove", data.secDetails)
+        // console.log("playerMove", data.secDetails)
         socket.broadcast.emit('enemyMove', data);
     });
     socket.on('on_food_init', function() {
@@ -196,7 +196,7 @@ function genfood() {
 function updateDashboard() {
     dashboardData.sort(dashboardCompare)
     if (dashboardData[0] && highestScoreSnake.score < dashboardData[0].score) highestScoreSnake = dashboardData[0]
-    console.log("disconnect", dashboardData)
+    // console.log("disconnect", dashboardData)
     io.emit('dashboardUpdate', dashboardData)
     io.emit('higestScoreUpdate', highestScoreSnake)
 }

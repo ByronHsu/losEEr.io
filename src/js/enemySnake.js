@@ -32,25 +32,10 @@ EnemySnake.prototype.initSections = function () {
 }
 
 // modify enemysnake addSectionAtPosition(x, y)
+EnemySnake.prototype.tempAddSectionAtPosition = EnemySnake.prototype.addSectionAtPosition
 EnemySnake.prototype.addSectionAtPosition = function(x, y) {
-    var sec = this.game.add.sprite(x, y, this.spriteKey);
-    this.game.physics.p2.enable(sec, this.debug);
-    sec.body.setCollisionGroup(this.collisionGroup);
-    sec.body.collides([]);
-    sec.body.kinematic = true;
-
-    this.sectionGroup.add(sec);
-    sec.sendToBack();
-    sec.scale.setTo(this.scale);
-
-    this.sections.push(sec);
-
-    this.shadow.add(x, y);
-    //add a circle body to this section
-    sec.body.clearShapes();
-    sec.body.addCircle(sec.width * 0.5);
-
-    return sec;
+    this.snakeLength--
+    return this.tempAddSectionAtPosition(x, y)
 }
 
 // EnemySnake.prototype.tempUpdate = EnemySnake.prototype.update;
@@ -69,7 +54,7 @@ EnemySnake.prototype.update = function() {
     this.eyes.update();
     this.shadow.update();
 
-    this.displayName.position.x = this.headPath[0].x - this.displayName.width / 2
-    this.displayName.position.y = this.headPath[0].y - this.head.width - 6
+    this.displayName.position.x = this.secDetails[0].x - this.displayName.width / 2
+    this.displayName.position.y = this.secDetails[0].y - this.head.width - 6
 }
 export default EnemySnake;
