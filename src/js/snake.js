@@ -8,7 +8,7 @@ import EyePair from './eyePair';
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var Snake = function (game, spriteKey, x, y, props) {
+var Snake = function (game, spriteKey, x, y, props, headSprite) {
     this.game = game;
     //create an array of snakes in the game object and add this snake
     if (!this.game.snakes) {
@@ -17,6 +17,8 @@ var Snake = function (game, spriteKey, x, y, props) {
     this.game.snakes.push(this);
     this.debug = false;
     this.spriteKey = spriteKey;
+    this.headSprite = headSprite || this.spriteKey;
+    console.log(`headSprite is ${this.headSprite}`)
 
     this.id = props.id
     this.snakeName = props.name
@@ -44,7 +46,7 @@ var Snake = function (game, spriteKey, x, y, props) {
     this.shadow = new Shadow(this.game, this.sections, this.scale);
     this.sectionGroup = this.game.add.group();
     //add the head of the snake
-    this.head = this.addSectionAtPosition(x, y, 'earth');
+    this.head = this.addSectionAtPosition(x, y, this.headSprite);
     this.head.name = "head";
     this.head.snake = this;
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
@@ -85,6 +87,7 @@ Snake.prototype = {
      * @return {Phaser.Sprite}   new section
      */
     addSectionAtPosition: function (x, y, spriteKey) {
+        console.log(`new sec of spriteKey ${spriteKey}`)
         //initialize a new section
         var sec = this.game.add.sprite(x, y, spriteKey);
         this.game.physics.p2.enable(sec, this.debug);

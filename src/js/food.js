@@ -51,8 +51,6 @@ Food.prototype = {
                 id: this.head.snake.id,
                 snakeLength: this.head.snake.snakeLength,
                 scale: this.head.snake.scale
-                // food: this.head.snake.food,
-                // queuedSections: this.head.snake.queuedSections
             })
             this.destroy();
         }

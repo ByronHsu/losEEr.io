@@ -9,14 +9,15 @@ import Util from './util';
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var PlayerSnake = function(game, spriteKey, x, y, id) {
+var PlayerSnake = function(game, spriteKey, x, y, id, headSprite) {
     // initialize
     let playerSnakeData = Object.assign({}, SnakeProps)
     playerSnakeData.secDetails = []
-    console.log("construct playersnake", SnakeProps)
+    // console.log("construct playersnake", SnakeProps)
     playerSnakeData.name = game.playerName
     playerSnakeData.id = id
-    Snake.call(this, game, spriteKey, x, y, playerSnakeData);
+    playerSnakeData.spriteKey = headSprite
+    Snake.call(this, game, spriteKey, x, y, playerSnakeData, headSprite);
     this.req_exp = 1;
     this.exp = 0;
 
@@ -41,7 +42,7 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     this.edge.body.onBeginContact.add(this.edgeContact, this);
     
     // socket createPlayer
-    console.log("creatPlayer", playerSnakeData)
+    // console.log("creatPlayer", playerSnakeData)
     this.game.socket.emit('createPlayer', playerSnakeData);
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
@@ -79,7 +80,7 @@ PlayerSnake.prototype.spaceKeyUp = function() {
 PlayerSnake.prototype.edgeContact = function (phaserBody) {
    //if the edge hits another snake's section, destroy this snake
    if (phaserBody && this.sections.indexOf(phaserBody.sprite) == -1) {
-       console.log(phaserBody.sprite.snakeName)
+    //    console.log(phaserBody.sprite.snakeName)
        console.log(`${this.snakeName} is killed by ${phaserBody.sprite.snakeName}`)
        this.destroy();
    }
@@ -190,7 +191,7 @@ PlayerSnake.prototype.onCycleComplete = function() {
         var lastSec = this.sections[this.sections.length - 1];
 
         this.exp++;
-        console.log(this.exp, ' ', this.req_exp);
+        console.log(`${this.exp}/${this.req_exp}`);
         //to control snake size
         if (this.exp >= this.req_exp) {
             this.req_exp++;

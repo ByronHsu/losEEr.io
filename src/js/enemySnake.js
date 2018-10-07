@@ -8,9 +8,9 @@ import SnakeProps from './SnakeProps'
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var EnemySnake = function(game, spriteKey, x, y, props) {
-    Snake.call(this, game, spriteKey, x, y, props);
-    console.log("createEnemySnake", this)
+var EnemySnake = function(game, spriteKey, x, y, props, headSprite) {
+    Snake.call(this, game, spriteKey, x, y, props, headSprite);
+    // console.log("createEnemySnake", this)
 }
 
 EnemySnake.prototype = Object.create(Snake.prototype);
@@ -27,15 +27,15 @@ EnemySnake.prototype.initSections = function () {
     for (let i = 1; i < this.secDetails.length; i++) {
         let x = this.secDetails[i].x;
         let y = this.secDetails[i].y
-        this.addSectionAtPosition(x, y);
+        this.addSectionAtPosition(x, y, this.spriteKey);
     }
 }
 
 // modify enemysnake addSectionAtPosition(x, y)
 EnemySnake.prototype.tempAddSectionAtPosition = EnemySnake.prototype.addSectionAtPosition
-EnemySnake.prototype.addSectionAtPosition = function(x, y) {
+EnemySnake.prototype.addSectionAtPosition = function(x, y, spriteKey) {
     this.snakeLength--
-    return this.tempAddSectionAtPosition(x, y, this.spriteKey)
+    return this.tempAddSectionAtPosition(x, y, spriteKey)
 }
 
 // EnemySnake.prototype.tempUpdate = EnemySnake.prototype.update;
