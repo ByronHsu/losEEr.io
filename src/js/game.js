@@ -21,6 +21,14 @@ Game.prototype = {
 
         this.game.load.image('earth', 'asset/heads/地球.png');
         this.game.load.image('bloody', 'asset/heads/血絲.png');
+        this.game.load.image('crown', 'asset/heads/皇冠.png');
+        this.game.load.image('southPark', 'asset/heads/南方公園.png');
+        this.game.load.image('leaf', 'asset/heads/葉子.png');
+        this.game.load.image('sushi', 'asset/heads/壽司.png');
+        this.game.load.image('leaf', 'asset/heads/葉子.png');
+        this.game.load.image('headband', 'asset/heads/頭帶.png');
+
+        this.game.availableHeads = ['earth', 'bloody', 'crown', 'southPark', 'leaf', 'sushi', 'leaf', 'headband']
         // this.game.socket = io('http://localhost:8000');
         this.game.socket = io(window.document.URL);
 
@@ -71,7 +79,8 @@ Game.prototype = {
 
         //create player
         var snake = new PlayerSnake(this.game, 'circle', Util.randomInt(-this.worldWidth + this.cornerWidth * 5, this.worldWidth - this.cornerWidth * 5),
-            Util.randomInt(-this.worldHeight + this.cornerWidth * 5, this.worldHeight - this.cornerWidth * 5), uuid(), 'earth');
+            Util.randomInt(-this.worldHeight + this.cornerWidth * 5, this.worldHeight - this.cornerWidth * 5), uuid(),
+            this.game.availableHeads[Math.floor(Math.random() * this.game.availableHeads.length)]);
         snake.head.body.collideWorldBounds = true
         this.game.camera.follow(snake.head);
         this.game.player = snake;

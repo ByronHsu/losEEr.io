@@ -56,7 +56,7 @@ var Snake = function (game, spriteKey, x, y, props, headSprite) {
         this.initSections()
     }
     //initialize the eyes
-    this.eyes = new EyePair(this.game, this.head, this.scale, this.headAngle);
+    // this.eyes = new EyePair(this.game, this.head, this.scale, this.headAngle);
     
     
     // display snakeName
@@ -105,9 +105,10 @@ Snake.prototype = {
         this.shadow.add(x, y);
         //add a circle body to this section
         sec.body.clearShapes();
-        if(sec.width > 60)
-            sec.width = 60;
-        sec.body.addCircle(sec.width * 0.5);
+        let temp = sec.width;
+        if(temp > 60)
+            temp = 80;
+        sec.body.addCircle(temp * 0.5);
 
         return sec;
     },
@@ -127,7 +128,7 @@ Snake.prototype = {
         }
 
         //scale eyes and shadows
-        this.eyes.setScale(scale, this.headAngle);
+        // this.eyes.setScale(scale, this.headAngle);
         this.shadow.setScale(scale);
     },
     /**
@@ -143,7 +144,7 @@ Snake.prototype = {
         this.sections.forEach(function (sec, index) {
             sec.destroy();
         });
-        this.eyes.destroy();
+        // this.eyes.destroy();
         this.shadow.destroy();
         this.displayName.destroy();
         //call this snake's destruction callbacks
