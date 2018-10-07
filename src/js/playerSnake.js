@@ -53,17 +53,42 @@ PlayerSnake.prototype = Object.create(Snake.prototype);
 PlayerSnake.prototype.constructor = PlayerSnake;
 
 //make this snake light up and speed up when the space key is down
+let keyDownInterval = null
+let keyUpInterval = null
+let energy = 0
 PlayerSnake.prototype.spaceKeyDown = function() {
-        this.speed = this.fastSpeed;
-        this.shadow.isLightingUp = true;
-        // console.log("spaceKeyDown")
-        this.game.socket.emit("spaceKeyEvent", {
-            id: this.id,
-            isLightingUp: this.shadow.isLightingUp
-        })
-    }
+    console.log("spaceKeyDown")
+    this.speed = this.fastSpeed;
+    this.shadow.isLightingUp = true;
+    // console.log("spaceKeyDown")
+    this.game.socket.emit("spaceKeyEvent", {
+        id: this.id,
+        isLightingUp: this.shadow.isLightingUp
+    })
+    // set longest time of speeding
+    let self = this
+    clearInterval(keyUpInterval)
+    keyDownInterval = setInterval(function() {
+        energy++
+        console.log(energy)
+        if (energy > 200) {
+            self.speed = self.slowSpeed
+            self.shadow.isLightingUp = false
+            self.game.socket.emit("spaceKeyEvent", {
+                id: self.id,
+                isLightingUp: self.shadow.isLightingUp
+            })
+            energy = 200
+        }
+    }, 1)
+}
     //make the snake slow down when the space key is up again
 PlayerSnake.prototype.spaceKeyUp = function() {
+    clearInterval(keyDownInterval)
+    keyUpInterval = setInterval(function() {
+        if (energy > 0) energy--
+        console.log(energy)
+    }, 1)
     this.speed = this.slowSpeed;
     this.shadow.isLightingUp = false;
     this.game.socket.emit("spaceKeyEvent", {
