@@ -37,19 +37,6 @@ Game.prototype = {
         this.game.cornerWidth = this.cornerWidth
 
         this.game.snakes = [];
-        this.game.globalScale = {x: 0.99, y: 0.99};
-        // let E = this.game.input.keyboard.addKey(Phaser.Keyboard.E);
-        // let Q = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
-        // E.onDown.add(() => {
-        //     this.game.camera.scale.x = this.game.globalScale;
-        //     this.game.camera.scale.y = this.game.globalScale;
-        //     this.game.globalScale -= 0.01;
-        // });
-        // Q.onDown.add(() => {
-        //     this.game.camera.scale.x = this.game.globalScale;
-        //     this.game.camera.scale.y = this.game.globalScale;
-        //     this.game.globalScale += 0.01;
-        // })
         //callbacks
         this.game.socket.on('on_get_food', this.onGetFood.bind(this));
         this.game.socket.on('destroy_food', this.remove_food_by_id.bind(this));
@@ -64,6 +51,7 @@ Game.prototype = {
         this.game.socket.on('higestScoreUpdate', this.onHigestScoreUpdate.bind(this))
     },
     create: function() {
+        this.game.globalScale = {x: 0.99, y: 0.99};
         if (this.game.socket.disconnected)
             this.game.socket.connect();
 
@@ -98,6 +86,10 @@ Game.prototype = {
             //callback for when a snake is destroyed
             snake.addDestroyedCallback(this.snakeDestroyed, this);
         }
+
+        setInterval(function() {
+            console.log(new Date())
+        }, 3000)
     },
     onGetFood: function(data) {
         for (var i = 0; i < data.length; i++) {
@@ -262,9 +254,12 @@ Game.prototype = {
             // console.log('Sending id and foodDrop to server @ game.js: snakeDestroyed');
             this.game.socket.emit("snakeDestroyed", { id: snake.id, drop: foodDrop });
             this.game.socket.disconnect();
-            
-            this.game.state.start('Login');
+    
+            this.game.state.start('Login');         
         });
+        // return to login after 2 second after died
+        // todo died page & count down
+        // setInterval(() => {this.game.state.start('Login')}, 2000);
     },
     remove_food_by_id: function(id) {
         // console.log(`Received Request of Removing food ${id} @ game.js: remove_food_by_id`);

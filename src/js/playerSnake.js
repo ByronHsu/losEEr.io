@@ -79,6 +79,8 @@ PlayerSnake.prototype.spaceKeyUp = function() {
 PlayerSnake.prototype.edgeContact = function (phaserBody) {
    //if the edge hits another snake's section, destroy this snake
    if (phaserBody && this.sections.indexOf(phaserBody.sprite) == -1) {
+       console.log(phaserBody.sprite.snakeName)
+       console.log(`${this.snakeName} is killed by ${phaserBody.sprite.snakeName}`)
        this.destroy();
    }
    //if the edge hits this snake's own section, a simple solution to avoid
@@ -273,10 +275,16 @@ PlayerSnake.prototype.updateMethod = function() {
     this.displayName.position.y = this.secDetails[0].y - this.head.width - 6
 }
 PlayerSnake.prototype.update = function() {
-    if (this.head.width*this.game.globalScale.x/this.game.camera.width > 0.04) {
+    var headToWidthRatio = this.head.width*this.game.globalScale.x/this.game.camera.width;
+    if (headToWidthRatio > 0.04) {
         this.game.add.tween(this.game.camera.scale).to(this.game.globalScale, 800, Phaser.Easing.Linear.None, true);
         this.game.globalScale.x -= 0.005;
         this.game.globalScale.y -= 0.005;
+    }
+    else if (headToWidthRatio < 0.02) {
+        this.game.add.tween(this.game.camera.scale).to(this.game.globalScale, 800, Phaser.Easing.Linear.None, true);
+        this.game.globalScale.x += 0.005;
+        this.game.globalScale.y += 0.005;
     }
 
     //find the angle that the head needs to rotate

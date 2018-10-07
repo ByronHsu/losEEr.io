@@ -42,6 +42,7 @@ h2.dash_title {
 
 .table_rank {
     text-align: center;
+    width: 5%;
 }
 
 .table_name {
@@ -54,4 +55,5 @@ h2.dash_title {
 
 .table_score {
     text-align: right;
+    width: 5%;
 }
