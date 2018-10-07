@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta charset="utf-8" />
     <title>losEEr.io</title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+        crossorigin="anonymous">
     <style>
         html {
             height:100%;
@@ -102,13 +103,19 @@
             opacity: 0.7;
             font-style: italic;
         }
+        #loseer_logo {
+            display: block;
+            margin-left: auto;
+         margin-right: auto;
+        }
         :focus {
             outline: 0;
         }
     </style>
 </head>
-<body style="background-color: #000033">
-    <div id="dashboard">
+
+<body>
+    <div id="dashboard" style="background-color: #000033">
         <h2 class="dash_title">LEgEnd Board</h2>
         <div id="dash_leader">
             <span style="padding-left: 3px;">Highest Score of All Time</span>
@@ -124,11 +131,17 @@
             <table id="table_data"></table>
         </div>
     </div>
+    <div id="loseer_logo">
+        <img src="asset/losEEr_logo.png" width=50%>
+    </div>
 
     <div id="login">
         <input id="nameinput" type="text" placeholder="Please enter your name">
         <button id="submitname">Play</button>
         <p id="nullstringwarning"></p>
+    </div>
+    <div id="eeweek_logo">
+        <img src="asset/電機週logo.png" width=50%>
     </div>
     <!-- <script src="//cdn.jsdelivr.net/phaser/2.6.2/phaser.js"></script> -->
     <script src="asset/phaser.min.js"></script>
