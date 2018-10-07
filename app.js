@@ -53,7 +53,7 @@ for (var i = 0; i < foodAmount; i++) {
 let socketToSnakeID = {}
 let dashboardData = []
 let highestScoreSnake = {
-    // name: "",
+    name: "",
     id: "",
     socketId: "",
     score: 0
@@ -76,7 +76,7 @@ io.sockets.on('connection', function(socket) {
             name: data.name,
             id: data.id,
             socketId: socket.id,
-            score: data.snakeLength
+            score: data.foodcnt * 5
         })
         updateDashboard()
     });
@@ -139,11 +139,12 @@ io.sockets.on('connection', function(socket) {
         snake.scale = data.scale
         snake.snakeLength = data.snakeLength
         snake.headAngle = data.headAngle
+        snake.foodcnt = data.foodcnt
         socket.broadcast.emit('enemyIncrease', data)
         //update dashboard
         for (let i = 0;i < dashboardData.length; i++) {
             if (dashboardData[i].id == data.id) {
-                dashboardData[i].score = data.snakeLength
+                dashboardData[i].score = data.foodcnt * 5
                 break;
             }
         }

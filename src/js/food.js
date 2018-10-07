@@ -36,6 +36,7 @@ Food.prototype = {
             );
             this.head = phaserBody.sprite;
             this.head.snake.food.push(this);
+            this.head.snake.foodcnt++;
         }
     },
     /**
@@ -50,9 +51,8 @@ Food.prototype = {
             this.game.socket.emit('playerIncrease', {
                 id: this.head.snake.id,
                 snakeLength: this.head.snake.snakeLength,
-                scale: this.head.snake.scale
-                // food: this.head.snake.food,
-                // queuedSections: this.head.snake.queuedSections
+                scale: this.head.snake.scale,
+                foodcnt: this.head.snake.foodcnt
             })
             this.destroy();
         }

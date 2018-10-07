@@ -19,6 +19,7 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     Snake.call(this, game, spriteKey, x, y, playerSnakeData);
     this.req_exp = 1;
     this.exp = 0;
+    this.foodcnt = 0
 
     this.cursors = game.input.keyboard.createCursorKeys();
     //handle the space key so that the player's snake can speed up
@@ -70,7 +71,7 @@ PlayerSnake.prototype.spaceKeyDown = function() {
     clearInterval(keyUpInterval)
     keyDownInterval = setInterval(function() {
         energy++
-        console.log(energy)
+        // console.log(energy)
         if (energy > 200) {
             self.speed = self.slowSpeed
             self.shadow.isLightingUp = false
@@ -86,8 +87,8 @@ PlayerSnake.prototype.spaceKeyDown = function() {
 PlayerSnake.prototype.spaceKeyUp = function() {
     clearInterval(keyDownInterval)
     keyUpInterval = setInterval(function() {
-        if (energy > 0) energy--
-        console.log(energy)
+        if (energy > 0) energy = energy - 2
+        // console.log(energy)
     }, 1)
     this.speed = this.slowSpeed;
     this.shadow.isLightingUp = false;
@@ -200,6 +201,9 @@ PlayerSnake.prototype.setScale = function(scale) {
 
 PlayerSnake.prototype.tempDestroy = PlayerSnake.prototype.destroy
 PlayerSnake.prototype.destroy = function() {
+    // remove interval
+    clearInterval(keyDownInterval)
+    clearInterval(keyUpInterval)
     //remove constraints
     this.game.physics.p2.removeConstraint(this.edgeLock);
     this.edge.destroy();

@@ -6,8 +6,8 @@ let SnakeProps = {
     fastSpeed: 400, 
     slowSpeed: 200, 
     rotationSpeed: 80, 
-    // headPath: [], 
     food: [],
+    foodcnt: 0,
     isLightingUp: false,
     secDetails: [] // {x, y}
 }
