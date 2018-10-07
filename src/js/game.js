@@ -35,19 +35,6 @@ Game.prototype = {
         this.game.cornerWidth = this.cornerWidth
 
         this.game.snakes = [];
-        this.game.globalScale = {x: 0.99, y: 0.99};
-        // let E = this.game.input.keyboard.addKey(Phaser.Keyboard.E);
-        // let Q = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
-        // E.onDown.add(() => {
-        //     this.game.camera.scale.x = this.game.globalScale;
-        //     this.game.camera.scale.y = this.game.globalScale;
-        //     this.game.globalScale -= 0.01;
-        // });
-        // Q.onDown.add(() => {
-        //     this.game.camera.scale.x = this.game.globalScale;
-        //     this.game.camera.scale.y = this.game.globalScale;
-        //     this.game.globalScale += 0.01;
-        // })
         //callbacks
         this.game.socket.on('on_get_food', this.onGetFood.bind(this));
         this.game.socket.on('destroy_food', this.remove_food_by_id.bind(this));
@@ -62,6 +49,7 @@ Game.prototype = {
         this.game.socket.on('higestScoreUpdate', this.onHigestScoreUpdate.bind(this))
     },
     create: function() {
+        this.game.globalScale = {x: 0.99, y: 0.99};
         if (this.game.socket.disconnected)
             this.game.socket.connect();
 
