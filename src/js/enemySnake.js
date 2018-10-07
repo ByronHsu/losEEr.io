@@ -60,7 +60,7 @@ EnemySnake.prototype.update = function() {
     this.displayName.position.y = this.secDetails[0].y - this.head.width - 6
 }
 
-EnemySnake.prototype.render = function() {
-    this.game.debug.spriteInfo(this.head, 32, 200, "rgb(100, 0, 0)");
-}
+// EnemySnake.prototype.render = function() {
+//     this.game.debug.spriteInfo(this.head, 32, 200, "rgb(100, 0, 0)");
+// }
 export default EnemySnake;

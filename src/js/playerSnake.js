@@ -355,7 +355,7 @@ PlayerSnake.prototype.update = function() {
     }
 }
 
-PlayerSnake.prototype.render = function() {
-    this.game.debug.spriteInfo(this.head, 32, 32, "rgb(0, 0, 0)");
-}
+// PlayerSnake.prototype.render = function() {
+//     this.game.debug.spriteInfo(this.head, 32, 32, "rgb(0, 0, 0)");
+// }
 export default PlayerSnake;
