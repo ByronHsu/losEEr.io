@@ -10,10 +10,10 @@
     <style>
         html {
             height:100%;
-            background: #000033;
-            background: -moz-linear-gradient(top, #000033 0%, #1e5799 50%,#207cca 70%,#7db9e8 100%) fixed;
-            background: -webkit-linear-gradient(top, #000033 0%, #1e5799 50%,#207cca 70%,#7db9e8 100%) fixed no-repeat;
-            background: linear-gradient(to bottom, #000033 0%, #1e5799 50%,#207cca 70%,#7db9e8 100%) fixed;
+            background: #000000;
+            /* background: -moz-linear-gradient(top, #000000 0%, #000000 50%,#000000 70%,#000000 100%) fixed;
+            background: -webkit-linear-gradient(top,  #000000 0%, #000000 50%,#000000 70%,#000000 100%) fixed no-repeat;
+            background: linear-gradient(to bottom, #000000 0%, #000000 50%,#000000 70%,#000000 100%) fixed; */
             -webkit-background-size: cover;
             -moz-background-size: cover;
             -o-background-size: cover;
@@ -104,9 +104,20 @@
             font-style: italic;
         }
         #loseer_logo {
-            display: block;
-            margin-left: auto;
-         margin-right: auto;
+            position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 21%;
+    margin-top: -5%;
+    min-height: 375px;
+    bottom: 70%;
+        }
+        #eeweek_logo{
+            right:-10%;
+            position: absolute;
+            /* transform: translateX(-50%); */
+            width: 40%;
+            top: 70%;
         }
         :focus {
             outline: 0;
@@ -132,7 +143,7 @@
         </div>
     </div>
     <div id="loseer_logo">
-        <img src="asset/losEEr_logo.png" width=50%>
+        <img src="asset/losEEr_logo.png">
     </div>
 
     <div id="login">
