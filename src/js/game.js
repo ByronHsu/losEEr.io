@@ -5,10 +5,10 @@ import Food from './food';
 import Util from './util';
 import uuid from 'uuid/v1';
 
-var Game = function(game) {}
+var Game = function (game) { }
 
 Game.prototype = {
-    preload: function() {
+    preload: function () {
         //load assets
         this.game.load.image('circle', 'asset/circle.png');
         this.game.load.image('shadow', 'asset/white-shadow.png');
@@ -17,7 +17,7 @@ Game.prototype = {
         this.game.load.image('eye-white', 'asset/eye-white.png');
         this.game.load.image('eye-black', 'asset/eye-black.png');
 
-        this.game.load.image('food', 'asset/hex.png');
+        this.game.load.image('food', 'asset/canada_flag.png');
 
         this.game.load.image('earth', 'asset/heads/地球.png');
         this.game.load.image('bloody', 'asset/heads/血絲.png');
@@ -51,8 +51,8 @@ Game.prototype = {
         this.game.socket.on('dashboardUpdate', this.onDashboardUpdate.bind(this))
         this.game.socket.on('higestScoreUpdate', this.onHigestScoreUpdate.bind(this))
     },
-    create: function() {
-        this.game.globalScale = {x: 0.99, y: 0.99};
+    create: function () {
+        this.game.globalScale = { x: 0.99, y: 0.99 };
         if (this.game.socket.disconnected)
             this.game.socket.connect();
 
@@ -88,22 +88,22 @@ Game.prototype = {
             snake.addDestroyedCallback(this.snakeDestroyed, this);
         }
 
-        setInterval(function() {
+        setInterval(function () {
             console.log(new Date())
         }, 3000)
     },
-    onGetFood: function(data) {
+    onGetFood: function (data) {
         for (var i = 0; i < data.length; i++) {
             this.initFood(data[i].x, data[i].y, data[i].id);
         }
     },
-    onEnemyPlayers: function(data) {
+    onEnemyPlayers: function (data) {
         console.log("onEnemyPlayers", data)
         for (let i = 0; i < data.length; i++) {
             let snake = new EnemySnake(this.game, 'circle', data[i].secDetails[0].x, data[i].secDetails[0].y, data[i], data[i].spriteKey)
         }
     },
-    onNewEnemy: function(data) {
+    onNewEnemy: function (data) {
         console.log("onNewEnemyData", data)
         let snake = new EnemySnake(this.game, 'circle', data.secDetails[0].x, data.secDetails[0].y, data, data.spriteKey);
         // console.log("onNewEnemy", snake)
@@ -111,7 +111,7 @@ Game.prototype = {
         // snake.headAngle = data.headAngle
         //   console.log('onNewPlayerSnakes', this.game.snakes);
     },
-    onEnemyMove: function(data) {
+    onEnemyMove: function (data) {
         // console.log('onEnemyMove', data);
         var snake = this.game.snakes.find((e) => e.id == data.id);
         if (!snake) return;
@@ -119,7 +119,7 @@ Game.prototype = {
         snake.headAngle = data.headAngle
         snake.secDetails = data.secDetails
     },
-    onEnemyDestroy: function(id, foodDrop) {
+    onEnemyDestroy: function (id, foodDrop) {
         // console.log(`Received signal to destroy snake of id ${id} @ game.js: onEnemyDestroy`);
         for (let snake of this.game.snakes) {
             if (id === snake.id) {
@@ -132,7 +132,7 @@ Game.prototype = {
         }
         // console.log('Received foodDrop @ game.js: onEnemyDestroy');
     },
-    onEnemyIncrease: function(data) {
+    onEnemyIncrease: function (data) {
         // console.log("onEnemyIncrease", data)
         let snake = this.game.snakes.find(e => e.id == data.id)
         if (snake) {
@@ -140,19 +140,19 @@ Game.prototype = {
             snake.setScale(data.scale)
         }
     },
-    onEnemySpaceKeyEvent: function(data) {
+    onEnemySpaceKeyEvent: function (data) {
         // console.log("onEnemySpaceKeyEvent", data)
         let snake = this.game.snakes.find(e => e.id == data.id)
         if (snake)
             snake.shadow.isLightingUp = data.isLightingUp
     },
-    onEnemyDisconnect: function(snakeId) {
+    onEnemyDisconnect: function (snakeId) {
         // console.log("onEnemyDisconnect", snakeId)
         let snake = this.game.snakes.find(e => e.id == snakeId)
         if (snake)
             snake.destroy()
     },
-    onDashboardUpdate: function(data) {
+    onDashboardUpdate: function (data) {
         // console.log("onDashboardUpdate", data)
         let table = document.getElementById("table_data")
         if (data.length > table.rows.length) {
@@ -166,13 +166,13 @@ Game.prototype = {
                 c3.classList.add("table_score")
             }
         }
-        else if(data.length < table.rows.length) {
+        else if (data.length < table.rows.length) {
             for (let i = table.rows.length - 1; i >= data.length; i--) {
                 table.deleteRow(i)
             }
         }
         for (let i = 0; i < Math.min(10, data.length); i++) {
-            table.rows[i].cells[0].innerHTML = "#"+ (i + 1).toString()
+            table.rows[i].cells[0].innerHTML = "#" + (i + 1).toString()
             let textlength = 40
             if (data[i].name.length > textlength) {
                 table.rows[i].cells[1].innerHTML = data[i].name.substring(0, textlength) + "..."
@@ -189,7 +189,7 @@ Game.prototype = {
             }
         }
     },
-    onHigestScoreUpdate: function(data) {
+    onHigestScoreUpdate: function (data) {
         let table = document.getElementById("leader_data")
         // console.log(data)
         let textlength = 40
@@ -205,7 +205,7 @@ Game.prototype = {
     /**
      * Main update loop
      */
-    update: function() {
+    update: function () {
         //update game components
         for (var i = this.game.snakes.length - 1; i >= 0; i--) {
             this.game.snakes[i].update();
@@ -216,7 +216,7 @@ Game.prototype = {
         }
     },
 
-    render: function() {
+    render: function () {
         for (let snake of this.game.snakes) {
             if (snake.render) snake.render()
         }
@@ -227,14 +227,14 @@ Game.prototype = {
      * @param  {number} y y-coordinate
      * @return {Food}   food object created
      */
-    initFood: function(x, y, id) {
+    initFood: function (x, y, id) {
         var f = new Food(this.game, x, y, id);
         f.sprite.body.setCollisionGroup(this.foodCollisionGroup);
         this.foodGroup.add(f.sprite);
         f.sprite.body.collides([this.snakeHeadCollisionGroup]);
         return f;
     },
-    snakeDestroyed: function(snake) {
+    snakeDestroyed: function (snake) {
         //place food where snake was destroyed
         let increment = Math.round(snake.secDetails.length / snake.snakeLength) * 2,
             len = snake.secDetails.length;
@@ -255,14 +255,14 @@ Game.prototype = {
             // console.log('Sending id and foodDrop to server @ game.js: snakeDestroyed');
             this.game.socket.emit("snakeDestroyed", { id: snake.id, drop: foodDrop });
             this.game.socket.disconnect();
-    
-            this.game.state.start('Login');         
+
+            this.game.state.start('Login');
         });
         // return to login after 2 second after died
         // todo died page & count down
         // setInterval(() => {this.game.state.start('Login')}, 2000);
     },
-    remove_food_by_id: function(id) {
+    remove_food_by_id: function (id) {
         // console.log(`Received Request of Removing food ${id} @ game.js: remove_food_by_id`);
         for (var i = 0; i < this.foodGroup.children.length; i++) {
             if (this.foodGroup.children[i].id == id) {
