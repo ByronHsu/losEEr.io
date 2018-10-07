@@ -18,6 +18,8 @@ Game.prototype = {
         this.game.load.image('eye-black', 'asset/eye-black.png');
 
         this.game.load.image('food', 'asset/hex.png');
+
+        this.game.load.image('earth', 'asset/heads/地球.png');
         // this.game.socket = io('http://localhost:8000');
         this.game.socket = io(window.document.URL);
 

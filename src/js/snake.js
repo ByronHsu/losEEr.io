@@ -44,7 +44,7 @@ var Snake = function (game, spriteKey, x, y, props) {
     this.shadow = new Shadow(this.game, this.sections, this.scale);
     this.sectionGroup = this.game.add.group();
     //add the head of the snake
-    this.head = this.addSectionAtPosition(x, y);
+    this.head = this.addSectionAtPosition(x, y, 'earth');
     this.head.name = "head";
     this.head.snake = this;
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
@@ -84,9 +84,9 @@ Snake.prototype = {
      * @param  {Number} y coordinate
      * @return {Phaser.Sprite}   new section
      */
-    addSectionAtPosition: function (x, y) {
+    addSectionAtPosition: function (x, y, spriteKey) {
         //initialize a new section
-        var sec = this.game.add.sprite(x, y, this.spriteKey);
+        var sec = this.game.add.sprite(x, y, spriteKey);
         this.game.physics.p2.enable(sec, this.debug);
         sec.body.setCollisionGroup(this.collisionGroup);
         sec.body.collides([]);

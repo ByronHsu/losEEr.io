@@ -35,7 +35,7 @@ EnemySnake.prototype.initSections = function () {
 EnemySnake.prototype.tempAddSectionAtPosition = EnemySnake.prototype.addSectionAtPosition
 EnemySnake.prototype.addSectionAtPosition = function(x, y) {
     this.snakeLength--
-    return this.tempAddSectionAtPosition(x, y)
+    return this.tempAddSectionAtPosition(x, y, this.spriteKey)
 }
 
 // EnemySnake.prototype.tempUpdate = EnemySnake.prototype.update;
@@ -46,7 +46,7 @@ EnemySnake.prototype.update = function() {
         this.sections[i].body.y = this.secDetails[i].y
     }
     for (let i = this.sections.length; i < this.secDetails.length; i++) {
-        this.addSectionAtPosition(this.secDetails[i].x, this.secDetails[i].y)
+        this.addSectionAtPosition(this.secDetails[i].x, this.secDetails[i].y, this.spriteKey)
     }
     this.head.body.angle = this.headAngle
     // console.log(this.head.body)

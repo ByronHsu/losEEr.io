@@ -100,7 +100,7 @@ PlayerSnake.prototype.initSections = function(num) {
     for (var i = 1; i <= num; i++) {
         var x = this.head.body.x;
         var y = this.head.body.y + i * this.preferredDistance;
-        this.addSectionAtPosition(x, y);
+        this.addSectionAtPosition(x, y, this.spriteKey);
         //add a point to the head path so that the section stays there
         this.headPath.push(new Phaser.Point(x, y));
     }
@@ -193,7 +193,7 @@ PlayerSnake.prototype.onCycleComplete = function() {
         if (this.exp >= this.req_exp) {
             this.req_exp++;
             this.exp = 0;
-            this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
+            this.addSectionAtPosition(lastSec.body.x, lastSec.body.y, this.spriteKey);
             if (this.req_exp % 5 == 0) { this.req_exp *= 2; }
         }
         // this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
