@@ -18,7 +18,6 @@ var Snake = function (game, spriteKey, x, y, props, headSprite) {
     this.debug = false;
     this.spriteKey = spriteKey;
     this.headSprite = headSprite || this.spriteKey;
-    console.log(`headSprite is ${this.headSprite}`)
 
     this.id = props.id
     this.snakeName = props.name
@@ -87,7 +86,6 @@ Snake.prototype = {
      * @return {Phaser.Sprite}   new section
      */
     addSectionAtPosition: function (x, y, spriteKey) {
-        console.log(`new sec of spriteKey ${spriteKey}`)
         //initialize a new section
         var sec = this.game.add.sprite(x, y, spriteKey);
         this.game.physics.p2.enable(sec, this.debug);
