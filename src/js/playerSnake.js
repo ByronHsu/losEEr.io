@@ -9,14 +9,15 @@ import Util from './util';
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var PlayerSnake = function(game, spriteKey, x, y, id) {
+var PlayerSnake = function(game, spriteKey, x, y, id, headSprite) {
     // initialize
     let playerSnakeData = Object.assign({}, SnakeProps)
     playerSnakeData.secDetails = []
-    console.log("construct playersnake", SnakeProps)
+    // console.log("construct playersnake", SnakeProps)
     playerSnakeData.name = game.playerName
     playerSnakeData.id = id
-    Snake.call(this, game, spriteKey, x, y, playerSnakeData);
+    playerSnakeData.spriteKey = headSprite
+    Snake.call(this, game, spriteKey, x, y, playerSnakeData, headSprite);
     this.req_exp = 1;
     this.exp = 0;
 
@@ -41,7 +42,7 @@ var PlayerSnake = function(game, spriteKey, x, y, id) {
     this.edge.body.onBeginContact.add(this.edgeContact, this);
     
     // socket createPlayer
-    console.log("creatPlayer", playerSnakeData)
+    // console.log("creatPlayer", playerSnakeData)
     this.game.socket.emit('createPlayer', playerSnakeData);
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
@@ -79,6 +80,8 @@ PlayerSnake.prototype.spaceKeyUp = function() {
 PlayerSnake.prototype.edgeContact = function (phaserBody) {
    //if the edge hits another snake's section, destroy this snake
    if (phaserBody && this.sections.indexOf(phaserBody.sprite) == -1) {
+    //    console.log(phaserBody.sprite.snakeName)
+       console.log(`${this.snakeName} is killed by ${phaserBody.sprite.snakeName}`)
        this.destroy();
    }
    //if the edge hits this snake's own section, a simple solution to avoid
@@ -100,7 +103,7 @@ PlayerSnake.prototype.initSections = function(num) {
     for (var i = 1; i <= num; i++) {
         var x = this.head.body.x;
         var y = this.head.body.y + i * this.preferredDistance;
-        this.addSectionAtPosition(x, y);
+        this.addSectionAtPosition(x, y, this.spriteKey);
         //add a point to the head path so that the section stays there
         this.headPath.push(new Phaser.Point(x, y));
     }
@@ -188,12 +191,12 @@ PlayerSnake.prototype.onCycleComplete = function() {
         var lastSec = this.sections[this.sections.length - 1];
 
         this.exp++;
-        console.log(this.exp, ' ', this.req_exp);
+        console.log(`${this.exp}/${this.req_exp}`);
         //to control snake size
         if (this.exp >= this.req_exp) {
             this.req_exp++;
             this.exp = 0;
-            this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
+            this.addSectionAtPosition(lastSec.body.x, lastSec.body.y, this.spriteKey);
             if (this.req_exp % 5 == 0) { this.req_exp *= 2; }
         }
         // this.addSectionAtPosition(lastSec.body.x, lastSec.body.y);
@@ -273,10 +276,16 @@ PlayerSnake.prototype.updateMethod = function() {
     this.displayName.position.y = this.secDetails[0].y - this.head.width - 6
 }
 PlayerSnake.prototype.update = function() {
-    if (this.head.width*this.game.globalScale.x/this.game.camera.width > 0.04) {
+    var headToWidthRatio = this.head.width*this.game.globalScale.x/this.game.camera.width;
+    if (headToWidthRatio > 0.04) {
         this.game.add.tween(this.game.camera.scale).to(this.game.globalScale, 800, Phaser.Easing.Linear.None, true);
         this.game.globalScale.x -= 0.005;
         this.game.globalScale.y -= 0.005;
+    }
+    else if (headToWidthRatio < 0.02) {
+        this.game.add.tween(this.game.camera.scale).to(this.game.globalScale, 800, Phaser.Easing.Linear.None, true);
+        this.game.globalScale.x += 0.005;
+        this.game.globalScale.y += 0.005;
     }
 
     //find the angle that the head needs to rotate

@@ -5,11 +5,11 @@
  * @param  {Number} x    coordinate
  * @param  {Number} y    coordinate
  */
-var Food = function (game, x, y, id) {
+var Food = function(game, x, y, id) {
     this.game = game;
     this.debug = false;
     this.sprite = this.game.add.sprite(x, y, 'food');
-    // this.sprite.tint = 00000000;
+    this.sprite.tint = 0xff0000;
     this.sprite.id = id;
 
     this.game.physics.p2.enable(this.sprite, this.debug);
@@ -25,7 +25,7 @@ var Food = function (game, x, y, id) {
 }
 
 Food.prototype = {
-    onBeginContact: function (phaserBody, p2Body) {
+    onBeginContact: function(phaserBody, p2Body) {
         if (phaserBody && phaserBody.sprite.name == "head" && this.constraint === null) {
             this.sprite.body.collides([]);
             //Create constraint between the food and the snake head that
@@ -41,7 +41,7 @@ Food.prototype = {
     /**
      * Call from main update loop
      */
-    update: function () {
+    update: function() {
         //once the food reaches the center of the snake head, destroy it and
         //increment the size of the snake
         if (this.head && Math.round(this.head.body.x) == Math.round(this.sprite.body.x) &&
@@ -51,8 +51,6 @@ Food.prototype = {
                 id: this.head.snake.id,
                 snakeLength: this.head.snake.snakeLength,
                 scale: this.head.snake.scale
-                // food: this.head.snake.food,
-                // queuedSections: this.head.snake.queuedSections
             })
             this.destroy();
         }
@@ -60,7 +58,7 @@ Food.prototype = {
     /**
      * Destroy this food and its constraints
      */
-    destroy: function () {
+    destroy: function() {
         if (this.head) {
             this.game.socket.emit('food_destroy', this.sprite.id);
             this.game.physics.p2.removeConstraint(this.constraint);
@@ -69,7 +67,7 @@ Food.prototype = {
             this.head = null;
         }
     },
-    remote_destroy: function () {
+    remote_destroy: function() {
         // console.log('Remote_destroy called! @ food.js: remote_destroy');
         if (this.head) { // The food to destroy was near the player snake, but another snake ate it first (very unlikely)
             this.game.physics.p2.removeConstraint(this.constraint);

@@ -8,7 +8,7 @@ import EyePair from './eyePair';
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var Snake = function (game, spriteKey, x, y, props) {
+var Snake = function (game, spriteKey, x, y, props, headSprite) {
     this.game = game;
     //create an array of snakes in the game object and add this snake
     if (!this.game.snakes) {
@@ -17,6 +17,7 @@ var Snake = function (game, spriteKey, x, y, props) {
     this.game.snakes.push(this);
     this.debug = false;
     this.spriteKey = spriteKey;
+    this.headSprite = headSprite || this.spriteKey;
 
     this.id = props.id
     this.snakeName = props.name
@@ -27,7 +28,7 @@ var Snake = function (game, spriteKey, x, y, props) {
     this.rotationSpeed = props.rotationSpeed;
     this.headAngle = props.headAngle
     this.speed = this.slowSpeed;
-
+    
     //initialize groups and arrays
     this.snakeLength = props.snakeLength;
     this.collisionGroup = this.game.physics.p2.createCollisionGroup();
@@ -44,7 +45,7 @@ var Snake = function (game, spriteKey, x, y, props) {
     this.shadow = new Shadow(this.game, this.sections, this.scale);
     this.sectionGroup = this.game.add.group();
     //add the head of the snake
-    this.head = this.addSectionAtPosition(x, y);
+    this.head = this.addSectionAtPosition(x, y, this.headSprite);
     this.head.name = "head";
     this.head.snake = this;
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
@@ -56,11 +57,8 @@ var Snake = function (game, spriteKey, x, y, props) {
     }
     //initialize the eyes
     this.eyes = new EyePair(this.game, this.head, this.scale, this.headAngle);
-
-    //initialize the head
-    this.game.add.sprite(this.head.body.x, this.head.body.y, 'head1');
-
-
+    
+    
     // display snakeName
     this.onDestroyedCallbacks = [];
     this.onDestroyedContexts = [];
@@ -71,15 +69,15 @@ var Snake = function (game, spriteKey, x, y, props) {
     }
     let textlength = 40
     if (this.snakeName.length > textlength) {
-        this.displayName = this.game.add.text(this.secDetails[0].x, this.secDetails[0].y,
+        this.displayName = this.game.add.text(this.secDetails[0].x, this.secDetails[0].y, 
             this.snakeName.substring(0, textlength) + "...", displayStyle)
     } else {
-        this.displayName = this.game.add.text(this.secDetails[0].x, this.secDetails[0].y,
+        this.displayName = this.game.add.text(this.secDetails[0].x, this.secDetails[0].y, 
             this.snakeName, displayStyle)
     }
     // console.log(this.displayName)
 }
-
+    
 Snake.prototype = {
     /**
      * Add a section to the snake at a given position
@@ -87,13 +85,15 @@ Snake.prototype = {
      * @param  {Number} y coordinate
      * @return {Phaser.Sprite}   new section
      */
-    addSectionAtPosition: function (x, y) {
+    addSectionAtPosition: function (x, y, spriteKey) {
         //initialize a new section
-        var sec = this.game.add.sprite(x, y, this.spriteKey);
+        var sec = this.game.add.sprite(x, y, spriteKey);
         this.game.physics.p2.enable(sec, this.debug);
         sec.body.setCollisionGroup(this.collisionGroup);
         sec.body.collides([]);
         sec.body.kinematic = true;
+
+        sec.snakeName = this.snakeName
 
         this.snakeLength++;
         this.sectionGroup.add(sec);
@@ -105,6 +105,8 @@ Snake.prototype = {
         this.shadow.add(x, y);
         //add a circle body to this section
         sec.body.clearShapes();
+        if(sec.width > 60)
+            sec.width = 60;
         sec.body.addCircle(sec.width * 0.5);
 
         return sec;
