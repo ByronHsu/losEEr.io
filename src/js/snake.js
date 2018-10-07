@@ -104,6 +104,8 @@ Snake.prototype = {
         this.shadow.add(x, y);
         //add a circle body to this section
         sec.body.clearShapes();
+        if(sec.width > 60)
+            sec.width = 60;
         sec.body.addCircle(sec.width * 0.5);
 
         return sec;
