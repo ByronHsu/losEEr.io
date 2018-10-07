@@ -53,7 +53,7 @@ EnemySnake.prototype.update = function() {
 
     //call the original snake update method
     // this.tempUpdate();
-    this.eyes.update();
+    // this.eyes.update();
     this.shadow.update();
 
     this.displayName.position.x = this.secDetails[0].x - this.displayName.width / 2
