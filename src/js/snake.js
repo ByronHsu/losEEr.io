@@ -27,7 +27,7 @@ var Snake = function (game, spriteKey, x, y, props) {
     this.rotationSpeed = props.rotationSpeed;
     this.headAngle = props.headAngle
     this.speed = this.slowSpeed;
-    
+
     //initialize groups and arrays
     this.snakeLength = props.snakeLength;
     this.collisionGroup = this.game.physics.p2.createCollisionGroup();
@@ -56,8 +56,11 @@ var Snake = function (game, spriteKey, x, y, props) {
     }
     //initialize the eyes
     this.eyes = new EyePair(this.game, this.head, this.scale, this.headAngle);
-    
-    
+
+    //initialize the head
+    this.game.add.sprite(this.head.body.x, this.head.body.y, 'head1');
+
+
     // display snakeName
     this.onDestroyedCallbacks = [];
     this.onDestroyedContexts = [];
@@ -68,15 +71,15 @@ var Snake = function (game, spriteKey, x, y, props) {
     }
     let textlength = 40
     if (this.snakeName.length > textlength) {
-        this.displayName = this.game.add.text(this.secDetails[0].x, this.secDetails[0].y, 
+        this.displayName = this.game.add.text(this.secDetails[0].x, this.secDetails[0].y,
             this.snakeName.substring(0, textlength) + "...", displayStyle)
     } else {
-        this.displayName = this.game.add.text(this.secDetails[0].x, this.secDetails[0].y, 
+        this.displayName = this.game.add.text(this.secDetails[0].x, this.secDetails[0].y,
             this.snakeName, displayStyle)
     }
     // console.log(this.displayName)
 }
-    
+
 Snake.prototype = {
     /**
      * Add a section to the snake at a given position
