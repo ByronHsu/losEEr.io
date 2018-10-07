@@ -92,6 +92,8 @@ Snake.prototype = {
         sec.body.collides([]);
         sec.body.kinematic = true;
 
+        sec.snakeName = this.snakeName
+
         this.snakeLength++;
         this.sectionGroup.add(sec);
         sec.sendToBack();

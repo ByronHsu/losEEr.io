@@ -79,6 +79,8 @@ PlayerSnake.prototype.spaceKeyUp = function() {
 PlayerSnake.prototype.edgeContact = function (phaserBody) {
    //if the edge hits another snake's section, destroy this snake
    if (phaserBody && this.sections.indexOf(phaserBody.sprite) == -1) {
+       console.log(phaserBody.sprite.snakeName)
+       console.log(`${this.snakeName} is killed by ${phaserBody.sprite.snakeName}`)
        this.destroy();
    }
    //if the edge hits this snake's own section, a simple solution to avoid
@@ -361,7 +363,7 @@ PlayerSnake.prototype.update = function() {
     }
 }
 
-// PlayerSnake.prototype.render = function() {
-//     this.game.debug.spriteInfo(this.head, 32, 32, "rgb(0, 0, 0)");
-// }
+PlayerSnake.prototype.render = function() {
+    this.game.debug.spriteInfo(this.head, 32, 32, "rgb(0, 0, 0)");
+}
 export default PlayerSnake;
