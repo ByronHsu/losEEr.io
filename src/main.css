@@ -9,6 +9,7 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 0.75em;
     width: 25%;
+    visibility: hidden;
 }
 
 h2.dash_title {

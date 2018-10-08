@@ -8,7 +8,7 @@ import EyePair from './eyePair';
  * @param  {Number} x         coordinate
  * @param  {Number} y         coordinate
  */
-var Snake = function (game, spriteKey, x, y, props) {
+var Snake = function (game, spriteKey, x, y, props, headSprite) {
     this.game = game;
     //create an array of snakes in the game object and add this snake
     if (!this.game.snakes) {
@@ -17,6 +17,7 @@ var Snake = function (game, spriteKey, x, y, props) {
     this.game.snakes.push(this);
     this.debug = false;
     this.spriteKey = spriteKey;
+    this.headSprite = headSprite || this.spriteKey;
 
     this.id = props.id
     this.snakeName = props.name
@@ -44,7 +45,7 @@ var Snake = function (game, spriteKey, x, y, props) {
     this.shadow = new Shadow(this.game, this.sections, this.scale);
     this.sectionGroup = this.game.add.group();
     //add the head of the snake
-    this.head = this.addSectionAtPosition(x, y);
+    this.head = this.addSectionAtPosition(x, y, this.headSprite);
     this.head.name = "head";
     this.head.snake = this;
     this.lastHeadPosition = new Phaser.Point(this.head.body.x, this.head.body.y);
@@ -55,7 +56,7 @@ var Snake = function (game, spriteKey, x, y, props) {
         this.initSections()
     }
     //initialize the eyes
-    this.eyes = new EyePair(this.game, this.head, this.scale, this.headAngle);
+    // this.eyes = new EyePair(this.game, this.head, this.scale, this.headAngle);
     
     
     // display snakeName
@@ -84,9 +85,9 @@ Snake.prototype = {
      * @param  {Number} y coordinate
      * @return {Phaser.Sprite}   new section
      */
-    addSectionAtPosition: function (x, y) {
+    addSectionAtPosition: function (x, y, spriteKey) {
         //initialize a new section
-        var sec = this.game.add.sprite(x, y, this.spriteKey);
+        var sec = this.game.add.sprite(x, y, spriteKey);
         this.game.physics.p2.enable(sec, this.debug);
         sec.body.setCollisionGroup(this.collisionGroup);
         sec.body.collides([]);
@@ -104,7 +105,10 @@ Snake.prototype = {
         this.shadow.add(x, y);
         //add a circle body to this section
         sec.body.clearShapes();
-        sec.body.addCircle(sec.width * 0.5);
+        let temp = sec.width;
+        if(temp > 60)
+            temp = 80;
+        sec.body.addCircle(temp * 0.5);
 
         return sec;
     },
@@ -124,7 +128,7 @@ Snake.prototype = {
         }
 
         //scale eyes and shadows
-        this.eyes.setScale(scale, this.headAngle);
+        // this.eyes.setScale(scale, this.headAngle);
         this.shadow.setScale(scale);
     },
     /**
@@ -140,7 +144,7 @@ Snake.prototype = {
         this.sections.forEach(function (sec, index) {
             sec.destroy();
         });
-        this.eyes.destroy();
+        // this.eyes.destroy();
         this.shadow.destroy();
         this.displayName.destroy();
         //call this snake's destruction callbacks
