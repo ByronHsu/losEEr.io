@@ -49,7 +49,7 @@ var snakeArr = [];
 var foodArr = [];
 var foodAmount = 10;
 for (var i = 0; i < foodAmount; i++) {
-    foodArr.push({ id: uuid(), x: Util.randomInt(-width + cornerWidth, width - cornerWidth), y: Util.randomInt(-height + cornerHeight, height - cornerHeight) });
+    foodArr.push({ id: uuid(), x: Util.randomInt(-width + cornerWidth+20, width - cornerWidth-20), y: Util.randomInt(-height + cornerHeight+20, height - cornerHeight-20) });
 }
 let socketToSnakeID = {}
 let dashboardData = []
@@ -201,7 +201,7 @@ function genfood() {
     var newfoods = [];
     while (foodAmount < limitFoodAmount) {
         foodAmount++;
-        var newfood = { id: uuid(), x: Util.randomInt(-width + cornerWidth, width - cornerWidth), y: Util.randomInt(-height + cornerHeight, height - cornerHeight) }
+        var newfood = { id: uuid(), x: Util.randomInt(-width + cornerWidth+20, width - cornerWidth-20), y: Util.randomInt(-height + cornerHeight+20, height - cornerHeight-20) }
         newfoods.push(newfood);
         foodArr.push(newfood);
     }

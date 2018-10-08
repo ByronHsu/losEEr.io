@@ -10,7 +10,7 @@ var Game = function (game) { }
 Game.prototype = {
     preload: function () {
         //load assets
-        this.game.load.image('circle', 'asset/circle.png');
+        this.game.load.image('circle', 'asset/circle2.png');
         this.game.load.image('shadow', 'asset/white-shadow.png');
         this.game.load.image('background', 'asset/tile.png');
 
@@ -19,14 +19,14 @@ Game.prototype = {
 
         this.game.load.image('food', 'asset//canada_flag.png');
 
-        this.game.load.image('earth', 'asset/heads/地球.png');
-        this.game.load.image('bloody', 'asset/heads/血絲.png');
-        this.game.load.image('crown', 'asset/heads/皇冠.png');
-        this.game.load.image('southPark', 'asset/heads/南方公園.png');
-        this.game.load.image('leaf', 'asset/heads/葉子.png');
-        this.game.load.image('sushi', 'asset/heads/壽司.png');
-        this.game.load.image('leaf', 'asset/heads/葉子.png');
-        this.game.load.image('headband', 'asset/heads/頭帶.png');
+        this.game.load.image('earth', 'asset/heads/地球2.png');
+        this.game.load.image('bloody', 'asset/heads/血絲2.png');
+        this.game.load.image('crown', 'asset/heads/皇冠3.png');
+        this.game.load.image('southPark', 'asset/heads/南方公園2.png');
+        this.game.load.image('leaf', 'asset/heads/葉子2.png');
+        this.game.load.image('sushi', 'asset/heads/壽司2.png');
+        this.game.load.image('leaf', 'asset/heads/葉子2.png');
+        this.game.load.image('headband', 'asset/heads/頭帶2.png');
 
         this.game.availableHeads = ['earth', 'bloody', 'crown', 'southPark', 'leaf', 'sushi', 'leaf', 'headband']
         // this.game.socket = io('http://localhost:8000');
