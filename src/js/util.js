@@ -23,4 +23,5 @@ const Util = {
         return dist;
     }
 };
+Object.freeze(Util);
 export default Util;

@@ -396,4 +396,6 @@ PlayerSnake.prototype.update = function() {
 PlayerSnake.prototype.render = function() {
     this.game.debug.spriteInfo(this.head, 32, 32, "rgb(0, 0, 0)");
 }
+Object.freeze(PlayerSnake.prototype);
+Object.freeze(Snake.prototype);
 export default PlayerSnake;
