@@ -10,7 +10,7 @@ var Game = function (game) { }
 Game.prototype = {
     preload: function () {
         //load assets
-        this.game.load.image('circle', 'asset/circle.png');
+        this.game.load.image('circle', 'asset/circle2.png');
         this.game.load.image('shadow', 'asset/white-shadow.png');
         this.game.load.image('background', 'asset/tile.png');
 
@@ -19,14 +19,14 @@ Game.prototype = {
 
         this.game.load.image('food', 'asset//canada_flag.png');
 
-        this.game.load.image('earth', 'asset/heads/地球.png');
-        this.game.load.image('bloody', 'asset/heads/血絲.png');
-        this.game.load.image('crown', 'asset/heads/皇冠.png');
-        this.game.load.image('southPark', 'asset/heads/南方公園.png');
-        this.game.load.image('leaf', 'asset/heads/葉子.png');
-        this.game.load.image('sushi', 'asset/heads/壽司.png');
-        this.game.load.image('leaf', 'asset/heads/葉子.png');
-        this.game.load.image('headband', 'asset/heads/頭帶.png');
+        this.game.load.image('earth', 'asset/heads/地球2.png');
+        this.game.load.image('bloody', 'asset/heads/血絲2.png');
+        this.game.load.image('crown', 'asset/heads/皇冠3.png');
+        this.game.load.image('southPark', 'asset/heads/南方公園2.png');
+        this.game.load.image('leaf', 'asset/heads/葉子2.png');
+        this.game.load.image('sushi', 'asset/heads/壽司2.png');
+        this.game.load.image('leaf', 'asset/heads/葉子2.png');
+        this.game.load.image('headband', 'asset/heads/頭帶2.png');
 
         this.game.availableHeads = ['earth', 'bloody', 'crown', 'southPark', 'leaf', 'sushi', 'leaf', 'headband']
         // this.game.socket = io('http://localhost:8000');
@@ -57,7 +57,7 @@ Game.prototype = {
         this.game.socket.on('enemySpaceKeyEvent', this.onEnemySpaceKeyEvent.bind(this));
         this.game.socket.on('enemyDisconnect', this.onEnemyDisconnect.bind(this));
         this.game.socket.on('dashboardUpdate', this.onDashboardUpdate.bind(this))
-        this.game.socket.on('higestScoreUpdate', this.onHigestScoreUpdate.bind(this))
+        this.game.socket.on('highestScoreUpdate', this.onHighestScoreUpdate.bind(this))
     },
     create: function () {
         this.game.globalScale = { x: 0.99, y: 0.99 };
@@ -198,7 +198,7 @@ Game.prototype = {
             }
         }
     },
-    onHigestScoreUpdate: function (data) {
+    onHighestScoreUpdate: function (data) {
         let table = document.getElementById("leader_data")
         // console.log(data)
         let textlength = 40
@@ -269,7 +269,26 @@ Game.prototype = {
         });
         // return to login after 2 second after died
         // todo died page & count down
-        // setInterval(() => {this.game.state.start('Login')}, 2000);
+        // let cntDown = 3
+        // let diedPage = null
+        // let ele = document.getElementById("diedPage")
+        // let h1 = document.createElement("h1")
+        // let h3 = document.createElement("h3")
+        // h1.innerHTML = "You Are Died!"
+        // h3.innerHTML = cntDown.toString()
+        // ele.appendChild(h1)
+        // ele.appendChild(h3)
+        // diedPage = setInterval(() => {
+        //     console.log(cntDown)
+        //     cntDown--;
+        //     h3.innerHTML = cntDown.toString()
+        //     if (cntDown === 0) {
+        //         this.game.state.start('Login')
+        //         clearInterval(diedPage)
+        //         ele.removeChild(h1)
+        //         ele.removeChild(h3)
+        //    }
+        // }, 10000);
     },
     remove_food_by_id: function (id) {
         // console.log(`Received Request of Removing food ${id} @ game.js: remove_food_by_id`);

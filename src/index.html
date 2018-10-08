@@ -2,7 +2,6 @@
 <html>
 
 <head>
-    <link href="asset/favicon.ico" rel="shortcut icon">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <meta charset="utf-8" />
     <link rel="icon" href="./asset/favicon-96x96.png" type="image/x-icon">
@@ -112,18 +111,30 @@
         }
         #loseer_logo {
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            /* left: 50%;
+            transform: translateX(-50%); */
             top: 21%;
             margin-top: -5%;
-            min-height: 375px;
-            bottom: 70%;
+            bottom: 40%;
+            width: 100%;
+            max-width: 100%;
+            text-align: center;
+            align-items: center;
+            align-content: center;
         }
         #eeweek_logo{
             right:-10%;
             position: absolute;
             width: 40%;
             top: 70%;
+        }
+        #eeweek_logo_img {
+            width: auto;
+            max-width: 100%;
+            max-height: 120%;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
         }
         :focus {
             outline: 0;
@@ -149,7 +160,7 @@
         </div>
     </div>
     <div id="loseer_logo">
-        <img src="asset/losEEr_logo.png">
+        <img src="asset/losEEr_logo.png" id="eeweek_logo_img">
     </div>
 
     <div id="login">
@@ -157,6 +168,7 @@
         <button id="submitname">Play</button>
         <p id="nullstringwarning"></p>
     </div>
+    <div id="diedPage"></div>
     <div id="eeweek_logo">
         <img src="asset/電機週logo.png" width=50%>
     </div>

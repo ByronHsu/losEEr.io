@@ -3,6 +3,7 @@ var unique = require('node-uuid');
 var uuid = require('uuid/v4');
 var app = express();
 var serv = require('http').Server(app);
+let fs = require('fs')
 app.get('/', function(req, res) {
     res.sendFile(__dirname, 'public/index.html');
 });
@@ -58,6 +59,19 @@ let highestScoreSnake = {
     socketId: "",
     score: 0
 }
+let highestScoreSnakes = []
+
+fs.readFile('highestScoreData.json', (err, data) => {
+    if (err) {
+        console.log(err)
+    }
+    else {
+        let tmp = JSON.parse(data)
+        highestScoreSnakes.push(...tmp)
+        // console.log(highestScoreSnakes)
+        highestScoreSnake = Object.assign({}, highestScoreSnakes[highestScoreSnakes.length - 1])
+    }
+})
 
 let dashboardCompare = (a, b) => b.score - a.score
 
@@ -196,9 +210,16 @@ function genfood() {
 
 function updateDashboard() {
     dashboardData.sort(dashboardCompare)
-    if (dashboardData[0] && highestScoreSnake.score < dashboardData[0].score) highestScoreSnake = dashboardData[0]
+    if (dashboardData[0] && highestScoreSnake.score < dashboardData[0].score) {
+        highestScoreSnake = Object.assign({}, dashboardData[0])
+        highestScoreSnakes.push(highestScoreSnake)
+        // console.log("updatedash", highestScoreSnakes)
+        fs.writeFile('highestScoreData.json', JSON.stringify(highestScoreSnakes), (err) => {
+            console.log(err)
+        })
+    }
     // console.log("disconnect", dashboardData)
     io.emit('dashboardUpdate', dashboardData)
-    io.emit('higestScoreUpdate', highestScoreSnake)
+    io.emit('highestScoreUpdate', highestScoreSnake)
 }
 setInterval(genfood, 2000);
