@@ -97,9 +97,9 @@ Game.prototype = {
             snake.addDestroyedCallback(this.snakeDestroyed, this);
         }
 
-        setInterval(function () {
-            console.log(new Date())
-        }, 3000)
+        // setInterval(function () {
+        //     console.log(new Date())
+        // }, 3000)
     },
     onGetFood: function (data) {
         for (var i = 0; i < data.length; i++) {
@@ -226,9 +226,9 @@ Game.prototype = {
     },
 
     render: function () {
-        for (let snake of this.game.snakes) {
-            if (snake.render) snake.render()
-        }
+        // for (let snake of this.game.snakes) {
+        //     if (snake.render) snake.render()
+        // }
     },
     /**
      * Create a piece of food at a point
