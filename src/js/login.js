@@ -2,13 +2,17 @@ class Login extends Phaser.State {
     constructor() {
         super();
         this.login = document.getElementById('login');
+        this.logo1 = document.getElementById('loseer_logo');
+        this.logo2 = document.getElementById('eeweek_logo');
         this.warning = document.getElementById('nullstringwarning');
         document.getElementById('submitname').addEventListener('click', () => {
             if (this.login.children.nameinput.value) {
                 this.login.style.visibility = 'hidden';
+                this.logo1.style.visibility = 'hidden';
+                this.logo2.style.visibility = 'hidden';
                 this.game.playerName = login.children.nameinput.value;
                 this.game.state.start('Game');
-                
+
                 this.canvas.style.visibility = 'visible';
                 this.canvas.className = '';
                 this.warning.innerHTML = '';
@@ -27,8 +31,11 @@ class Login extends Phaser.State {
 
     create() {
         this.game.playerName = '';
-        if (this.login.style.visibility === 'hidden')
+        if (this.login.style.visibility === 'hidden') {
             this.login.style.visibility = 'initial';
+            this.logo1.style.visibility = 'initial';
+            this.logo2.style.visibility = 'initial';
+        }
         this.login.children.nameinput.value = '';
 
         //dashboard hidden
