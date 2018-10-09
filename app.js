@@ -215,7 +215,7 @@ function updateDashboard() {
         highestScoreSnakes.push(highestScoreSnake)
         // console.log("updatedash", highestScoreSnakes)
         fs.writeFile('highestScoreData.json', JSON.stringify(highestScoreSnakes), (err) => {
-            console.log(err)
+            if (err) console.log(err)
         })
     }
     // console.log("disconnect", dashboardData)

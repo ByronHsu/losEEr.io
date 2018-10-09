@@ -107,13 +107,13 @@ Game.prototype = {
         }
     },
     onEnemyPlayers: function (data) {
-        console.log("onEnemyPlayers", data)
+        // console.log("onEnemyPlayers", data)
         for (let i = 0; i < data.length; i++) {
             let snake = new EnemySnake(this.game, 'circle', data[i].secDetails[0].x, data[i].secDetails[0].y, data[i], data[i].spriteKey)
         }
     },
     onNewEnemy: function (data) {
-        console.log("onNewEnemyData", data)
+        // console.log("onNewEnemyData", data)
         let snake = new EnemySnake(this.game, 'circle', data.secDetails[0].x, data.secDetails[0].y, data, data.spriteKey);
         // console.log("onNewEnemy", snake)
         // snake.remote_headPath = data.headPath;

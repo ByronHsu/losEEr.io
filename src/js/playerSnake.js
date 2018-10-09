@@ -220,7 +220,7 @@ PlayerSnake.prototype.onCycleComplete = function() {
         var lastSec = this.sections[this.sections.length - 1];
 
         this.exp++;
-        console.log(`${this.exp}/${this.req_exp}`);
+        // console.log(`${this.exp}/${this.req_exp}`);
         //to control snake size
         if (this.exp >= this.req_exp) {
             this.req_exp++;
