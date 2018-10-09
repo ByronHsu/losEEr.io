@@ -123,4 +123,5 @@ Shadow.prototype = {
         }
     }
 };
+Object.freeze(Shadow.prototype);
 export default Shadow;

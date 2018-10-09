@@ -63,4 +63,5 @@ EnemySnake.prototype.update = function() {
 EnemySnake.prototype.render = function() {
     this.game.debug.spriteInfo(this.head, 32, 200, "rgb(100, 0, 0)");
 }
+Object.freeze(EnemySnake.prototype);
 export default EnemySnake;

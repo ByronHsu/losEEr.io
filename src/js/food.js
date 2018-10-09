@@ -79,4 +79,5 @@ Food.prototype = {
         this.sprite.destroy();
     }
 };
+Object.freeze(Food.prototype);
 export default Food;

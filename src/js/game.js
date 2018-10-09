@@ -107,13 +107,13 @@ Game.prototype = {
         }
     },
     onEnemyPlayers: function (data) {
-        console.log("onEnemyPlayers", data)
+        // console.log("onEnemyPlayers", data)
         for (let i = 0; i < data.length; i++) {
             let snake = new EnemySnake(this.game, 'circle', data[i].secDetails[0].x, data[i].secDetails[0].y, data[i], data[i].spriteKey)
         }
     },
     onNewEnemy: function (data) {
-        console.log("onNewEnemyData", data)
+        // console.log("onNewEnemyData", data)
         let snake = new EnemySnake(this.game, 'circle', data.secDetails[0].x, data.secDetails[0].y, data, data.spriteKey);
         // console.log("onNewEnemy", snake)
         // snake.remote_headPath = data.headPath;
@@ -292,15 +292,17 @@ Game.prototype = {
     },
     remove_food_by_id: function (id) {
         // console.log(`Received Request of Removing food ${id} @ game.js: remove_food_by_id`);
-        for (var i = 0; i < this.foodGroup.children.length; i++) {
-            if (this.foodGroup.children[i].id == id) {
-                // console.log("Found the food to destroy @ game.js: remove_food_by_id")
-                this.foodGroup.children[i].food.remote_destroy();
-                return;
+        if(this.foodGroup) {
+            for (var i = 0; i < this.foodGroup.children.length; i++) {
+                if (this.foodGroup.children[i].id == id) {
+                    // console.log("Found the food to destroy @ game.js: remove_food_by_id")
+                    this.foodGroup.children[i].food.remote_destroy();
+                    return;
+                }
             }
+            console.error(`[Error]: food ${id} not found @ game.js: remove_food_by_id`);
         }
-        console.error(`[Error]: food ${id} not found @ game.js: remove_food_by_id`);
     }
 };
-
+Object.freeze(Game.prototype);
 export default Game;

@@ -220,7 +220,7 @@ PlayerSnake.prototype.onCycleComplete = function() {
         var lastSec = this.sections[this.sections.length - 1];
 
         this.exp++;
-        console.log(`${this.exp}/${this.req_exp}`);
+        // console.log(`${this.exp}/${this.req_exp}`);
         //to control snake size
         if (this.exp >= this.req_exp) {
             this.req_exp++;
@@ -396,4 +396,6 @@ PlayerSnake.prototype.update = function() {
 PlayerSnake.prototype.render = function() {
     this.game.debug.spriteInfo(this.head, 32, 32, "rgb(0, 0, 0)");
 }
+Object.freeze(PlayerSnake.prototype);
+Object.freeze(Snake.prototype);
 export default PlayerSnake;
