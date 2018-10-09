@@ -310,11 +310,13 @@ PlayerSnake.prototype.update = function() {
         this.game.add.tween(this.game.camera.scale).to(this.game.globalScale, 800, Phaser.Easing.Linear.None, true);
         this.game.globalScale.x -= 0.005;
         this.game.globalScale.y -= 0.005;
+        this.game.camera.setBoundsToWorld();
     }
     else if (headToWidthRatio < 0.02) {
         this.game.add.tween(this.game.camera.scale).to(this.game.globalScale, 800, Phaser.Easing.Linear.None, true);
         this.game.globalScale.x += 0.005;
         this.game.globalScale.y += 0.005;
+        this.game.camera.setBoundsToWorld();
     }
 
     //find the angle that the head needs to rotate
