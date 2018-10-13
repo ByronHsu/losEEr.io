@@ -58,3 +58,18 @@ h2.dash_title {
     text-align: right;
     width: 5%;
 }
+
+.progressPos {
+    position: absolute;
+    right: 1%;
+    bottom: 40px;
+    width: 200px;
+}
+
+.progress {
+    height: 85px;
+}
+.progress > svg {
+    height: 100%;
+    display: block;
+}

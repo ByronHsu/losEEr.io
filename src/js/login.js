@@ -40,6 +40,8 @@ class Login extends Phaser.State {
 
         //dashboard hidden
         document.getElementById("dashboard").style.visibility = "hidden"
+        //burst button hidden
+        document.getElementById("progress").style.visibility = "hidden"
     }
 }
 export default Login;

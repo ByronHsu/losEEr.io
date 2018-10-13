@@ -1,6 +1,7 @@
 import Snake from './snake'
 import SnakeProps from './SnakeProps'
 import Util from './util';
+import {progressCircle, progressIcon} from './progress.js'
 
 /**
  * Player of the core snake for controls
@@ -48,56 +49,132 @@ var PlayerSnake = function(game, spriteKey, x, y, id, headSprite) {
     this.addDestroyedCallback(function() {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
         spaceKey.onUp.remove(this.spaceKeyUp, this);
+
+        progressCircle.path.removeEventListener("mousedown",e => this.spaceKeyDown(), false)
+        progressCircle.path.removeEventListener("mouseup",e => this.spaceKeyUp(), false)
+        progressIcon.removeEventListener("mousedown",e => this.spaceKeyDown(), false)
+        progressIcon.removeEventListener("mouseup",e => this.spaceKeyUp(), false)
+
     }, this);
+
+    initialKeyProp()
+    progressCircle.path.addEventListener("mousedown",e => this.spaceKeyDown(), false)
+    progressCircle.path.addEventListener("mouseup",e => this.spaceKeyUp(), false)
+    progressIcon.addEventListener("mousedown",e => this.spaceKeyDown(), false)
+    progressIcon.addEventListener("mouseup",e => this.spaceKeyUp(), false)
 }
 
 PlayerSnake.prototype = Object.create(Snake.prototype);
 PlayerSnake.prototype.constructor = PlayerSnake;
 
 //make this snake light up and speed up when the space key is down
+
+PlayerSnake.prototype.spaceKeyDown = function() {
+    this.speed = this.fastSpeed
+    this.shadow.isLightingUp = true
+    progressCircle.path.style.fill = "rgb(180, 180, 180)"
+    this.game.socket.emit("spaceKeyEvent", {
+        id: this.id,
+        isLightingUp: this.shadow.isLightingUp
+    })
+}
+PlayerSnake.prototype.spaceKeyUp = function() {
+    this.speed = this.slowSpeed
+    this.shadow.isLightingUp = false
+    progressCircle.path.style.fill = "rgb(206, 206, 206)"
+    this.game.socket.emit("spaceKeyEvent", {
+        id: this.id,
+        isLightingUp: this.shadow.isLightingUp
+    })
+}
+
 let keyDownInterval = null
 let keyUpInterval = null
 let energy = 0
-PlayerSnake.prototype.spaceKeyDown = function() {
-    // console.log("spaceKeyDown")
-    this.speed = this.fastSpeed;
-    this.shadow.isLightingUp = true;
-    // console.log("spaceKeyDown")
-    this.game.socket.emit("spaceKeyEvent", {
-        id: this.id,
-        isLightingUp: this.shadow.isLightingUp
-    })
-    // set longest time of speeding
-    let self = this
-    clearInterval(keyUpInterval)
-    keyDownInterval = setInterval(function() {
-        energy++
-        // console.log(energy)
-        if (energy > 250) {
-            self.speed = self.slowSpeed
-            self.shadow.isLightingUp = false
-            self.game.socket.emit("spaceKeyEvent", {
-                id: self.id,
-                isLightingUp: self.shadow.isLightingUp
-            })
-            energy = 200
-        }
-    }, 1)
+let isOverEnergy = 0
+let spaceKeyDownIsCalled = 0
+let spaceKeyUpIsCalled = 0
+
+let initialKeyProp = function () {
+    keyDownInterval = null
+    keyUpInterval = null
+    energy = 0
+    isOverEnergy = 0
+    spaceKeyDownIsCalled = 0
+    spaceKeyUpIsCalled = 0
+    progressCircle.set(0)
 }
-    //make the snake slow down when the space key is up again
-PlayerSnake.prototype.spaceKeyUp = function() {
-    clearInterval(keyDownInterval)
-    keyUpInterval = setInterval(function() {
-        if (energy > 0) energy = energy - 2
-        // console.log(energy)
-    }, 1)
-    this.speed = this.slowSpeed;
-    this.shadow.isLightingUp = false;
-    this.game.socket.emit("spaceKeyEvent", {
-        id: this.id,
-        isLightingUp: this.shadow.isLightingUp
-    })
-}
+
+// let keyUpInterMethod = () => {
+//     energy = energy - 1;
+//     progressCircle.set(energy / 250)
+//     if (energy <= 0) {
+//         isOverEnergy = 0
+//         clearInterval(keyUpInterval)
+//         keyUpInterval = null
+//     }
+// }
+
+// PlayerSnake.prototype.spaceKeyDown = function() {
+//     if (!isOverEnergy && !spaceKeyDownIsCalled) {
+//         if (spaceKeyDownIsCalled) return
+//         spaceKeyDownIsCalled = 1
+//         spaceKeyUpIsCalled = 0
+//         clearInterval(keyUpInterval)
+//         keyUpInterval = null
+    
+//         this.speed = this.fastSpeed;
+//         this.shadow.isLightingUp = true;
+//         progressCircle.path.style.fill = "rgb(180, 180, 180)"
+//         console.log("spaceKeyDown is called", this.speed, this.shadow.isLightingUp)
+//         this.game.socket.emit("spaceKeyEvent", {
+//             id: this.id,
+//             isLightingUp: this.shadow.isLightingUp
+//         })
+//         // set longest time of speeding
+//         let self = this
+//         keyDownInterval = setInterval(function() {
+//             energy++
+//             progressCircle.set(energy / 250)
+//             if (energy >= 250) {
+//                 isOverEnergy = 1
+//                 progressCircle.path.style.fill = "rgb(206, 206, 206)"
+//                 self.speed = self.slowSpeed
+//                 self.shadow.isLightingUp = false
+//                 self.game.socket.emit("spaceKeyEvent", {
+//                     id: self.id,
+//                     isLightingUp: self.shadow.isLightingUp
+//                 })
+//                 keyUpInterval = setInterval(keyUpInterMethod, 1)
+//                 clearInterval(keyDownInterval)
+//                 keyDownInterval = null
+//             }
+//         }, 1)
+//     }
+// }
+//     //make the snake slow down when the space key is up again
+// PlayerSnake.prototype.spaceKeyUp = function() {
+//     if (!isOverEnergy && !spaceKeyUpIsCalled) {
+//         if (spaceKeyUpIsCalled) return
+//         spaceKeyUpIsCalled = 1
+//         spaceKeyDownIsCalled = 0
+//         if (energy > 0) {
+//             clearInterval(keyDownInterval)
+//             clearInterval(keyUpInterval)
+//             keyDownInterval = null
+//             keyUpInterval = null
+//             keyUpInterval = setInterval(keyUpInterMethod, 1)
+//             this.speed = this.slowSpeed;
+//             this.shadow.isLightingUp = false;
+//             console.log("spaceKeyUp is called", this.speed, this.shadow.isLightingUp)
+//             progressCircle.path.style.fill = "rgb(206, 206, 206)"
+//             this.game.socket.emit("spaceKeyEvent", {
+//                 id: this.id,
+//                 isLightingUp: this.shadow.isLightingUp
+//             })
+//         }
+//     }
+// }
 
 /**
 * Called when the front of the snake (the edge) hits something
