@@ -1,7 +1,7 @@
 import Snake from './snake'
 import SnakeProps from './SnakeProps'
 import Util from './util';
-import {progressCircle, progressIcon} from './progress.js'
+// import {progressCircle, progressIcon} from './progress.js'
 
 /**
  * Player of the core snake for controls
@@ -50,18 +50,18 @@ var PlayerSnake = function(game, spriteKey, x, y, id, headSprite) {
         spaceKey.onDown.remove(this.spaceKeyDown, this);
         spaceKey.onUp.remove(this.spaceKeyUp, this);
 
-        progressCircle.path.removeEventListener("mousedown",e => this.spaceKeyDown(), false)
-        progressCircle.path.removeEventListener("mouseup",e => this.spaceKeyUp(), false)
-        progressIcon.removeEventListener("mousedown",e => this.spaceKeyDown(), false)
-        progressIcon.removeEventListener("mouseup",e => this.spaceKeyUp(), false)
+        // progressCircle.path.removeEventListener("mousedown",e => this.spaceKeyDown(), false)
+        // progressCircle.path.removeEventListener("mouseup",e => this.spaceKeyUp(), false)
+        // progressIcon.removeEventListener("mousedown",e => this.spaceKeyDown(), false)
+        // progressIcon.removeEventListener("mouseup",e => this.spaceKeyUp(), false)
 
     }, this);
 
-    initialKeyProp()
-    progressCircle.path.addEventListener("mousedown",e => this.spaceKeyDown(), false)
-    progressCircle.path.addEventListener("mouseup",e => this.spaceKeyUp(), false)
-    progressIcon.addEventListener("mousedown",e => this.spaceKeyDown(), false)
-    progressIcon.addEventListener("mouseup",e => this.spaceKeyUp(), false)
+    // initialKeyProp()
+    // progressCircle.path.addEventListener("mousedown",e => this.spaceKeyDown(), false)
+    // progressCircle.path.addEventListener("mouseup",e => this.spaceKeyUp(), false)
+    // progressIcon.addEventListener("mousedown",e => this.spaceKeyDown(), false)
+    // progressIcon.addEventListener("mouseup",e => this.spaceKeyUp(), false)
 }
 
 PlayerSnake.prototype = Object.create(Snake.prototype);
@@ -72,7 +72,7 @@ PlayerSnake.prototype.constructor = PlayerSnake;
 PlayerSnake.prototype.spaceKeyDown = function() {
     this.speed = this.fastSpeed
     this.shadow.isLightingUp = true
-    progressCircle.path.style.fill = "rgb(180, 180, 180)"
+    // progressCircle.path.style.fill = "rgb(180, 180, 180)"
     this.game.socket.emit("spaceKeyEvent", {
         id: this.id,
         isLightingUp: this.shadow.isLightingUp
@@ -81,29 +81,29 @@ PlayerSnake.prototype.spaceKeyDown = function() {
 PlayerSnake.prototype.spaceKeyUp = function() {
     this.speed = this.slowSpeed
     this.shadow.isLightingUp = false
-    progressCircle.path.style.fill = "rgb(206, 206, 206)"
+    // progressCircle.path.style.fill = "rgb(206, 206, 206)"
     this.game.socket.emit("spaceKeyEvent", {
         id: this.id,
         isLightingUp: this.shadow.isLightingUp
     })
 }
 
-let keyDownInterval = null
-let keyUpInterval = null
-let energy = 0
-let isOverEnergy = 0
-let spaceKeyDownIsCalled = 0
-let spaceKeyUpIsCalled = 0
+// let keyDownInterval = null
+// let keyUpInterval = null
+// let energy = 0
+// let isOverEnergy = 0
+// let spaceKeyDownIsCalled = 0
+// let spaceKeyUpIsCalled = 0
 
-let initialKeyProp = function () {
-    keyDownInterval = null
-    keyUpInterval = null
-    energy = 0
-    isOverEnergy = 0
-    spaceKeyDownIsCalled = 0
-    spaceKeyUpIsCalled = 0
-    progressCircle.set(0)
-}
+// let initialKeyProp = function () {
+//     keyDownInterval = null
+//     keyUpInterval = null
+//     energy = 0
+//     isOverEnergy = 0
+//     spaceKeyDownIsCalled = 0
+//     spaceKeyUpIsCalled = 0
+//     progressCircle.set(0)
+// }
 
 // let keyUpInterMethod = () => {
 //     energy = energy - 1;

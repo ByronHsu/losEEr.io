@@ -88,7 +88,7 @@ Game.prototype = {
         //dashboard visible
         document.getElementById("dashboard").style.visibility = "visible"
         //burst button visible
-        document.getElementById("progress").style.visibility = "visible"
+        // document.getElementById("progress").style.visibility = "visible"
 
         //initialize snake groups and collision
         for (var i = 0; i < this.game.snakes.length; i++) {
