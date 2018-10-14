@@ -280,8 +280,8 @@ PlayerSnake.prototype.setScale = function(scale) {
 PlayerSnake.prototype.tempDestroy = PlayerSnake.prototype.destroy
 PlayerSnake.prototype.destroy = function() {
     // remove interval
-    clearInterval(keyDownInterval)
-    clearInterval(keyUpInterval)
+    // clearInterval(keyDownInterval)
+    // clearInterval(keyUpInterval)
     //remove constraints
     this.game.physics.p2.removeConstraint(this.edgeLock);
     this.edge.destroy();
